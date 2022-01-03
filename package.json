@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "prepare": "husky install",
+    "postinstall": "husky install"
+  },
   "devDependencies": {
     "@types/node": "^17.0.7",
     "@typescript-eslint/eslint-plugin": "^5.8.1",
