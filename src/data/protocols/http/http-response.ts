@@ -9,5 +9,5 @@ export enum HttpStatusCode {
 
 export type HttpResponse<TBody> = {
   statusCode: HttpStatusCode;
-  data: TBody;
+  body?: TBody;
 };
