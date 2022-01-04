@@ -1,0 +1,19 @@
+@import '../../../styles/colors.scss';
+
+.button {
+  cursor: pointer;
+  border: $defaultBorder;
+  border-radius: 4px;
+  background: $primary;
+  color: $white;
+  padding: 8px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.64rem;
+
+  &:hover {
+    font-weight: bold;
+    background: $primaryLight;
+  }
+  transition: all 0.2s;
+}

@@ -1,0 +1,60 @@
+@import '../../../styles/colors.scss';
+
+input[type='text'],
+input[type='password'],
+input[type='email'] {
+  border: none;
+  outline: none;
+  padding: 9px;
+  background: transparent;
+  color: $white;
+  font-size: 1.7rem;
+  &::placeholder {
+    color: $white;
+  }
+  width: 100%;
+
+  transition: all 0.3s;
+}
+
+.inputWrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border: 1px solid $primaryDark;
+  border-radius: 3px;
+
+  span {
+    font-size: 18px;
+    color: $red;
+    margin-right: 10px;
+    position: relative;
+
+    &::after {
+      content: 'Salve maneiro';
+      cursor: default;
+      position: absolute;
+      color: $white;
+      font-weight: 600;
+      top: 10px;
+      left: 20px;
+      background: $primaryLight;
+      border-radius: 5px;
+      white-space: nowrap;
+      padding: 4px;
+      font-size: 1.5rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s;
+    }
+
+    &:hover {
+      &::after {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    cursor: pointer;
+  }
+}

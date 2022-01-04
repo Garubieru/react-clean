@@ -1,0 +1,15 @@
+@import '../../../styles/colors.scss';
+
+.link {
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 1.6rem;
+  align-self: center;
+  color: $secondaryLight;
+
+  &:hover {
+    color: $primaryLight;
+    text-decoration: underline;
+  }
+  transition: all 0.2s;
+}
