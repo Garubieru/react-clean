@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --open",
     "prepare": "husky install",
-    "pretty-quick": "pretty-quick --staged",
+    "pretty-quick": "npx pretty-quick --staged",
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "npm test -- --watch",
     "test:staged": "npm test -- --findRelatedTests",
