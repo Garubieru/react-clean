@@ -4,7 +4,7 @@ module.exports = {
   coverageDirectory: 'coverage',
   testEnvironment: 'node',
   transform: {
-    '.+\\.{ts|tsx}$': 'ts-jest',
+    '^.+\\.(ts|tsx)?$': 'ts-jest',
   },
   moduleNameMapper: {
     '@/(.*)': '<rootDir>/src/$1',
