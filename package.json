@@ -6,6 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --open",
     "prepare": "husky install",
+    "pretty-quick": "pretty-quick --staged",
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "npm test -- --watch",
     "test:staged": "npm test -- --findRelatedTests",
@@ -51,6 +52,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/react-fontawesome": "^0.1.16",
     "axios": "^0.24.0",
+    "pretty-quick": "^3.1.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.2.1"
