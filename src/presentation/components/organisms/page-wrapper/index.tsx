@@ -1,6 +1,5 @@
 import React from 'react';
-import LoginHeader from '@/presentation/components/molecules/login-header';
-import Footer from '@/presentation/components/atoms/footer';
+import { LoginHeader, Footer } from '@/presentation/components';
 import Styles from './styles.scss';
 
 const PageWrapper: React.FC = (props) => {

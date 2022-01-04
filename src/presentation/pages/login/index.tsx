@@ -1,10 +1,6 @@
 import React from 'react';
 import Styles from './styles.scss';
-import Input from '@/presentation/components/atoms/input';
-import Button from '@/presentation/components/atoms/button';
-import Link from '@/presentation/components/atoms/link';
-import Error from '@/presentation/components/atoms/error';
-import PageWrapper from '@/presentation/components/organisms/page-wrapper';
+import { Input, Button, Link, Error, PageWrapper } from '@/presentation/components';
 
 const Login: React.FC = () => {
   return (
