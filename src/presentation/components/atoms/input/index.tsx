@@ -16,6 +16,7 @@ const Input: React.FC<InputProps> = ({ errorMsg, ...props }) => {
     currentInput.readOnly = false;
     
   };
+  
   return (
     <div className={Styles.inputWrapper}>
       <input {...props} readOnly onFocus={handleFocus} />
