@@ -16,11 +16,12 @@ export class RemoteAuthentication {
       body: params,
     });
     switch (statusCode) {
+      case HttpStatusCode.ok:
+        break;
       case HttpStatusCode.unathorized:
         throw new InvalidCredentialError();
-      case HttpStatusCode.badRequest:
-        throw new UnexpectedError();
       default:
+        throw new UnexpectedError();
     }
     return data;
   }
