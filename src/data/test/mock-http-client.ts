@@ -6,7 +6,7 @@ export class HttpPostClientSpy implements HttpPostClient {
   public body: any | null = null;
 
   public response: HttpResponse<any> = {
-    statusCode: HttpStatusCode.noContent,
+    statusCode: HttpStatusCode.ok,
     data: this.body,
   };
 

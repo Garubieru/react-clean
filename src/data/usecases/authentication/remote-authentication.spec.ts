@@ -51,4 +51,24 @@ describe('RemoteAuthentication', () => {
     const promise = sut.auth(mockAuthentication());
     await expect(promise).rejects.toThrow(new UnexpectedError());
   });
+
+  it('Should throw UnexpectedError when response returns 404 statusCode', async () => {
+    const { sut, httpPostClientSpy } = createSut();
+    httpPostClientSpy.response = {
+      statusCode: HttpStatusCode.notFound,
+      data: '',
+    };
+    const promise = sut.auth(mockAuthentication());
+    await expect(promise).rejects.toThrow(new UnexpectedError());
+  });
+
+  it('Should throw UnexpectedError when response returns 500 statusCode', async () => {
+    const { sut, httpPostClientSpy } = createSut();
+    httpPostClientSpy.response = {
+      statusCode: HttpStatusCode.serverError,
+      data: '',
+    };
+    const promise = sut.auth(mockAuthentication());
+    await expect(promise).rejects.toThrow(new UnexpectedError());
+  });
 });
