@@ -12,8 +12,7 @@ type InputProps = React.DetailedHTMLProps<
 
 const Input: React.FC<InputProps> = ({ errorMsg, ...props }) => {
   const handleFocus = (e: React.FocusEvent<HTMLInputElement, Element>): void => {
-    const currentInput = e.currentTarget;
-    currentInput.readOnly = false;
+    e.currentTarget.readOnly = false;
   };
   return (
     <div className={Styles.inputWrapper}>
