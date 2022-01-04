@@ -1,0 +1,12 @@
+.pageWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+
+  .pageContent {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+  }
+}

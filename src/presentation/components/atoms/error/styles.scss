@@ -1,0 +1,11 @@
+@import '../../../styles/colors.scss';
+
+.errorWrapper {
+  color: $red;
+  padding: 10px;
+  border: 1px solid $red;
+  text-align: center;
+  font-size: 1.6rem;
+  border-radius: 4px;
+  font-weight: bold;
+}
