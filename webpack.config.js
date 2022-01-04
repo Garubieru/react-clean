@@ -7,7 +7,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'public/js'),
     publicPath: '/public/js',
-    fileName: 'bundle.js',
+    filename: 'bundle.js',
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.scss'],
@@ -31,9 +31,13 @@ module.exports = {
     ],
   },
   devServer: {
-    contentBase: './public',
-    writeToDisk: true,
+    static: {
+      directory: path.resolve(__dirname, 'public'),
+    },
     historyApiFallback: true,
+    devMiddleware: {
+      writeToDisk: true,
+    },
   },
   externals: {
     react: 'React',
