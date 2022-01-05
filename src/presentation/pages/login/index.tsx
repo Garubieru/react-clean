@@ -22,15 +22,9 @@ const Login: React.FC<LoginProps> = ({ validation }) => {
     setState((prevState) => ({
       ...prevState,
       emailError: validation.validate('email', state.email),
-    }));
-  }, [state.email]);
-
-  useEffect(() => {
-    setState((prevState) => ({
-      ...prevState,
       passwordError: validation.validate('password', state.password),
     }));
-  }, [state.password]);
+  }, [state.email, state.password]);
 
   return (
     <PageWrapper>
