@@ -10,9 +10,13 @@ type SutTypes = {
   validationStub: ValidationStub;
 };
 
-const createSut = (): SutTypes => {
+type SutParams = {
+  withError: boolean;
+};
+
+const createSut = ({ withError }: SutParams = { withError: false }): SutTypes => {
   const validationStub = new ValidationStub();
-  validationStub.errorMessage = faker.random.alpha();
+  validationStub.errorMessage = withError ? faker.random.alpha() : null;
   const sut = render(<Login validation={validationStub} />);
   return { sut, validationStub };
 };
@@ -20,7 +24,7 @@ const createSut = (): SutTypes => {
 describe('Login Component', () => {
   afterEach(() => cleanup());
   it('Should start screen with initial state', () => {
-    const { sut, validationStub } = createSut();
+    const { sut, validationStub } = createSut({ withError: true });
     const { getByTestId } = sut;
     const error = getByTestId('error-msg');
     expect(error.classList.contains('hidden')).toBeTruthy();
@@ -43,7 +47,7 @@ describe('Login Component', () => {
   });
 
   it('Should throw email error if Validations fail', () => {
-    const { sut, validationStub } = createSut();
+    const { sut, validationStub } = createSut({ withError: true });
     const { getByTestId } = sut;
     const emailInput = getByTestId('email') as HTMLInputElement;
     fireEvent.input(emailInput, { target: { value: faker.internet.email() } });
@@ -56,7 +60,7 @@ describe('Login Component', () => {
   });
 
   it('Should throw password error if Validations fail', () => {
-    const { sut, validationStub } = createSut();
+    const { sut, validationStub } = createSut({ withError: true });
     const { getByTestId } = sut;
     const passwordInput = getByTestId('password') as HTMLInputElement;
     fireEvent.input(passwordInput, { target: { value: faker.internet.password() } });
@@ -69,8 +73,7 @@ describe('Login Component', () => {
   });
 
   it('Should not throw email error if Validations succeeds', () => {
-    const { sut, validationStub } = createSut();
-    validationStub.errorMessage = null;
+    const { sut } = createSut();
     const { getByTestId } = sut;
     const emailInput = getByTestId('email') as HTMLInputElement;
     fireEvent.input(emailInput, { target: { value: faker.internet.email() } });
@@ -83,8 +86,7 @@ describe('Login Component', () => {
   });
 
   it('Should not throw password error if Validations succeeds', () => {
-    const { sut, validationStub } = createSut();
-    validationStub.errorMessage = null;
+    const { sut } = createSut();
     const { getByTestId } = sut;
     const passwordInput = getByTestId('password') as HTMLInputElement;
     fireEvent.input(passwordInput, { target: { value: faker.internet.password() } });
@@ -94,5 +96,33 @@ describe('Login Component', () => {
       'class',
       expect.stringContaining('icon-success'),
     );
+  });
+
+  it('Should not be able to submit if form is invalid', () => {
+    const { sut } = createSut({ withError: true });
+    const { getByTestId } = sut;
+
+    const emailInput = getByTestId('email') as HTMLInputElement;
+    fireEvent.input(emailInput, { target: { value: faker.internet.email() } });
+
+    const passwordInput = getByTestId('password') as HTMLInputElement;
+    fireEvent.input(passwordInput, { target: { value: faker.internet.password() } });
+
+    const submitButton = getByTestId('login-button') as HTMLButtonElement;
+    expect(submitButton.disabled).toBeTruthy();
+  });
+
+  it('Should be able to submit if form is valid', () => {
+    const { sut } = createSut();
+    const { getByTestId } = sut;
+
+    const emailInput = getByTestId('email') as HTMLInputElement;
+    fireEvent.input(emailInput, { target: { value: faker.internet.email() } });
+
+    const passwordInput = getByTestId('password') as HTMLInputElement;
+    fireEvent.input(passwordInput, { target: { value: faker.internet.password() } });
+
+    const submitButton = getByTestId('login-button') as HTMLButtonElement;
+    expect(submitButton.disabled).toBeFalsy();
   });
 });
