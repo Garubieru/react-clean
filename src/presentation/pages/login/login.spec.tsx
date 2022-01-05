@@ -51,7 +51,7 @@ describe('Login Component', () => {
     expect(emailStatus.textContent).toBe(validationStub.errorMessage);
     expect(emailStatus.firstElementChild).toHaveAttribute(
       'class',
-      expect.stringContaining('fa-exclamation-circle'),
+      expect.stringContaining('icon-warning'),
     );
   });
 
@@ -64,7 +64,35 @@ describe('Login Component', () => {
     expect(passwordStatus.textContent).toBe(validationStub.errorMessage);
     expect(passwordStatus.firstElementChild).toHaveAttribute(
       'class',
-      expect.stringContaining('fa-exclamation-circle'),
+      expect.stringContaining('icon-warning'),
+    );
+  });
+
+  it('Should not throw email error if Validations succeeds', () => {
+    const { sut, validationStub } = createSut();
+    validationStub.errorMessage = null;
+    const { getByTestId } = sut;
+    const emailInput = getByTestId('email') as HTMLInputElement;
+    fireEvent.input(emailInput, { target: { value: faker.internet.email() } });
+    const emailStatus = getByTestId('email-status');
+    expect(emailStatus.textContent).toBe('');
+    expect(emailStatus.firstElementChild).toHaveAttribute(
+      'class',
+      expect.stringContaining('icon-success'),
+    );
+  });
+
+  it('Should not throw password error if Validations succeeds', () => {
+    const { sut, validationStub } = createSut();
+    validationStub.errorMessage = null;
+    const { getByTestId } = sut;
+    const passwordInput = getByTestId('password') as HTMLInputElement;
+    fireEvent.input(passwordInput, { target: { value: faker.internet.password() } });
+    const passwordStatus = getByTestId('password-status');
+    expect(passwordStatus.textContent).toBe('');
+    expect(passwordStatus.firstElementChild).toHaveAttribute(
+      'class',
+      expect.stringContaining('icon-success'),
     );
   });
 });
