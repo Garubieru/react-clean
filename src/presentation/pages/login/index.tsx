@@ -26,6 +26,8 @@ const Login: React.FC<LoginProps> = ({ validation }) => {
     }));
   }, [state.email, state.password]);
 
+  const hasError = !!state.emailError || !!state.passwordError;
+
   return (
     <PageWrapper>
       <div className={Styles.mainContainer}>
@@ -38,7 +40,7 @@ const Login: React.FC<LoginProps> = ({ validation }) => {
               type="button"
               data-testid="login-button"
               isLoading={state.isLoading}
-              disabled
+              disabled={hasError}
             >
               Login
             </Button>
