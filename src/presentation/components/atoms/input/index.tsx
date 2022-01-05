@@ -14,7 +14,6 @@ const Input: React.FC<InputProps> = ({ errorMsg, ...props }) => {
   const handleFocus = (e: React.FocusEvent<HTMLInputElement, Element>): void => {
     const currentInput = e.currentTarget;
     currentInput.readOnly = false;
-    
   };
 
   return (
