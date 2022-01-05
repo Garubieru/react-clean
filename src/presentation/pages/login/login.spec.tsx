@@ -12,6 +12,7 @@ type SutTypes = {
 
 const createSut = (): SutTypes => {
   const validationSpy = new ValidationSpy();
+  validationSpy.errorMessage = faker.random.alpha();
   const sut = render(<Login validation={validationSpy} />);
   return { sut, validationSpy };
 };
@@ -19,23 +20,24 @@ const createSut = (): SutTypes => {
 describe('Login Component', () => {
   afterEach(() => cleanup());
   it('Should start screen with initial state', () => {
-    const { sut } = createSut();
+    const { sut, validationSpy } = createSut();
     const { getByTestId } = sut;
     const error = getByTestId('error-msg');
     expect(error.classList.contains('hidden')).toBeTruthy();
 
     const button = getByTestId('login-button') as HTMLButtonElement;
     expect(button.disabled).toBeTruthy();
-    const requiredMessage = 'Required field';
 
     const emailStatus = getByTestId('email-status') as HTMLInputElement;
-    expect(emailStatus.querySelector('div').innerHTML).toBe(requiredMessage);
+    expect(emailStatus.querySelector('div').innerHTML).toBe(validationSpy.errorMessage);
     expect(emailStatus.firstElementChild).toHaveAttribute(
       'class',
       expect.stringContaining('fa-exclamation-circle'),
     );
     const passwordStatus = getByTestId('password-status') as HTMLInputElement;
-    expect(passwordStatus.querySelector('div').innerHTML).toBe(requiredMessage);
+    expect(passwordStatus.querySelector('div').innerHTML).toBe(
+      validationSpy.errorMessage,
+    );
     expect(passwordStatus.firstElementChild).toHaveAttribute(
       'class',
       expect.stringContaining('fa-exclamation-circle'),
@@ -60,5 +62,31 @@ describe('Login Component', () => {
     fireEvent.input(passwordInput, { target: { value: password } });
     expect(validationSpy.fieldName).toBe('password');
     expect(validationSpy.fieldValue).toBe(password);
+  });
+
+  it('Should throw email error if Validations fail', () => {
+    const { sut, validationSpy } = createSut();
+    const { getByTestId } = sut;
+    const emailInput = getByTestId('email') as HTMLInputElement;
+    fireEvent.input(emailInput, { target: { value: faker.internet.email() } });
+    const emailStatus = getByTestId('email-status');
+    expect(emailStatus.textContent).toBe(validationSpy.errorMessage);
+    expect(emailStatus.firstElementChild).toHaveAttribute(
+      'class',
+      expect.stringContaining('fa-exclamation-circle'),
+    );
+  });
+
+  it('Should throw password error if Validations fail', () => {
+    const { sut, validationSpy } = createSut();
+    const { getByTestId } = sut;
+    const passwordInput = getByTestId('password') as HTMLInputElement;
+    fireEvent.input(passwordInput, { target: { value: faker.internet.password() } });
+    const passwordStatus = getByTestId('password-status');
+    expect(passwordStatus.textContent).toBe(validationSpy.errorMessage);
+    expect(passwordStatus.firstElementChild).toHaveAttribute(
+      'class',
+      expect.stringContaining('fa-exclamation-circle'),
+    );
   });
 });
