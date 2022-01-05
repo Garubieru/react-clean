@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import Login from '.';
 
 describe('Login', () => {
-  it('Should error warning not be visible', () => {
+  it('Should error warning not be visible on start', () => {
     const { getByTestId } = render(<Login />);
     const error = getByTestId('error-msg');
     expect(error.classList.contains('hidden')).toBeTruthy();
