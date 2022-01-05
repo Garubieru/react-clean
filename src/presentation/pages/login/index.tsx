@@ -18,7 +18,12 @@ const Login: React.FC = () => {
             <h2>Login</h2>
             <Input name="email" type="email" placeholder="Email" />
             <Input name="password" type="password" placeholder="Password" />
-            <Button type="button" isLoading={state.isLoading}>
+            <Button
+              type="button"
+              data-testid="login-button"
+              isLoading={state.isLoading}
+              disabled
+            >
               Login
             </Button>
             <Error />
