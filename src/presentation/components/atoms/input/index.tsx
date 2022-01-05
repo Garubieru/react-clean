@@ -18,7 +18,7 @@ const Input: React.FC<InputProps> = ({ errorMsg, ...props }) => {
 
   return (
     <div className={Styles.inputWrapper}>
-      <input {...props} readOnly onFocus={handleFocus} />
+      <input {...props} onFocus={handleFocus} readOnly />
       <span>
         <FontAwesomeIcon icon={faExclamationCircle} />
       </span>
