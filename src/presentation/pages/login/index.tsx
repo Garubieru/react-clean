@@ -3,21 +3,30 @@ import Styles from './styles.scss';
 import { Input, Button, Link, Error, PageWrapper } from '@/presentation/components';
 import { FormContext } from '@/presentation/context/form/form-context';
 
-type StateProps = {
-  isLoading: boolean;
-  errorMsg: string;
-};
-
 const Login: React.FC = () => {
-  const [state] = useState<StateProps>({ isLoading: false, errorMsg: '' });
+  const [state] = useState({
+    isLoading: false,
+  });
+
+  const [errorState] = useState({
+    email: 'Required field',
+    password: 'Required field',
+    main: '',
+  });
+
   return (
     <PageWrapper>
       <div className={Styles.mainContainer}>
-        <FormContext.Provider value={state}>
+        <FormContext.Provider value={{ state, errorState }}>
           <form className={Styles.form}>
             <h2>Login</h2>
-            <Input name="email" type="email" placeholder="Email" />
-            <Input name="password" type="password" placeholder="Password" />
+            <Input name="email" type="email" placeholder="Email" data-testid="email" />
+            <Input
+              name="password"
+              type="password"
+              placeholder="Password"
+              data-testid="password"
+            />
             <Button
               type="button"
               data-testid="login-button"

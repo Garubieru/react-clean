@@ -30,15 +30,14 @@ input[type='email'] {
     margin-right: 10px;
     position: relative;
 
-    &::after {
-      content: 'Salve maneiro';
+    div {
       cursor: default;
       position: absolute;
       color: $white;
       font-weight: 600;
       top: 10px;
       left: 20px;
-      background: $primaryLight;
+      background: $red;
       border-radius: 5px;
       white-space: nowrap;
       padding: 4px;
@@ -49,7 +48,7 @@ input[type='email'] {
     }
 
     &:hover {
-      &::after {
+      div {
         opacity: 1;
         visibility: visible;
       }
