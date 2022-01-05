@@ -4,15 +4,14 @@ import React from 'react';
 import Styles from './styles.scss';
 
 const Error: React.FC = () => {
-  const { errorState } = useForm();
-  const { main } = errorState;
-  const visibility = main ? 'visible' : 'hidden';
+  const { state } = useForm();
+  const visibility = state.mainError ? 'visible' : 'hidden';
   return (
     <span
       data-testid="error-msg"
       className={`${Styles.errorWrapper} ${Styles[visibility]}`}
     >
-      {main}
+      {state.mainError}
     </span>
   );
 };

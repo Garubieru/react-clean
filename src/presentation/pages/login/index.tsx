@@ -1,32 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Styles from './styles.scss';
 import { Input, Button, Link, Error, PageWrapper } from '@/presentation/components';
-import { FormContext } from '@/presentation/context/form/form-context';
+import { FormContext, FormContextState } from '@/presentation/context/form/form-context';
+import { Validation } from '@/presentation/protocols/validation';
 
-const Login: React.FC = () => {
-  const [state] = useState({
+type LoginProps = {
+  validation?: Validation;
+};
+
+const Login: React.FC<LoginProps> = ({ validation }) => {
+  const [state, setState] = useState<FormContextState>({
     isLoading: false,
+    email: '',
+    password: '',
+    emailError: 'Required field',
+    passwordError: 'Required field',
+    mainError: '',
   });
 
-  const [errorState] = useState({
-    email: 'Required field',
-    password: 'Required field',
-    main: '',
-  });
+  useEffect(() => {
+    validation.validate({ email: state.email });
+  }, [state.email]);
+
+  useEffect(() => {
+    validation.validate({ password: state.password });
+  }, [state.password]);
 
   return (
     <PageWrapper>
       <div className={Styles.mainContainer}>
-        <FormContext.Provider value={{ state, errorState }}>
+        <FormContext.Provider value={{ state, setState }}>
           <form className={Styles.form}>
             <h2>Login</h2>
-            <Input name="email" type="email" placeholder="Email" data-testid="email" />
-            <Input
-              name="password"
-              type="password"
-              placeholder="Password"
-              data-testid="password"
-            />
+            <Input name="email" type="email" placeholder="Email" />
+            <Input name="password" type="password" placeholder="Password" />
             <Button
               type="button"
               data-testid="login-button"
