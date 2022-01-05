@@ -1,6 +1,6 @@
 import React from 'react';
 import Styles from './styles.scss';
-import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationCircle, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useForm } from '@/presentation/context/form/form-context';
 
@@ -22,8 +22,13 @@ const Input: React.FC<InputProps> = (props) => {
     setState((state) => ({ ...state, [props.name]: e.target.value }));
   };
 
-  const getError = (): string => state[`${props.name}Error`];
-  const getStatus = (): JSX.Element => <FontAwesomeIcon icon={faExclamationCircle} />;
+  const error = state[`${props.name}Error`];
+  const getStatus = (): JSX.Element => (
+    <FontAwesomeIcon
+      icon={error ? faExclamationCircle : faCheckCircle}
+      className={Styles[`icon-${error ? 'warning' : 'success'}`]}
+    />
+  );
 
   return (
     <div className={Styles.inputWrapper}>
@@ -36,7 +41,7 @@ const Input: React.FC<InputProps> = (props) => {
       />
       <span data-testid={`${props.name}-status`}>
         {getStatus()}
-        <div>{getError()}</div>
+        {error && <div>{error}</div>}
       </span>
     </div>
   );
