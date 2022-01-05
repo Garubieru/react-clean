@@ -1,16 +1,28 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, RenderResult } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Login from '.';
 
+type SutTypes = {
+  sut: RenderResult;
+};
+
+const createSut = (): SutTypes => {
+  const sut = render(<Login />);
+  return { sut };
+};
+
 describe('Login Component', () => {
   it('Should start screen with initial state', () => {
-    const { getByTestId } = render(<Login />);
+    const { sut } = createSut();
+    const { getByTestId } = sut;
     const error = getByTestId('error-msg');
     expect(error.classList.contains('hidden')).toBeTruthy();
+
     const button = getByTestId('login-button') as HTMLButtonElement;
     expect(button.disabled).toBeTruthy();
     const requiredMessage = 'Required field';
+
     const emailStatus = getByTestId('email-status') as HTMLInputElement;
     expect(emailStatus.querySelector('div').innerHTML).toBe(requiredMessage);
     expect(emailStatus.firstElementChild).toHaveAttribute(
