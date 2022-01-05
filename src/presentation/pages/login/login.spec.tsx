@@ -1,24 +1,14 @@
-import React from 'react';
-import { render, RenderResult, fireEvent, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import React from 'react';
+import faker from 'faker';
+import { render, RenderResult, fireEvent, cleanup } from '@testing-library/react';
+import { ValidationSpy } from '@/presentation/test';
 import Login from '.';
-import { Validation } from '@/presentation/protocols/validation';
 
 type SutTypes = {
   sut: RenderResult;
   validationSpy: ValidationSpy;
 };
-class ValidationSpy implements Validation {
-  errorMessage: string;
-  fieldValue: string;
-  fieldName: string;
-
-  validate(fieldName: string, fieldValue: string): string {
-    this.fieldName = fieldName;
-    this.fieldValue = fieldValue;
-    return this.errorMessage;
-  }
-}
 
 const createSut = (): SutTypes => {
   const validationSpy = new ValidationSpy();
@@ -56,17 +46,19 @@ describe('Login Component', () => {
     const { sut, validationSpy } = createSut();
     const { getByTestId } = sut;
     const emailInput = getByTestId('email') as HTMLInputElement;
-    fireEvent.input(emailInput, { target: { value: 'any_email' } });
+    const email = faker.internet.email();
+    fireEvent.input(emailInput, { target: { value: email } });
     expect(validationSpy.fieldName).toBe('email');
-    expect(validationSpy.fieldValue).toBe('any_email');
+    expect(validationSpy.fieldValue).toBe(email);
   });
 
   it('Should call validation with correct password value', () => {
     const { sut, validationSpy } = createSut();
     const { getByTestId } = sut;
     const passwordInput = getByTestId('password') as HTMLInputElement;
-    fireEvent.input(passwordInput, { target: { value: 'any_password' } });
+    const password = faker.internet.password();
+    fireEvent.input(passwordInput, { target: { value: password } });
     expect(validationSpy.fieldName).toBe('password');
-    expect(validationSpy.fieldValue).toBe('any_password');
+    expect(validationSpy.fieldValue).toBe(password);
   });
 });
