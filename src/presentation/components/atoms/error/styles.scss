@@ -8,4 +8,16 @@
   font-size: 1.6rem;
   border-radius: 4px;
   font-weight: bold;
+
+  &.visible {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  &.hidden {
+    opacity: 0;
+    display: none;
+  }
+
+  transition: all 0.3s;
 }

@@ -11,7 +11,7 @@ type ButtonProps = React.DetailedHTMLProps<
 
 const Button: React.FC<ButtonProps> = ({ isLoading, ...props }) => {
   return (
-    <button type="submit" className={Styles.button} {...props}>
+    <button className={Styles.button} {...props}>
       {!isLoading && props.children}
       {isLoading && <Spinner />}
     </button>
