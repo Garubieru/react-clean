@@ -145,4 +145,16 @@ describe('Login Component', () => {
 
     expect(authenticationSpy.params).toEqual(authParams);
   });
+
+  it('Should call Authentication only once while submitting', async () => {
+    const authParams = mockAuthentication();
+    const { sut, authenticationSpy } = createSut({
+      populateForm: true,
+      submitForm: true,
+      authParams: authParams,
+    });
+    populateForm(sut, true);
+
+    expect(authenticationSpy.callsCount).toBe(1);
+  });
 });
