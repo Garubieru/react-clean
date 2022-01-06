@@ -14,9 +14,9 @@ type SutParams = {
   withError: boolean;
 };
 
-const createSut = ({ withError }: SutParams = { withError: false }): SutTypes => {
+const createSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub();
-  validationStub.errorMessage = withError ? faker.random.alpha() : null;
+  validationStub.errorMessage = params?.withError && faker.random.alpha();
   const sut = render(<Login validation={validationStub} />);
   return { sut, validationStub };
 };
