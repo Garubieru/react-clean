@@ -1,6 +1,9 @@
 import '@testing-library/jest-dom';
 import 'jest-localstorage-mock';
 import React from 'react';
+import { Router } from 'react-router-dom';
+import { createMemoryHistory } from 'history';
+
 import faker from 'faker';
 import {
   render,
@@ -30,12 +33,15 @@ type SutParams = {
 
 type InputName = 'password' | 'email';
 
+const history = createMemoryHistory();
 const createSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub();
   validationStub.errorMessage = params?.withError && faker.random.words();
   const authenticationSpy = new AuthenticationSpy();
   const sut = render(
-    <Login validation={validationStub} authentication={authenticationSpy} />,
+    <Router location={history.location} navigator={history}>
+      <Login validation={validationStub} authentication={authenticationSpy} />
+    </Router>,
   );
   if (params?.populateForm) populateForm(sut, params?.submitForm, params?.authParams);
   return { sut, validationStub, authenticationSpy };
@@ -217,5 +223,12 @@ describe('Login Component', () => {
       'accessToken',
       authenticationSpy.account.accessToken,
     );
+  });
+
+  it('Should go to sign up page on click', async () => {
+    const { sut } = createSut();
+    const link = sut.getByTestId('signup-link');
+    fireEvent.click(link);
+    expect(history.location.pathname).toBe('/signup');
   });
 });
