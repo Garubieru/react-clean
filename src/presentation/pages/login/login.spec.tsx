@@ -176,4 +176,11 @@ describe('Login Component', () => {
     fireEvent.submit(form);
     expect(authenticationSpy.callsCount).toBe(0);
   });
+
+  it('Should not call Authentication if form is valid', async () => {
+    const { sut, authenticationSpy } = createSut({ populateForm: true });
+    const form = sut.getByTestId('form');
+    fireEvent.submit(form);
+    expect(authenticationSpy.callsCount).toBe(1);
+  });
 });
