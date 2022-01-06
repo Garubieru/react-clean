@@ -27,7 +27,11 @@ const Login: React.FC<LoginProps> = ({ validation, authentication }) => {
     if (hasError) return;
     setState((prevState) => ({ ...prevState, isLoading: true }));
     try {
-      await authentication.auth({ email: state.email, password: state.password });
+      const { accessToken } = await authentication.auth({
+        email: state.email,
+        password: state.password,
+      });
+      localStorage.setItem('accessToken', accessToken);
     } catch (e) {
       const errorMsg = e as Error;
       setState((prevState) => ({
