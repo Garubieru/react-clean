@@ -22,6 +22,7 @@ const Login: React.FC<LoginProps> = ({ validation, authentication }) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
+    if (state.emailError || state.passwordError) return;
     setState((prevState) => ({ ...prevState, isLoading: true }));
     await authentication.auth({ email: state.email, password: state.password });
   };
@@ -40,7 +41,7 @@ const Login: React.FC<LoginProps> = ({ validation, authentication }) => {
     <PageWrapper>
       <div className={Styles.mainContainer}>
         <FormContext.Provider value={{ state, setState }}>
-          <form className={Styles.form} onSubmit={handleSubmit}>
+          <form className={Styles.form} onSubmit={handleSubmit} data-testid="form">
             <h2>Login</h2>
             <Input name="email" type="email" placeholder="Email" />
             <Input name="password" type="password" placeholder="Password" />
