@@ -18,6 +18,11 @@ const Login: React.FC<LoginProps> = ({ validation }) => {
     mainError: '',
   });
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    setState((prevState) => ({ ...prevState, isLoading: true }));
+  };
+
   useEffect(() => {
     setState((prevState) => ({
       ...prevState,
@@ -32,12 +37,12 @@ const Login: React.FC<LoginProps> = ({ validation }) => {
     <PageWrapper>
       <div className={Styles.mainContainer}>
         <FormContext.Provider value={{ state, setState }}>
-          <form className={Styles.form}>
+          <form className={Styles.form} onSubmit={handleSubmit}>
             <h2>Login</h2>
             <Input name="email" type="email" placeholder="Email" />
             <Input name="password" type="password" placeholder="Password" />
             <Button
-              type="button"
+              type="submit"
               data-testid="login-button"
               isLoading={state.isLoading}
               disabled={hasError}
