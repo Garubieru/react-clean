@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import 'jest-localstorage-mock';
 import React from 'react';
 import faker from 'faker';
 import {
@@ -82,6 +83,7 @@ const simulateFieldStatus = (
 
 describe('Login Component', () => {
   afterEach(() => cleanup());
+  beforeEach(() => localStorage.clear());
   it('Should start screen with initial state', () => {
     const { sut, validationStub } = createSut({ withError: true });
     const { getByTestId } = sut;
@@ -203,5 +205,17 @@ describe('Login Component', () => {
     await waitFor(() => errorMsg);
     expect(errorMsg.textContent).toBe(error.message);
     expect(errorMsg).toHaveClass('visible');
+  });
+
+  it('Should store accessToken on localStorage on success', async () => {
+    const { sut, authenticationSpy } = createSut({
+      populateForm: true,
+      submitForm: true,
+    });
+    await waitFor(() => sut.getByTestId('form'));
+    expect(localStorage.setItem).toBeCalledWith(
+      'accessToken',
+      authenticationSpy.account.accessToken,
+    );
   });
 });
