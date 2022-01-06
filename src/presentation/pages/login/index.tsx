@@ -26,7 +26,16 @@ const Login: React.FC<LoginProps> = ({ validation, authentication }) => {
     e.preventDefault();
     if (hasError) return;
     setState((prevState) => ({ ...prevState, isLoading: true }));
-    await authentication.auth({ email: state.email, password: state.password });
+    try {
+      await authentication.auth({ email: state.email, password: state.password });
+    } catch (e) {
+      const errorMsg = e as Error;
+      setState((prevState) => ({
+        ...prevState,
+        mainError: errorMsg.message,
+        isLoading: false,
+      }));
+    }
   };
 
   useEffect(() => {
