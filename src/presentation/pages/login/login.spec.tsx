@@ -2,11 +2,9 @@ import '@testing-library/jest-dom';
 import React from 'react';
 import faker from 'faker';
 import { render, RenderResult, fireEvent, cleanup } from '@testing-library/react';
-import { ValidationStub } from '@/presentation/test';
+import { ValidationStub, AuthenticationSpy } from '@/presentation/test';
+import { mockAuthentication } from '@/domain/test';
 import Login from '.';
-import { AuthenticationParams, AuthenticationProtocol } from '@/domain/usecases';
-import { AccountModel } from '@/domain/models';
-import { mockAccount, mockAuthentication } from '@/domain/test';
 
 type SutTypes = {
   sut: RenderResult;
@@ -17,15 +15,6 @@ type SutTypes = {
 type SutParams = {
   withError: boolean;
 };
-
-class AuthenticationSpy implements AuthenticationProtocol {
-  params: AuthenticationParams;
-  account = mockAccount();
-  async auth(params: AuthenticationParams): Promise<AccountModel> {
-    this.params = params;
-    return await Promise.resolve(this.account);
-  }
-}
 
 const createSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub();
