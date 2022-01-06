@@ -32,12 +32,13 @@ describe('EmailValidation', () => {
   });
 
   it('Should not return error when value is valid', () => {
-    const { sut } = createSut();
+    const { sut, emailValidatorSpy } = createSut();
     const result = sut.validate(faker.random.word());
+    jest.spyOn(emailValidatorSpy, 'validate').mockReturnValueOnce(true);
     expect(result).toBeFalsy();
   });
 
-  it('Should return error when value is valid', () => {
+  it('Should return error when value is invalid', () => {
     const { sut, emailValidatorSpy } = createSut();
     jest.spyOn(emailValidatorSpy, 'validate').mockReturnValueOnce(false);
     const result = sut.validate(faker.internet.email());
