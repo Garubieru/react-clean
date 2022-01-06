@@ -1,11 +1,18 @@
 import '@testing-library/jest-dom';
 import React from 'react';
 import faker from 'faker';
-import { render, RenderResult, fireEvent, cleanup } from '@testing-library/react';
+import {
+  render,
+  RenderResult,
+  fireEvent,
+  cleanup,
+  waitFor,
+} from '@testing-library/react';
 import { ValidationStub, AuthenticationSpy } from '@/presentation/test';
 import { mockAuthentication } from '@/domain/test';
 import Login from '.';
 import { AuthenticationParams } from '@/domain/usecases';
+import { InvalidCredentialError } from '@/domain/errors';
 
 type SutTypes = {
   sut: RenderResult;
@@ -38,14 +45,14 @@ const populateForm = (
   submit = false,
   authParams = mockAuthentication(),
 ): void => {
-  const { getByTestId } = sut;
   populateField(sut, 'email', authParams.email);
   populateField(sut, 'password', authParams.password);
+  if (submit) submitForm(sut);
+};
 
-  if (submit) {
-    const submitButton = getByTestId('login-button') as HTMLButtonElement;
-    fireEvent.click(submitButton);
-  }
+const submitForm = (sut: RenderResult): void => {
+  const submitButton = sut.getByTestId('login-button') as HTMLButtonElement;
+  fireEvent.click(submitButton);
 };
 
 const populateField = (
@@ -182,5 +189,19 @@ describe('Login Component', () => {
     const form = sut.getByTestId('form');
     fireEvent.submit(form);
     expect(authenticationSpy.callsCount).toBe(1);
+  });
+
+  it('Should render error if Authentication fails', async () => {
+    const { sut, authenticationSpy } = createSut({
+      populateForm: true,
+    });
+    const error = new InvalidCredentialError();
+    jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(Promise.reject(error));
+    submitForm(sut);
+
+    const errorMsg = sut.getByTestId('error-msg');
+    await waitFor(() => errorMsg);
+    expect(errorMsg.textContent).toBe(error.message);
+    expect(errorMsg).toHaveClass('visible');
   });
 });
