@@ -4,21 +4,37 @@ import faker from 'faker';
 import { render, RenderResult, fireEvent, cleanup } from '@testing-library/react';
 import { ValidationStub } from '@/presentation/test';
 import Login from '.';
+import { AuthenticationParams, AuthenticationProtocol } from '@/domain/usecases';
+import { AccountModel } from '@/domain/models';
+import { mockAccount, mockAuthentication } from '@/domain/test';
 
 type SutTypes = {
   sut: RenderResult;
   validationStub: ValidationStub;
+  authenticationSpy: AuthenticationSpy;
 };
 
 type SutParams = {
   withError: boolean;
 };
 
+class AuthenticationSpy implements AuthenticationProtocol {
+  params: AuthenticationParams;
+  account = mockAccount();
+  async auth(params: AuthenticationParams): Promise<AccountModel> {
+    this.params = params;
+    return await Promise.resolve(this.account);
+  }
+}
+
 const createSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub();
   validationStub.errorMessage = params?.withError && faker.random.words();
-  const sut = render(<Login validation={validationStub} />);
-  return { sut, validationStub };
+  const authenticationSpy = new AuthenticationSpy();
+  const sut = render(
+    <Login validation={validationStub} authentication={authenticationSpy} />,
+  );
+  return { sut, validationStub, authenticationSpy };
 };
 
 describe('Login Component', () => {
@@ -140,5 +156,22 @@ describe('Login Component', () => {
     fireEvent.click(submitButton);
     const spinner = getByTestId('spinner');
     expect(submitButton).toContainElement(spinner);
+  });
+
+  it('Should call Authentication with correct values', async () => {
+    const { sut, authenticationSpy } = createSut();
+    const { getByTestId } = sut;
+
+    const authParams = mockAuthentication();
+    const emailInput = getByTestId('email') as HTMLInputElement;
+    fireEvent.input(emailInput, { target: { value: authParams.email } });
+
+    const passwordInput = getByTestId('password') as HTMLInputElement;
+    fireEvent.input(passwordInput, { target: { value: authParams.password } });
+
+    const submitButton = getByTestId('login-button') as HTMLButtonElement;
+    fireEvent.click(submitButton);
+    await authenticationSpy.auth(authParams);
+    expect(authenticationSpy.params).toEqual(authParams);
   });
 });
