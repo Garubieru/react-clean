@@ -1,16 +1,7 @@
 import faker from 'faker';
 import { EmailError } from '@/presentation/validation/errors';
 import { EmailValidation } from './email-validation';
-import { EmailValidatorProtocol } from '@/presentation/validation/protocols';
-
-class EmailValidatorSpy implements EmailValidatorProtocol {
-  value: string;
-  valid = true;
-  validate(value: string): boolean {
-    this.value = value;
-    return this.valid;
-  }
-}
+import { EmailValidatorSpy } from '@/presentation/validation/test';
 
 type SutTypes = {
   sut: EmailValidation;
@@ -32,9 +23,8 @@ describe('EmailValidation', () => {
   });
 
   it('Should not return error when value is valid', () => {
-    const { sut, emailValidatorSpy } = createSut();
+    const { sut } = createSut();
     const result = sut.validate(faker.random.word());
-    jest.spyOn(emailValidatorSpy, 'validate').mockReturnValueOnce(true);
     expect(result).toBeFalsy();
   });
 
