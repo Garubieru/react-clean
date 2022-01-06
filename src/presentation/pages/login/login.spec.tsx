@@ -16,7 +16,7 @@ type SutParams = {
 
 const createSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub();
-  validationStub.errorMessage = params?.withError && faker.random.alpha();
+  validationStub.errorMessage = params?.withError && faker.random.words();
   const sut = render(<Login validation={validationStub} />);
   return { sut, validationStub };
 };
