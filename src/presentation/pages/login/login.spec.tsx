@@ -33,7 +33,8 @@ type SutParams = {
 
 type InputName = 'password' | 'email';
 
-const history = createMemoryHistory();
+const history = createMemoryHistory({ initialEntries: ['/login'] });
+
 const createSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub();
   validationStub.errorMessage = params?.withError && faker.random.words();
@@ -223,6 +224,7 @@ describe('Login Component', () => {
       'accessToken',
       authenticationSpy.account.accessToken,
     );
+    expect(history.location.pathname).toBe('/');
   });
 
   it('Should go to sign up page on click', async () => {
