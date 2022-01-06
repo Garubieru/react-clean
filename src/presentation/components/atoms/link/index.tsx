@@ -1,17 +1,13 @@
 import React from 'react';
+import { Link as RouterLink, LinkProps } from 'react-router-dom';
 
 import Styles from './styles.scss';
 
-type LinkProps = React.DetailedHTMLProps<
-  React.AnchorHTMLAttributes<HTMLAnchorElement>,
-  HTMLAnchorElement
->;
-
 const Link: React.FC<LinkProps> = (props) => {
   return (
-    <a {...props} className={Styles.link}>
+    <RouterLink {...props} className={Styles.link}>
       {props.children}
-    </a>
+    </RouterLink>
   );
 };
 

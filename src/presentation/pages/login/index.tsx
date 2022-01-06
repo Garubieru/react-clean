@@ -67,7 +67,9 @@ const Login: React.FC<LoginProps> = ({ validation, authentication }) => {
               Login
             </Button>
             <Error />
-            <Link href="/oi">Create account</Link>
+            <Link to="/signup" data-testid="signup-link">
+              Create account
+            </Link>
           </form>
         </FormContext.Provider>
       </div>
