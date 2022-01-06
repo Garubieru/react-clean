@@ -157,4 +157,23 @@ describe('Login Component', () => {
 
     expect(authenticationSpy.callsCount).toBe(1);
   });
+
+  it('Should not call Authentication if form is invalid', async () => {
+    const { sut, authenticationSpy } = createSut({
+      withError: true,
+      populateForm: true,
+    });
+    const form = sut.getByTestId('form');
+    fireEvent.submit(form);
+    expect(authenticationSpy.callsCount).toBe(0);
+  });
+
+  it('Should not call Authentication if form is not fullfiled', async () => {
+    const { sut, authenticationSpy } = createSut({
+      withError: true,
+    });
+    const form = sut.getByTestId('form');
+    fireEvent.submit(form);
+    expect(authenticationSpy.callsCount).toBe(0);
+  });
 });
