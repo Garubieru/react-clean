@@ -20,9 +20,11 @@ const Login: React.FC<LoginProps> = ({ validation, authentication }) => {
     mainError: '',
   });
 
+  const hasError = !!state.emailError || !!state.passwordError;
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    if (state.emailError || state.passwordError) return;
+    if (hasError) return;
     setState((prevState) => ({ ...prevState, isLoading: true }));
     await authentication.auth({ email: state.email, password: state.password });
   };
@@ -34,8 +36,6 @@ const Login: React.FC<LoginProps> = ({ validation, authentication }) => {
       passwordError: validation.validate('password', state.password),
     }));
   }, [state.email, state.password]);
-
-  const hasError = !!state.emailError || !!state.passwordError;
 
   return (
     <PageWrapper>
