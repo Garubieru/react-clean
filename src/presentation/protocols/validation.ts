@@ -1,3 +1,5 @@
+export type ValidationFieldValues = { [field: string]: string | null };
+
 export interface Validation {
-  validate: (fieldName: string, fieldValue: string) => string | null;
+  validate: <T extends ValidationFieldValues>(values: T) => T;
 }
