@@ -1,6 +1,6 @@
 const path = require('path');
-const { DefinePlugin } = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = (webpackConfigEnv, argv) => ({
   mode: 'development',
@@ -46,6 +46,8 @@ module.exports = (webpackConfigEnv, argv) => ({
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new DefinePlugin({ 'process.env.API_URL': 'http://fordevs.herokuapp.com/api' }),
+    new Dotenv({
+      path: './.env',
+    }),
   ],
 });
