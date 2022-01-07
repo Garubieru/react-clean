@@ -2,7 +2,7 @@ import {
   FieldValidation,
   EmailValidatorProtocol,
 } from '@/presentation/validation/protocols';
-import { EmailError } from '@/presentation/validation/errors';
+import { InvalidFieldError } from '@/presentation/validation/errors';
 
 export class EmailValidation implements FieldValidation {
   constructor(
@@ -11,6 +11,8 @@ export class EmailValidation implements FieldValidation {
   ) {}
 
   validate(value: string): Error {
-    return this.emailValidator.validate(value) ? null : new EmailError();
+    return this.emailValidator.validate(value)
+      ? null
+      : new InvalidFieldError('Invalid email');
   }
 }
