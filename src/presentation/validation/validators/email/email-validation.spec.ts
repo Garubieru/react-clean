@@ -1,5 +1,5 @@
 import faker from 'faker';
-import { EmailError } from '@/presentation/validation/errors';
+import { InvalidFieldError } from '@/presentation/validation/errors';
 import { EmailValidation } from './email-validation';
 import { EmailValidatorSpy } from '@/presentation/validation/test';
 
@@ -32,6 +32,6 @@ describe('EmailValidation', () => {
     const { sut, emailValidatorSpy } = createSut();
     jest.spyOn(emailValidatorSpy, 'validate').mockReturnValueOnce(false);
     const result = sut.validate(faker.internet.email());
-    expect(result).toEqual(new EmailError());
+    expect(result).toEqual(new InvalidFieldError('Invalid email'));
   });
 });
