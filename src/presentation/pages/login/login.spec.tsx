@@ -14,7 +14,7 @@ import {
 } from '@testing-library/react';
 import { ValidationStub, AuthenticationSpy } from '@/presentation/test';
 import { mockAuthentication } from '@/domain/test';
-import Login from '.';
+import { Login } from '@/presentation/pages';
 import { AuthenticationParams } from '@/domain/usecases';
 import { InvalidCredentialError } from '@/domain/errors';
 

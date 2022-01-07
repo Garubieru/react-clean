@@ -1,7 +1,10 @@
 import { EmailValidator } from '@/infra/validators/email-validator/email-validator';
-import { RequiredFieldValidation } from '@/presentation/validation/validators';
-import { EmailValidation } from '../email/email-validation';
-import { MinLengthValidation } from '../min-length/min-length-validation';
+import {
+  RequiredFieldValidation,
+  EmailValidation,
+  MinLengthValidation,
+} from '@/presentation/validation/validators';
+
 import { ValidationBuilder as sut } from './validation-builder';
 import faker from 'faker';
 
