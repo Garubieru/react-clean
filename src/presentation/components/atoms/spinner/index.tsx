@@ -3,7 +3,7 @@ import Styles from './styles.scss';
 
 const Spinner: React.FC = (props) => {
   return (
-    <div {...props} data-testid="spinner" className={Styles.spinner}>
+    <div {...props} className={Styles.spinner}>
       <div />
       <div />
       <div />
