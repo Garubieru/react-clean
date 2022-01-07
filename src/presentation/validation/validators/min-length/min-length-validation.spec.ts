@@ -3,7 +3,7 @@ import { InvalidFieldError } from '../../errors';
 import faker from 'faker';
 
 const createSut = (length = 5): MinLengthValidation => {
-  return new MinLengthValidation('length', length);
+  return new MinLengthValidation(length);
 };
 
 describe('MinLengthValidation', () => {

@@ -10,7 +10,7 @@ type SutTypes = {
 
 const createSut = (): SutTypes => {
   const emailValidatorSpy = new EmailValidatorSpy();
-  const sut = new EmailValidation('email', emailValidatorSpy);
+  const sut = new EmailValidation(emailValidatorSpy);
   return { sut, emailValidatorSpy };
 };
 

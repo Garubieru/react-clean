@@ -9,32 +9,28 @@ describe('ValidationBuilder', () => {
   afterEach(() => jest.clearAllMocks());
 
   it('Should have RequiredFieldValidation', () => {
-    const fieldName = faker.database.column();
-    const validations = sut.field(fieldName).required().build();
-    expect(validations).toEqual([new RequiredFieldValidation(fieldName)]);
+    const validations = sut.field().required().build();
+    expect(validations).toEqual([new RequiredFieldValidation()]);
   });
 
   it('Should have MinLengthValidation', () => {
-    const fieldName = faker.database.column();
     const length = faker.datatype.number();
-    const validations = sut.field(fieldName).min(length).build();
-    expect(validations).toEqual([new MinLengthValidation(fieldName, length)]);
+    const validations = sut.field().min(length).build();
+    expect(validations).toEqual([new MinLengthValidation(length)]);
   });
 
   it('Should have EmailValidation', () => {
-    const fieldName = faker.database.column();
-    const validations = sut.field(fieldName).isEmail().build();
-    expect(validations).toEqual([new EmailValidation(fieldName, new EmailValidator())]);
+    const validations = sut.field().isEmail().build();
+    expect(validations).toEqual([new EmailValidation(new EmailValidator())]);
   });
 
   it('Should return a list of validations', () => {
     const length = faker.datatype.number();
-    const fieldName = faker.database.column();
-    const validations = sut.field(fieldName).required().min(length).isEmail().build();
+    const validations = sut.field().required().min(length).isEmail().build();
     expect(validations).toEqual([
-      new RequiredFieldValidation(fieldName),
-      new MinLengthValidation(fieldName, length),
-      new EmailValidation(fieldName, new EmailValidator()),
+      new RequiredFieldValidation(),
+      new MinLengthValidation(length),
+      new EmailValidation(new EmailValidator()),
     ]);
   });
 });

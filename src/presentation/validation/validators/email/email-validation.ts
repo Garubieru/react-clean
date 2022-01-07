@@ -5,10 +5,7 @@ import {
 import { InvalidFieldError } from '@/presentation/validation/errors';
 
 export class EmailValidation implements FieldValidation {
-  constructor(
-    readonly name: string,
-    private readonly emailValidator: EmailValidatorProtocol,
-  ) {}
+  constructor(private readonly emailValidator: EmailValidatorProtocol) {}
 
   validate(value: string): Error {
     return this.emailValidator.validate(value)

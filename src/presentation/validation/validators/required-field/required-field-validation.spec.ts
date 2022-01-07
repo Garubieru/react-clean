@@ -3,8 +3,7 @@ import faker from 'faker';
 import { RequiredFieldError } from '@/presentation/validation/errors';
 import { RequiredFieldValidation } from './required-field-validation';
 
-const createSut = (): RequiredFieldValidation =>
-  new RequiredFieldValidation(faker.database.column());
+const createSut = (): RequiredFieldValidation => new RequiredFieldValidation();
 
 describe('RequiredFieldValidation', () => {
   it('Should throw error when value is empty', () => {

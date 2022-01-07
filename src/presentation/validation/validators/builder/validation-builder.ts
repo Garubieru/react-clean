@@ -3,27 +3,24 @@ import { FieldValidation } from '@/presentation/validation/protocols';
 import { EmailValidator } from '@/infra/validators/email-validator/email-validator';
 
 export class ValidationBuilder {
-  private constructor(
-    private readonly fieldName: string,
-    private readonly validations: FieldValidation[],
-  ) {}
+  private constructor(private readonly validations: FieldValidation[]) {}
 
-  static field(fieldName: string): ValidationBuilder {
-    return new ValidationBuilder(fieldName, []);
+  static field(): ValidationBuilder {
+    return new ValidationBuilder([]);
   }
 
   required(): ValidationBuilder {
-    this.validations.push(new RequiredFieldValidation(this.fieldName));
+    this.validations.push(new RequiredFieldValidation());
     return this;
   }
 
   min(length: number): ValidationBuilder {
-    this.validations.push(new MinLengthValidation(this.fieldName, length));
+    this.validations.push(new MinLengthValidation(length));
     return this;
   }
 
   isEmail(): ValidationBuilder {
-    this.validations.push(new EmailValidation(this.fieldName, new EmailValidator()));
+    this.validations.push(new EmailValidation(new EmailValidator()));
     return this;
   }
 
