@@ -1,7 +1,7 @@
 import faker from 'faker';
 import { InvalidFieldError } from '@/presentation/validation/errors';
 import { EmailValidation } from './email-validation';
-import { EmailValidatorSpy } from '@/presentation/validation/test';
+import { EmailValidatorSpy } from '@/presentation/validation/validators/test';
 
 type SutTypes = {
   sut: EmailValidation;
@@ -17,21 +17,21 @@ const createSut = (): SutTypes => {
 describe('EmailValidation', () => {
   it('Should call EmailValidator with correct value', () => {
     const { sut, emailValidatorSpy } = createSut();
-    const value = faker.random.word();
+    const value = faker.internet.email();
     sut.validate(value);
     expect(emailValidatorSpy.value).toEqual(value);
   });
 
   it('Should not return error when value is valid', () => {
     const { sut } = createSut();
-    const result = sut.validate(faker.random.word());
+    const result = sut.validate(faker.internet.email());
     expect(result).toBeFalsy();
   });
 
   it('Should return error when value is invalid', () => {
     const { sut, emailValidatorSpy } = createSut();
-    jest.spyOn(emailValidatorSpy, 'validate').mockReturnValueOnce(false);
-    const result = sut.validate(faker.internet.email());
+    emailValidatorSpy.valid = false;
+    const result = sut.validate(faker.random.word());
     expect(result).toEqual(new InvalidFieldError('Invalid email'));
   });
 });
