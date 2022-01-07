@@ -36,4 +36,10 @@ describe('EmailValidator', () => {
     validateSut(sut, faker.random.words());
     expect(isEmailSpy.mock.results[0].value).toBeFalsy();
   });
+
+  it('Should return false when email is empty', () => {
+    const sut = createSut();
+    validateSut(sut, '');
+    expect(isEmailSpy.mock.results[0].value).toBeFalsy();
+  });
 });
