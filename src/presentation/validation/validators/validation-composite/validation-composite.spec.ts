@@ -1,5 +1,5 @@
 import faker from 'faker';
-import { FieldValidationSpy } from '@/presentation/validation/validators/test';
+import { FieldValidationSpy } from '@/presentation/validation/test';
 import { InvalidFieldError } from '@/presentation/validation/errors';
 import { ValidationComposite } from './validation-composite';
 

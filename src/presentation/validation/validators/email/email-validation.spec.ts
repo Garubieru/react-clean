@@ -1,7 +1,7 @@
 import faker from 'faker';
 import { InvalidFieldError } from '@/presentation/validation/errors';
 import { EmailValidation } from './email-validation';
-import { EmailValidatorSpy } from '@/presentation/validation/validators/test';
+import { EmailValidatorSpy } from '@/presentation/validation/test';
 
 type SutTypes = {
   sut: EmailValidation;
