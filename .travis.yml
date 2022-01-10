@@ -4,4 +4,4 @@ node_js:
 script:
   - prettier --check "src/**/*.(ts|tsx)"
   - eslint 'src/**'
-  - npm run test:ci
+  - npm run test:coveralls
