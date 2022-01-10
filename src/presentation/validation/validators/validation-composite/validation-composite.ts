@@ -1,14 +1,13 @@
-import { Validation, ValidationFieldValues } from '@/presentation/protocols/validation';
-import { FieldValidation } from '@/presentation/validation/protocols';
+import {
+  Validation,
+  ValidationFields,
+  ValidationFieldValues,
+} from '@/presentation/protocols/validation';
 
 export class ValidationComposite implements Validation {
-  private constructor(
-    private readonly validations: { [fieldName: string]: FieldValidation[] },
-  ) {}
+  private constructor(private readonly validations: ValidationFields) {}
 
-  static build(validations: {
-    [fieldName: string]: FieldValidation[];
-  }): ValidationComposite {
+  static build(validations: ValidationFields): ValidationComposite {
     return new ValidationComposite(validations);
   }
 
