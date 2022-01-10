@@ -61,7 +61,7 @@ const Login: React.FC<LoginProps> = ({
 
   return (
     <PageWrapper>
-      <div className={Styles.mainContainer}>
+      <div className={Styles.loginContainer}>
         <FormContext.Provider value={{ state, setState }}>
           <form className={Styles.form} onSubmit={handleSubmit} data-testid="form">
             <h2>Login</h2>
