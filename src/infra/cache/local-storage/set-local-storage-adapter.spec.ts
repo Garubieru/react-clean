@@ -21,12 +21,4 @@ describe('SetLocalStorageAdapter', () => {
     await sut.set(key, value);
     expect(localStorage.getItem(key)).toBe(value);
   });
-
-  it('Should get localStorage with correct value', async () => {
-    const sut = createSut();
-    const key = faker.database.column();
-    const value = faker.datatype.uuid();
-    await sut.set(key, value);
-    expect(localStorage.getItem(key)).toBe(value);
-  });
 });
