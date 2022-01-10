@@ -5,6 +5,8 @@ export enum HttpStatusCode {
   ok = 200,
   notFound = 404,
   serverError = 500,
+  forbidden = 403,
+  created = 201,
 }
 
 export type HttpResponse<TBody> = {
