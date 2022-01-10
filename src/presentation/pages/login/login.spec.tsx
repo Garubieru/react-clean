@@ -1,10 +1,8 @@
 import '@testing-library/jest-dom';
-import 'jest-localstorage-mock';
 import React from 'react';
+import faker from 'faker';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-
-import faker from 'faker';
 import {
   render,
   RenderResult,
@@ -145,7 +143,6 @@ const testErrorElement = (
 
 describe('Login Component', () => {
   afterEach(() => cleanup());
-  beforeEach(() => localStorage.clear());
   it('Should start screen with initial state', async () => {
     const { sut, validationStub } = await createSut({ withError: true });
 
