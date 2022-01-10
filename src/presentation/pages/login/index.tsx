@@ -3,15 +3,16 @@ import Styles from './styles.scss';
 import { Input, Button, Link, Error, PageWrapper } from '@/presentation/components';
 import { FormContext, FormContextState } from '@/presentation/context/form/form-context';
 import { Validation } from '@/presentation/protocols/validation';
-import { AuthenticationProtocol } from '@/domain/usecases';
+import { AuthenticationProtocol, StoreAccessToken } from '@/domain/usecases';
 import { useNavigate } from 'react-router-dom';
 
 type LoginProps = {
-  validation?: Validation;
-  authentication?: AuthenticationProtocol;
+  validation: Validation;
+  authentication: AuthenticationProtocol;
+  storage: StoreAccessToken;
 };
 
-const Login: React.FC<LoginProps> = ({ validation, authentication }) => {
+const Login: React.FC<LoginProps> = ({ validation, authentication, storage }) => {
   const navigate = useNavigate();
   const [state, setState] = useState<FormContextState>({
     isLoading: false,
@@ -33,7 +34,7 @@ const Login: React.FC<LoginProps> = ({ validation, authentication }) => {
         email: state.email,
         password: state.password,
       });
-      localStorage.setItem('accessToken', accessToken);
+      await storage.store(accessToken);
       navigate('/');
     } catch (e) {
       const errorMsg = e as Error;

@@ -1,3 +1,3 @@
 export interface StoreAccessToken {
-  store: (key: string, value: string) => Promise<void>;
+  store: (accessToken: string) => Promise<void>;
 }
