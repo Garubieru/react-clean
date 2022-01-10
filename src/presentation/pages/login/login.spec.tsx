@@ -12,7 +12,11 @@ import {
   cleanup,
   waitFor,
 } from '@testing-library/react';
-import { ValidationStub, AuthenticationSpy } from '@/presentation/test';
+import {
+  ValidationStub,
+  AuthenticationSpy,
+  StoreAccessTokenMock,
+} from '@/presentation/test';
 import { mockAuthentication } from '@/domain/test';
 import { Login } from '@/presentation/pages';
 import { AuthenticationParams } from '@/domain/usecases';
@@ -22,6 +26,7 @@ type SutTypes = {
   sut: RenderResult;
   validationStub: ValidationStub;
   authenticationSpy: AuthenticationSpy;
+  storageSpy: StoreAccessTokenMock;
 };
 
 type SutParams = {
@@ -40,9 +45,14 @@ const createSut = async (params?: SutParams): Promise<SutTypes> => {
   const validationStub = new ValidationStub();
   validationStub.errorMessage = params?.withError && faker.random.words();
   const authenticationSpy = new AuthenticationSpy();
+  const storageSpy = new StoreAccessTokenMock();
   const sut = render(
     <Router location={history.location} navigator={history}>
-      <Login validation={validationStub} authentication={authenticationSpy} />
+      <Login
+        validation={validationStub}
+        authentication={authenticationSpy}
+        storage={storageSpy}
+      />
     </Router>,
   );
   if (params?.populateForm) {
@@ -55,7 +65,7 @@ const createSut = async (params?: SutParams): Promise<SutTypes> => {
     );
   }
 
-  return { sut, validationStub, authenticationSpy };
+  return { sut, validationStub, authenticationSpy, storageSpy };
 };
 
 const populateForm = async (
@@ -241,15 +251,12 @@ describe('Login Component', () => {
     testErrorElement(sut, 'error-msg', 'Invalid credentials');
   });
 
-  it('Should store accessToken on localStorage on success', async () => {
-    const { authenticationSpy } = await createSut({
+  it('Should call StoreAccessToken.store with correct accessToken and redirect to /', async () => {
+    const { storageSpy, authenticationSpy } = await createSut({
       populateForm: true,
       submitForm: true,
     });
-    expect(localStorage.setItem).toBeCalledWith(
-      'accessToken',
-      authenticationSpy.account.accessToken,
-    );
+    expect(storageSpy.accessToken).toBe(authenticationSpy.account.accessToken);
     expect(history.location.pathname).toBe('/');
   });
 
