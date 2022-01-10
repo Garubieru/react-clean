@@ -1,3 +1,5 @@
+import { AccountModel } from '../models';
+
 export type AccountParams = {
   name: string;
   email: string;
@@ -6,5 +8,5 @@ export type AccountParams = {
 };
 
 export interface RemoteSignupProtocol {
-  create: (params: AccountParams) => Promise<void>;
+  create: (params: AccountParams) => Promise<AccountModel>;
 }

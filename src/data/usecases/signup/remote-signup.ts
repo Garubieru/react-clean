@@ -1,20 +1,20 @@
 import { HttpPostClient, HttpStatusCode } from '@/data/protocols/http';
 import { EmailInUseError, UnexpectedError } from '@/domain/errors';
+import { AccountModel } from '@/domain/models';
 import { AccountParams, RemoteSignupProtocol } from '@/domain/usecases/signup';
 
 export class RemoteSignup implements RemoteSignupProtocol {
   constructor(
     private readonly url: string,
-    private readonly httpPostClient: HttpPostClient<AccountParams, void>,
+    private readonly httpPostClient: HttpPostClient<AccountParams, AccountModel>,
   ) {}
 
-  async create(params: AccountParams): Promise<void> {
+  async create(params: AccountParams): Promise<AccountModel> {
     const { statusCode, body } = await this.httpPostClient.post({
       url: this.url,
       body: params,
     });
     switch (statusCode) {
-      case HttpStatusCode.created:
       case HttpStatusCode.ok:
         return body;
       case HttpStatusCode.forbidden:
