@@ -1,8 +1,8 @@
 import { HttpPostClient, HttpStatusCode } from '@/data/protocols/http';
 import { AccountCadastratedError, UnexpectedError } from '@/domain/errors';
-import { AccountParams, SigninProtocol } from '@/domain/usecases/signup';
+import { AccountParams, RemoteSignupProtocol } from '@/domain/usecases/signup';
 
-export class CreateAccount implements SigninProtocol {
+export class RemoteSignup implements RemoteSignupProtocol {
   constructor(
     private readonly url: string,
     private readonly httpPostClient: HttpPostClient<AccountParams, void>,
