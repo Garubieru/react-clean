@@ -1,4 +1,4 @@
-import { SetStorage } from '@/data/protocols/storage';
+import { SetStorage } from '@/data/protocols/cache';
 import { StoreAccessToken } from '@/domain/usecases';
 
 export class LocalStoreAccessToken implements StoreAccessToken {
