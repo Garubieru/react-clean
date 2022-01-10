@@ -24,7 +24,7 @@ type SutTypes = {
   sut: RenderResult;
   validationStub: ValidationStub;
   authenticationSpy: AuthenticationSpy;
-  storageSpy: StoreAccessTokenMock;
+  storeAccessTokenMock: StoreAccessTokenMock;
 };
 
 type SutParams = {
@@ -43,13 +43,13 @@ const createSut = async (params?: SutParams): Promise<SutTypes> => {
   const validationStub = new ValidationStub();
   validationStub.errorMessage = params?.withError && faker.random.words();
   const authenticationSpy = new AuthenticationSpy();
-  const storageSpy = new StoreAccessTokenMock();
+  const storeAccessTokenMock = new StoreAccessTokenMock();
   const sut = render(
     <Router location={history.location} navigator={history}>
       <Login
         validation={validationStub}
         authentication={authenticationSpy}
-        storage={storageSpy}
+        storeAccessToken={storeAccessTokenMock}
       />
     </Router>,
   );
@@ -63,7 +63,7 @@ const createSut = async (params?: SutParams): Promise<SutTypes> => {
     );
   }
 
-  return { sut, validationStub, authenticationSpy, storageSpy };
+  return { sut, validationStub, authenticationSpy, storeAccessTokenMock };
 };
 
 const populateForm = async (
@@ -249,11 +249,11 @@ describe('Login Component', () => {
   });
 
   it('Should call StoreAccessToken.store with correct accessToken and redirect to /', async () => {
-    const { storageSpy, authenticationSpy } = await createSut({
+    const { storeAccessTokenMock, authenticationSpy } = await createSut({
       populateForm: true,
       submitForm: true,
     });
-    expect(storageSpy.accessToken).toBe(authenticationSpy.account.accessToken);
+    expect(storeAccessTokenMock.accessToken).toBe(authenticationSpy.account.accessToken);
     expect(history.location.pathname).toBe('/');
   });
 

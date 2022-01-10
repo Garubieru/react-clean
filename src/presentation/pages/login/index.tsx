@@ -9,10 +9,14 @@ import { useNavigate } from 'react-router-dom';
 type LoginProps = {
   validation: Validation;
   authentication: AuthenticationProtocol;
-  storage: StoreAccessToken;
+  storeAccessToken: StoreAccessToken;
 };
 
-const Login: React.FC<LoginProps> = ({ validation, authentication, storage }) => {
+const Login: React.FC<LoginProps> = ({
+  validation,
+  authentication,
+  storeAccessToken,
+}) => {
   const navigate = useNavigate();
   const [state, setState] = useState<FormContextState>({
     isLoading: false,
@@ -34,7 +38,7 @@ const Login: React.FC<LoginProps> = ({ validation, authentication, storage }) =>
         email: state.email,
         password: state.password,
       });
-      await storage.store(accessToken);
+      await storeAccessToken.store(accessToken);
       navigate('/');
     } catch (e) {
       const errorMsg = e as Error;
