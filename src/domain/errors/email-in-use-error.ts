@@ -1,4 +1,4 @@
-export class AccountCadastratedError extends Error {
+export class EmailInUseError extends Error {
   constructor() {
     super('E-mail already in use');
   }

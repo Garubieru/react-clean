@@ -1,7 +1,7 @@
 import faker from 'faker';
 import { HttpStatusCode } from '@/data/protocols/http';
 import { HttpPostClientSpy } from '@/data/test';
-import { AccountCadastratedError, UnexpectedError } from '@/domain/errors';
+import { EmailInUseError, UnexpectedError } from '@/domain/errors';
 import { mockAccountCreation } from '@/domain/test';
 import { AccountParams } from '@/domain/usecases/signup';
 import { RemoteSignup } from './remote-signup';
@@ -35,13 +35,13 @@ describe('CreateAccount', () => {
     expect(httpPostClientSpy.body).toEqual(body);
   });
 
-  it('Should throw AccountCadastratedError if account email already exists', async () => {
+  it('Should throw AccountCadastratedError if httpPostClient returns 403', async () => {
     const { sut, httpPostClientSpy } = createSut();
     httpPostClientSpy.response = {
       statusCode: HttpStatusCode.forbidden,
     };
     const promise = sut.create(mockAccountCreation());
-    await expect(promise).rejects.toThrow(new AccountCadastratedError());
+    await expect(promise).rejects.toThrow(new EmailInUseError());
   });
 
   it('Should throw UnexpectedError if any error occurrs', async () => {

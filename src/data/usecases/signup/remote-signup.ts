@@ -1,5 +1,5 @@
 import { HttpPostClient, HttpStatusCode } from '@/data/protocols/http';
-import { AccountCadastratedError, UnexpectedError } from '@/domain/errors';
+import { EmailInUseError, UnexpectedError } from '@/domain/errors';
 import { AccountParams, RemoteSignupProtocol } from '@/domain/usecases/signup';
 
 export class RemoteSignup implements RemoteSignupProtocol {
@@ -18,7 +18,7 @@ export class RemoteSignup implements RemoteSignupProtocol {
       case HttpStatusCode.ok:
         return body;
       case HttpStatusCode.forbidden:
-        throw new AccountCadastratedError();
+        throw new EmailInUseError();
       default:
         throw new UnexpectedError();
     }
