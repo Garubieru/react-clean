@@ -32,6 +32,7 @@ type SutParams = {
   withError?: boolean;
   populateForm?: boolean;
   submitForm?: boolean;
+  waitSubmit?: boolean;
   throwHttpError?: boolean;
 };
 
@@ -60,6 +61,7 @@ const createSut = async (params?: SutParams): Promise<SutTypes> => {
       params?.submitForm,
       params?.authParams,
       params?.throwHttpError,
+      params?.waitSubmit,
     );
   }
 
@@ -72,6 +74,7 @@ const populateForm = async (
   submit = false,
   authParams = mockAuthentication(),
   httpError = false,
+  waitSubmit = true,
 ): Promise<void> => {
   if (httpError) {
     const error = new InvalidCredentialError();
@@ -80,15 +83,16 @@ const populateForm = async (
   populateField(sut, 'email', authParams.email);
   populateField(sut, 'password', authParams.password);
 
-  if (submit) {
-    const form = submitForm(sut);
-    await waitFor(() => form);
-  }
+  if (submit) await submitForm(sut, waitSubmit);
 };
 
-const submitForm = (sut: RenderResult): HTMLFormElement => {
+const submitForm = async (
+  sut: RenderResult,
+  waitSubmit = true,
+): Promise<HTMLFormElement> => {
   const form = sut.getByTestId('form') as HTMLFormElement;
   fireEvent.submit(form);
+  if (waitSubmit) await waitFor(() => form);
   return form;
 };
 
@@ -216,25 +220,28 @@ describe('Login Component', () => {
   });
 
   it('Should not call Authentication if form is invalid', async () => {
-    const { sut, authenticationSpy } = await createSut({
+    const { authenticationSpy } = await createSut({
       withError: true,
       populateForm: true,
+      submitForm: true,
     });
-    submitForm(sut);
     expect(authenticationSpy.callsCount).toBe(0);
   });
 
   it('Should not call Authentication if form is not fullfiled', async () => {
-    const { sut, authenticationSpy } = await createSut({
+    const { authenticationSpy } = await createSut({
       withError: true,
+      submitForm: true,
     });
-    submitForm(sut);
+
     expect(authenticationSpy.callsCount).toBe(0);
   });
 
-  it('Should not call Authentication if form is valid', async () => {
-    const { sut, authenticationSpy } = await createSut({ populateForm: true });
-    submitForm(sut);
+  it('Should call Authentication if form is valid', async () => {
+    const { authenticationSpy } = await createSut({
+      populateForm: true,
+      submitForm: true,
+    });
     expect(authenticationSpy.callsCount).toBe(1);
   });
 
@@ -262,5 +269,16 @@ describe('Login Component', () => {
     const link = sut.getByTestId('signup-link');
     fireEvent.click(link);
     expect(history.location.pathname).toBe('/signup');
+  });
+
+  it('Should render error if SaveAccessToken fails', async () => {
+    const { sut, storeAccessTokenMock } = await createSut({
+      populateForm: true,
+    });
+    jest
+      .spyOn(storeAccessTokenMock, 'store')
+      .mockReturnValueOnce(Promise.reject(new Error('error')));
+    await submitForm(sut, true);
+    testErrorElement(sut, 'error-msg', 'error');
   });
 });
