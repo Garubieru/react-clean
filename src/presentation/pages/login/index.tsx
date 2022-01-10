@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Styles from './styles.scss';
-import { Input, Button, Link, Error, PageWrapper } from '@/presentation/components';
+import { Input, Button, Link, Error, PageWrapper, Form } from '@/presentation/components';
 import { FormContext, FormContextState } from '@/presentation/context/form/form-context';
 import { Validation } from '@/presentation/protocols/validation';
 import { AuthenticationProtocol, StoreAccessToken } from '@/domain/usecases';
@@ -63,8 +63,7 @@ const Login: React.FC<LoginProps> = ({
     <PageWrapper>
       <div className={Styles.loginContainer}>
         <FormContext.Provider value={{ state, setState }}>
-          <form className={Styles.form} onSubmit={handleSubmit} data-testid="form">
-            <h2>Login</h2>
+          <Form title="Signin" onSubmit={handleSubmit} data-testid="form">
             <Input name="email" type="email" placeholder="Email" />
             <Input name="password" type="password" placeholder="Password" />
             <Button
@@ -79,7 +78,7 @@ const Login: React.FC<LoginProps> = ({
             <Link to="/signup" data-testid="signup-link">
               Create account
             </Link>
-          </form>
+          </Form>
         </FormContext.Provider>
       </div>
     </PageWrapper>

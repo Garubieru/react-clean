@@ -7,18 +7,3 @@
   align-items: center;
   justify-content: center;
 }
-
-.form {
-  padding: 1.8rem;
-  max-width: 500px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  width: 80%;
-  border: $defaultBorder;
-  border-radius: 6px;
-
-  h2 {
-    font-size: 1.8rem;
-  }
-}

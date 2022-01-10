@@ -5,3 +5,4 @@ export { default as Input } from './input';
 export { default as Link } from './link';
 export { default as Logo } from './logo';
 export { default as Spinner } from './spinner';
+export { default as Form } from './form';

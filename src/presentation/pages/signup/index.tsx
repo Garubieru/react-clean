@@ -1,6 +1,6 @@
 import React from 'react';
 import Styles from './styles.scss';
-import { Input, Button, Link, Error, PageWrapper } from '@/presentation/components';
+import { Input, Button, Link, Error, PageWrapper, Form } from '@/presentation/components';
 import { FormContext } from '@/presentation/context/form/form-context';
 
 const Signup: React.FC = () => {
@@ -8,8 +8,7 @@ const Signup: React.FC = () => {
     <PageWrapper>
       <div className={Styles.signupContainer}>
         <FormContext.Provider value={{ state: {} }}>
-          <form className={Styles.form}>
-            <h2>Signup</h2>
+          <Form title="Signup">
             <Input name="name" type="text" placeholder="Name" />
             <Input name="email" type="email" placeholder="Email" />
             <Input name="password" type="password" placeholder="Password" />
@@ -18,10 +17,10 @@ const Signup: React.FC = () => {
               type="password"
               placeholder="Repeat your password"
             />
-            <Button type="submit">Login</Button>
+            <Button type="submit">Create</Button>
             <Error />
-            <Link to="/signup">Back to signin</Link>
-          </form>
+            <Link to="/login">Back to Signin</Link>
+          </Form>
         </FormContext.Provider>
       </div>
     </PageWrapper>
