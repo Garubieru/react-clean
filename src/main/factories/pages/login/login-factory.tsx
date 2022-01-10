@@ -11,7 +11,7 @@ export const createLogin: React.FC = () => {
     <Login
       authentication={createRemoteAuthentication()}
       validation={createLoginValidation()}
-      storage={createLocalStoreAccessToken()}
+      storeAccessToken={createLocalStoreAccessToken()}
     />
   );
 };
