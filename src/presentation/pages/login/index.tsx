@@ -31,7 +31,7 @@ const Login: React.FC<LoginProps> = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    if (hasError) return;
+    if (hasError || state.isLoading) return;
     setState((prevState) => ({ ...prevState, isLoading: true }));
     try {
       const { accessToken } = await authentication.auth({
