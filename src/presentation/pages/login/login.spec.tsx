@@ -175,7 +175,7 @@ describe('Login Component', () => {
   });
 
   it('Should call StoreAccessToken.store with correct accessToken and redirect to /', async () => {
-    const { sut, storeAccessTokenMock, authenticationSpy } = await createSut({
+    const { sut, storeAccessTokenMock, authenticationSpy } = createSut({
       populateForm: true,
     });
     await Helpers.submitForm(sut, 'form');
@@ -184,14 +184,14 @@ describe('Login Component', () => {
   });
 
   it('Should go to sign up page on click', async () => {
-    const { sut } = await createSut();
+    const { sut } = createSut();
     const link = sut.getByTestId('signup-link');
     fireEvent.click(link);
     expect(history.location.pathname).toBe('/signup');
   });
 
   it('Should render error if SaveAccessToken fails', async () => {
-    const { sut, storeAccessTokenMock } = await createSut({
+    const { sut, storeAccessTokenMock } = createSut({
       populateForm: true,
     });
     const error = new Error('error');
