@@ -1,9 +1,14 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { cleanup, render, RenderResult, fireEvent } from '@testing-library/react';
+import { cleanup, render, RenderResult } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { RemoteSignupSpy, ValidationStub, Helpers } from '@/presentation/test';
+import {
+  RemoteSignupSpy,
+  ValidationStub,
+  Helpers,
+  StoreAccessTokenMock,
+} from '@/presentation/test';
 
 import Signup from '.';
 import { RequiredFieldError } from '@/presentation/validation/errors';
@@ -15,6 +20,7 @@ type SutType = {
   sut: RenderResult;
   validationStub: ValidationStub;
   remoteSignupSpy: RemoteSignupSpy;
+  storeAccessTokenMock: StoreAccessTokenMock;
 };
 
 type SutParams = {
@@ -27,10 +33,15 @@ const history = createMemoryHistory({ initialEntries: ['/signin'] });
 const createSut = (params?: SutParams): SutType => {
   const validationStub = new ValidationStub();
   const remoteSignupSpy = new RemoteSignupSpy();
+  const storeAccessTokenMock = new StoreAccessTokenMock();
   if (params?.withError) validationStub.errorMessage = new RequiredFieldError().message;
   const sut = render(
     <Router location={history.location} navigator={history}>
-      <Signup validations={validationStub} remoteSignup={remoteSignupSpy} />
+      <Signup
+        validations={validationStub}
+        remoteSignup={remoteSignupSpy}
+        storeAccessToken={storeAccessTokenMock}
+      />
     </Router>,
   );
   if (params?.populateForm) populateForm(sut, params?.formParams);
@@ -38,6 +49,7 @@ const createSut = (params?: SutParams): SutType => {
     sut,
     validationStub,
     remoteSignupSpy,
+    storeAccessTokenMock,
   };
 };
 
@@ -135,10 +147,18 @@ describe('Signup Component', () => {
     Helpers.testErrorContainer(sut, 'error-msg', error.message);
   });
 
-  it('Should go to login page on link click', async () => {
-    const { sut } = createSut();
-    const loginLink = sut.getByTestId('login-link');
-    fireEvent.click(loginLink);
-    expect(history.location.pathname).toBe('/login');
+  it('Should call storeAccessToken.store if correct accessToken and redirect to /', async () => {
+    const { sut, remoteSignupSpy, storeAccessTokenMock } = createSut();
+    await Helpers.submitForm(sut, 'create-form');
+    expect(storeAccessTokenMock.accessToken).toBe(remoteSignupSpy.account.accessToken);
+    expect(location.pathname).toBe('/');
+  });
+
+  it('Should render error if storeAccessToken.store fails', async () => {
+    const { sut, storeAccessTokenMock } = createSut();
+    const error = new Error('error');
+    jest.spyOn(storeAccessTokenMock, 'store').mockRejectedValue(error);
+    await Helpers.submitForm(sut, 'create-form');
+    Helpers.testErrorContainer(sut, 'error-msg', error.message);
   });
 });
