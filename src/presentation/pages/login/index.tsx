@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Styles from './styles.scss';
 import { Input, Button, Link, Error, PageWrapper, Form } from '@/presentation/components';
-import { FormContext, FormContextState } from '@/presentation/context/form/form-context';
+import { FormContext } from '@/presentation/context/form/form-context';
 import { Validation } from '@/presentation/protocols/validation';
 import { AuthenticationProtocol, StoreAccessToken } from '@/domain/usecases';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +18,7 @@ const Login: React.FC<LoginProps> = ({
   storeAccessToken,
 }) => {
   const navigate = useNavigate();
-  const [state, setState] = useState<FormContextState>({
+  const [state, setState] = useState({
     isLoading: false,
     email: '',
     password: '',
