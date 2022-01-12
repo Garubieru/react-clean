@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { cleanup, render, RenderResult } from '@testing-library/react';
+import { cleanup, fireEvent, render, RenderResult } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import {
@@ -160,5 +160,12 @@ describe('Signup Component', () => {
     jest.spyOn(storeAccessTokenMock, 'store').mockRejectedValue(error);
     await Helpers.submitForm(sut, 'create-form');
     Helpers.testErrorContainer(sut, 'error-msg', error.message);
+  });
+
+  it('Should redirect to login if login link is clicked', () => {
+    const { sut } = createSut();
+    const link = sut.getByTestId('login-link');
+    fireEvent.click(link);
+    expect(history.location.pathname).toBe('/login');
   });
 });
