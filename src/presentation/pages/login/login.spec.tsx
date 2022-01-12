@@ -30,7 +30,7 @@ type SutParams = {
 
 const history = createMemoryHistory({ initialEntries: ['/login'] });
 
-const createSut = async (params?: SutParams): Promise<SutTypes> => {
+const createSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub();
   validationStub.errorMessage = params?.withError && faker.random.words();
   const authenticationSpy = new AuthenticationSpy();
@@ -57,7 +57,7 @@ const populateForm = (sut: RenderResult, authParams = mockAuthentication()): voi
 describe('Login Component', () => {
   afterEach(() => cleanup());
   it('Should start screen with initial state', async () => {
-    const { sut, validationStub } = await createSut({ withError: true });
+    const { sut, validationStub } = createSut({ withError: true });
 
     Helpers.testErrorContainer(sut, 'error-msg');
 
@@ -68,48 +68,48 @@ describe('Login Component', () => {
   });
 
   it('Should throw email error if Validations fail', async () => {
-    const { sut, validationStub } = await createSut({ withError: true });
+    const { sut, validationStub } = createSut({ withError: true });
     Helpers.populateField(sut, 'email');
     Helpers.testFieldStatus(sut, 'email', validationStub.errorMessage);
   });
 
   it('Should throw password error if Validations fail', async () => {
-    const { sut, validationStub } = await createSut({ withError: true });
+    const { sut, validationStub } = createSut({ withError: true });
     Helpers.populateField(sut, 'password');
     Helpers.testFieldStatus(sut, 'password', validationStub.errorMessage);
   });
 
   it('Should not throw email error if Validations succeeds', async () => {
-    const { sut } = await createSut();
+    const { sut } = createSut();
     Helpers.populateField(sut, 'email');
     Helpers.testFieldStatus(sut, 'email');
   });
 
   it('Should not throw password error if Validations succeeds', async () => {
-    const { sut } = await createSut();
+    const { sut } = createSut();
     Helpers.populateField(sut, 'password');
     Helpers.testFieldStatus(sut, 'password');
   });
 
   it('Should not be able to submit if form is invalid', async () => {
-    const { sut } = await createSut({ withError: true, populateForm: true });
+    const { sut } = createSut({ withError: true, populateForm: true });
     Helpers.testButtonStatus(sut, 'login-button', 'disabled');
   });
 
   it('Should be able to submit if form is valid', async () => {
-    const { sut } = await createSut({ populateForm: true });
+    const { sut } = createSut({ populateForm: true });
     Helpers.testButtonStatus(sut, 'login-button', 'enabled');
   });
 
   it('Should show spinner in button when submit', async () => {
-    const { sut } = await createSut({ populateForm: true });
+    const { sut } = createSut({ populateForm: true });
     await Helpers.submitForm(sut, 'form');
     Helpers.testElementIsRendered(sut, 'spinner');
   });
 
   it('Should call Authentication with correct values', async () => {
     const authParams = mockAuthentication();
-    const { sut, authenticationSpy } = await createSut({
+    const { sut, authenticationSpy } = createSut({
       populateForm: true,
       authParams: authParams,
     });
@@ -119,7 +119,7 @@ describe('Login Component', () => {
   });
 
   it('Should button be disable while submitting', async () => {
-    const { sut } = await createSut({
+    const { sut } = createSut({
       populateForm: true,
     });
     await Helpers.submitForm(sut, 'form');
@@ -128,7 +128,7 @@ describe('Login Component', () => {
   });
 
   it('Should not call Authentication if form is invalid', async () => {
-    const { sut, authenticationSpy } = await createSut({
+    const { sut, authenticationSpy } = createSut({
       withError: true,
       populateForm: true,
     });
@@ -138,7 +138,7 @@ describe('Login Component', () => {
   });
 
   it('Should not call Authentication if form is not fullfiled', async () => {
-    const { sut, authenticationSpy } = await createSut({
+    const { sut, authenticationSpy } = createSut({
       withError: true,
     });
     await Helpers.submitForm(sut, 'form');
@@ -146,8 +146,15 @@ describe('Login Component', () => {
     expect(authenticationSpy.callsCount).toBe(0);
   });
 
+  it('Should call Authentication only once if submit is loading', async () => {
+    const { sut, authenticationSpy } = createSut({ populateForm: true });
+    await Helpers.submitForm(sut, 'form');
+    await Helpers.submitForm(sut, 'form');
+    expect(authenticationSpy.callsCount).toBe(1);
+  });
+
   it('Should call Authentication if form is valid', async () => {
-    const { sut, authenticationSpy } = await createSut({
+    const { sut, authenticationSpy } = createSut({
       populateForm: true,
     });
     await Helpers.submitForm(sut, 'form');
@@ -155,7 +162,7 @@ describe('Login Component', () => {
   });
 
   it('Should render error if Authentication fails', async () => {
-    const { sut, authenticationSpy } = await createSut({
+    const { sut, authenticationSpy } = createSut({
       populateForm: true,
     });
     const error = new InvalidCredentialError();
