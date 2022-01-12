@@ -3,14 +3,21 @@ import Styles from './styles.scss';
 import { Input, Button, Link, Error, PageWrapper, Form } from '@/presentation/components';
 import { FormContext } from '@/presentation/context/form/form-context';
 import { Validation } from '@/presentation/protocols/validation';
-import { RemoteSignupProtocol } from '@/domain/usecases';
+import { RemoteSignupProtocol, StoreAccessToken } from '@/domain/usecases';
+import { useNavigate } from 'react-router-dom';
 
 type SignupProps = {
   validations?: Validation;
   remoteSignup?: RemoteSignupProtocol;
+  storeAccessToken?: StoreAccessToken;
 };
 
-const Signup: React.FC<SignupProps> = ({ validations, remoteSignup }) => {
+const Signup: React.FC<SignupProps> = ({
+  validations,
+  remoteSignup,
+  storeAccessToken,
+}) => {
+  const navigate = useNavigate();
   const [state, setState] = useState({
     isLoading: false,
     mainError: '',
@@ -62,7 +69,14 @@ const Signup: React.FC<SignupProps> = ({ validations, remoteSignup }) => {
     setState((prevState) => ({ ...prevState, isLoading: true }));
     const { email, name, password, passwordConfirmation } = state;
     try {
-      await remoteSignup.create({ email, name, password, passwordConfirmation });
+      const { accessToken } = await remoteSignup.create({
+        email,
+        name,
+        password,
+        passwordConfirmation,
+      });
+      await storeAccessToken.store(accessToken);
+      navigate('/');
     } catch (e) {
       const error = e as Error;
       setState((prevState) => ({
