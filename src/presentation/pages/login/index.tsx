@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import Styles from './styles.scss';
+import { useNavigate } from 'react-router-dom';
 import { Input, Button, Link, Error, PageWrapper, Form } from '@/presentation/components';
 import { FormContext } from '@/presentation/context/form/form-context';
 import { Validation } from '@/presentation/protocols/validation';
 import { AuthenticationProtocol, StoreAccessToken } from '@/domain/usecases';
-import { useNavigate } from 'react-router-dom';
+import Styles from './styles.scss';
 
 type LoginProps = {
   validation: Validation;
