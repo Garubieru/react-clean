@@ -147,11 +147,11 @@ describe('Signup Component', () => {
     Helpers.testErrorContainer(sut, 'error-msg', error.message);
   });
 
-  it('Should call storeAccessToken.store if correct accessToken and redirect to /', async () => {
+  it('Should call storeAccessToken.store if correct accessToken and redirect to /login', async () => {
     const { sut, remoteSignupSpy, storeAccessTokenMock } = createSut();
     await Helpers.submitForm(sut, 'create-form');
     expect(storeAccessTokenMock.accessToken).toBe(remoteSignupSpy.account.accessToken);
-    expect(location.pathname).toBe('/');
+    expect(history.location.pathname).toBe('/login');
   });
 
   it('Should render error if storeAccessToken.store fails', async () => {

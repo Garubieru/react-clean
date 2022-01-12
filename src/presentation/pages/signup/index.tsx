@@ -76,7 +76,7 @@ const Signup: React.FC<SignupProps> = ({
         passwordConfirmation,
       });
       await storeAccessToken.store(accessToken);
-      navigate('/');
+      navigate('/login');
     } catch (e) {
       const error = e as Error;
       setState((prevState) => ({
