@@ -7,9 +7,9 @@ import { RemoteSignupProtocol, StoreAccessToken } from '@/domain/usecases';
 import Styles from './styles.scss';
 
 type SignupProps = {
-  validations?: Validation;
-  remoteSignup?: RemoteSignupProtocol;
-  storeAccessToken?: StoreAccessToken;
+  validations: Validation;
+  remoteSignup: RemoteSignupProtocol;
+  storeAccessToken: StoreAccessToken;
 };
 
 const Signup: React.FC<SignupProps> = ({

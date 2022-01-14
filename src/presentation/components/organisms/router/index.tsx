@@ -1,16 +1,16 @@
-import { Signup } from '@/presentation/pages';
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 type RouterProps = {
-  CreateLogin: React.FC;
+  login: React.FC;
+  signup: React.FC;
 };
 
-const Router: React.FC<RouterProps> = ({ CreateLogin }) => {
+const Router: React.FC<RouterProps> = ({ login: Login, signup: Signup }) => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<CreateLogin />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
     </BrowserRouter>
