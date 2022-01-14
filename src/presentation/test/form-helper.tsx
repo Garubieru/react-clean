@@ -1,4 +1,5 @@
 import { fireEvent, RenderResult, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import faker from 'faker';
 
 export const testFieldStatus = (

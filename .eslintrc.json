@@ -4,8 +4,13 @@
       "version": "detect"
     }
   },
-  "extends": ["standard-with-typescript", "prettier", "plugin:react/recommended"],
-  "plugins": ["prettier", "react"],
+  "extends": [
+    "standard-with-typescript",
+    "prettier",
+    "plugin:react/recommended",
+    "plugin:cypress/recommended"
+  ],
+  "plugins": ["prettier", "react", "cypress"],
   "parserOptions": {
     "project": "./tsconfig.json"
   },
@@ -14,5 +19,8 @@
     "@typescript-eslint/strict-boolean-expressions": "off",
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error"
+  },
+  "env": {
+    "cypress/globals": true
   }
 }

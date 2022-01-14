@@ -12,7 +12,8 @@
       "@/*": ["*"]
     },
     "allowJs": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["jest", "node"]
   },
-  "include": ["src", "./jest-setup.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "./jest-setup.ts"]
 }
