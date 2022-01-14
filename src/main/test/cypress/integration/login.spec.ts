@@ -61,4 +61,14 @@ describe('Login', () => {
     cy.getByTestId('spinner').should('not.exist');
     cy.url().should('eq', `${baseUrl}/login`);
   });
+
+  it('Should save accessToken in localStorage if credentials are valid', () => {
+    cy.getByTestId('email').focus().type('gabrielmorishita@gmail.com');
+    cy.getByTestId('password').focus().type('Bl@ck0ps23');
+    cy.getByTestId('login-button').click().getByTestId('spinner').should('exist');
+    cy.getByTestId('error-msg').should('not.exist');
+    cy.getByTestId('spinner').should('not.exist');
+    cy.url().should('eq', `${baseUrl}/`);
+    cy.window().then((window) => assert.isOk(window.localStorage.getItem('accessToken')));
+  });
 });
