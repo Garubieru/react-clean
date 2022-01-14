@@ -20,7 +20,7 @@ describe('Login', () => {
 
     cy.getByTestId('login-button').should('be.disabled');
 
-    cy.getByTestId('error-msg').should('have.css', 'display', 'none');
+    cy.getByTestId('error-msg').should('not.be.visible');
   });
 
   it('Should show error if input is invalid', () => {
@@ -32,5 +32,20 @@ describe('Login', () => {
       'contain.text',
       'Value must have more than 3 characters',
     );
+
+    cy.getByTestId('login-button').should('be.disabled');
+  });
+
+  it('Should not show error if input is valid ', () => {
+    cy.getByTestId('email').focus().type(faker.internet.email());
+    cy.getByTestId('email-status').get('svg').should('have.class', 'fa-check-circle');
+    cy.getByTestId('email-status').should('contain.text', '');
+
+    cy.getByTestId('password').focus().type(faker.datatype.string(3));
+    cy.getByTestId('password-status').get('svg').should('have.class', 'fa-check-circle');
+    cy.getByTestId('password-status').should('contain.text', '');
+
+    cy.getByTestId('login-button').should('be.enabled');
+    cy.getByTestId('error-msg').should('not.be.visible');
   });
 });
