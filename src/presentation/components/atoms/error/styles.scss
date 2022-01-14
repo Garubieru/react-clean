@@ -1,9 +1,9 @@
 @import '../../../styles/colors.scss';
 
 .errorWrapper {
-  color: $red;
+  color: $warning;
   padding: 10px;
-  border: 1px solid $red;
+  border: 1px solid $warning;
   text-align: center;
   font-size: 1.6rem;
   border-radius: 4px;

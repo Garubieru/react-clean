@@ -1,15 +1,95 @@
 @import '../../../styles/colors.scss';
 
+.inputPlaceholder {
+  position: absolute;
+  top: 9px;
+  left: 0px;
+  font-size: 1.6rem;
+  color: darken($primaryDark, 10);
+
+  pointer-events: none;
+  transition: 0.3s ease all;
+}
+
 .inputWrapper {
   width: 100%;
   display: flex;
   align-items: center;
-  border: 1px solid $primaryDark;
-  border-radius: 3px;
+  border-bottom: 1px solid darken($primaryDark, 10);
+  position: relative;
 
-  span {
+  &:focus-within {
+    &::before {
+      width: 100%;
+    }
+  }
+
+  &:not(:focus-within) {
+    .inputPlaceholder {
+      color: darken($primaryDark, 10);
+    }
+  }
+
+  &:hover {
+    &::after {
+      opacity: 1;
+      visibility: visible;
+      transition: all 0.2s;
+    }
+
+    .inputPlaceholder {
+      color: $primaryDark;
+    }
+  }
+
+  input {
+    font-size: 1.2rem;
+
+    &:focus {
+      & ~ .inputPlaceholder {
+        color: $secondaryLight;
+      }
+    }
+
+    &:focus,
+    &:not(:focus):valid {
+      & ~ .inputPlaceholder {
+        top: -10px;
+        font-size: 1.25rem;
+      }
+    }
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    opacity: 0;
+    visibility: hidden;
+    background-color: $primaryDark;
+    width: 100%;
+    height: 2px;
+    z-index: 1;
+    transition: all 0.3s;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -1px;
+    width: 0;
+    transform-origin: 0%;
+    transform: translateX(-50%);
+    background-color: $secondaryLight;
+    height: 2px;
+    z-index: 2;
+    transition: all ease 0.3s;
+  }
+
+  .info {
     font-size: 18px;
-    color: $red;
+    color: $warning;
     margin-right: 10px;
     position: relative;
 
@@ -20,7 +100,7 @@
       font-weight: 600;
       top: 10px;
       left: 20px;
-      background: $red;
+      background: $warning;
       border-radius: 5px;
       white-space: nowrap;
       padding: 4px;
@@ -28,6 +108,7 @@
       opacity: 0;
       visibility: hidden;
       transition: 0.3s;
+      z-index: 3;
     }
 
     &:hover {
@@ -46,5 +127,5 @@
 }
 
 .icon-danger {
-  color: $red;
+  color: $warning;
 }

@@ -10,7 +10,7 @@ interface InputProps
     HTMLInputElement
   > {}
 
-const Input: React.FC<InputProps> = (props) => {
+const Input: React.FC<InputProps> = ({ placeholder, ...props }) => {
   const { state, setState } = useForm();
 
   const handleFocus = (e: React.FocusEvent<HTMLInputElement, Element>): void => {
@@ -36,14 +36,16 @@ const Input: React.FC<InputProps> = (props) => {
       <input
         data-testid={props.name}
         onFocus={handleFocus}
-        {...props}
         readOnly
         onChange={handleChange}
+        required
+        {...props}
       />
-      <span data-testid={`${props.name}-status`}>
+      <span className={Styles.info} data-testid={`${props.name}-status`}>
         {getStatus()}
         {error && <div>{error}</div>}
       </span>
+      <label className={Styles.inputPlaceholder}>{placeholder}</label>
     </div>
   );
 };
