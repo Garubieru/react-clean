@@ -1,4 +1,9 @@
-import { EmailValidation, MinLengthValidation, RequiredFieldValidation } from '..';
+import {
+  EmailValidation,
+  MinLengthValidation,
+  RequiredFieldValidation,
+  CompareFieldsValidation,
+} from '..';
 import { FieldValidation } from '@/presentation/validation/protocols';
 import { EmailValidator } from '@/infra/validators/email-validator/email-validator';
 
@@ -21,6 +26,11 @@ export class ValidationBuilder {
 
   isEmail(): ValidationBuilder {
     this.validations.push(new EmailValidation(new EmailValidator()));
+    return this;
+  }
+
+  isEqual(fieldToCompare: string): ValidationBuilder {
+    this.validations.push(new CompareFieldsValidation(fieldToCompare));
     return this;
   }
 

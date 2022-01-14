@@ -15,7 +15,7 @@ export class ValidationComposite implements Validation {
     const formValues = Object.entries(values);
     const errors = formValues.reduce((ac, value) => {
       const [fieldKey, fieldValue] = value;
-      const error = this.checkFieldError(fieldKey, fieldValue);
+      const error = this.checkFieldError(fieldKey, fieldValue, values);
       return {
         ...ac,
         [fieldKey]: error,
@@ -24,10 +24,14 @@ export class ValidationComposite implements Validation {
     return errors as T;
   }
 
-  private checkFieldError(fieldName: string, fieldValue: string): string | null {
+  private checkFieldError(
+    fieldName: string,
+    fieldValue: string,
+    values: ValidationFieldValues,
+  ): string | null {
     const valueValidations = this.validations[fieldName];
     for (const validation of valueValidations) {
-      const validationError = validation.validate(fieldValue);
+      const validationError = validation.validate(fieldValue, values);
       if (validationError) return validationError.message;
     }
     return null;
