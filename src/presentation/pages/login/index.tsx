@@ -20,6 +20,7 @@ const Login: React.FC<LoginProps> = ({
   const navigate = useNavigate();
   const [state, setState] = useState({
     isLoading: false,
+    isFormInvalid: true,
     email: '',
     password: '',
     emailError: '',
@@ -27,11 +28,9 @@ const Login: React.FC<LoginProps> = ({
     mainError: '',
   });
 
-  const hasError = !!state.emailError || !!state.passwordError;
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    if (hasError || state.isLoading) return;
+    if (state.isFormInvalid || state.isLoading) return;
     setState((prevState) => ({ ...prevState, isLoading: true }));
     try {
       const { accessToken } = await authentication.auth({
@@ -51,11 +50,15 @@ const Login: React.FC<LoginProps> = ({
   };
 
   useEffect(() => {
-    const errors = validation.validate({ email: state.email, password: state.password });
+    const { email, password } = validation.validate({
+      email: state.email,
+      password: state.password,
+    });
     setState((prevState) => ({
       ...prevState,
-      emailError: errors.email,
-      passwordError: errors.password,
+      emailError: email,
+      passwordError: password,
+      isFormInvalid: !!email || !!password,
     }));
   }, [state.email, state.password]);
 
@@ -70,7 +73,7 @@ const Login: React.FC<LoginProps> = ({
               type="submit"
               data-testid="login-button"
               isLoading={state.isLoading}
-              disabled={hasError}
+              disabled={state.isFormInvalid}
             >
               Login
             </Button>

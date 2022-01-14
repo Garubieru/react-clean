@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input, Button, Link, Error, PageWrapper, Form } from '@/presentation/components';
 import { FormContext } from '@/presentation/context/form/form-context';
@@ -20,6 +20,7 @@ const Signup: React.FC<SignupProps> = ({
   const navigate = useNavigate();
   const [state, setState] = useState({
     isLoading: false,
+    isFormInvalid: true,
     mainError: '',
     name: '',
     nameError: '',
@@ -46,26 +47,17 @@ const Signup: React.FC<SignupProps> = ({
       nameError: errors.name,
       passwordError: errors.password,
       passwordConfirmationError: errors.passwordConfirmation,
+      isFormInvalid:
+        !!errors.email ||
+        !!errors.password ||
+        !!errors.password ||
+        !!errors.passwordConfirmation,
     }));
   }, [state.email, state.name, state.password, state.passwordConfirmation]);
 
-  const hasErrors = useMemo(
-    () =>
-      !!state.emailError ||
-      !!state.nameError ||
-      !!state.passwordError ||
-      !!state.passwordConfirmationError,
-    [
-      state.emailError,
-      state.nameError,
-      state.passwordError,
-      state.passwordConfirmationError,
-    ],
-  );
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    if (hasErrors || state.isLoading) return;
+    if (state.isFormInvalid || state.isLoading) return;
     setState((prevState) => ({ ...prevState, isLoading: true }));
     const { email, name, password, passwordConfirmation } = state;
     try {
@@ -103,7 +95,7 @@ const Signup: React.FC<SignupProps> = ({
             <Button
               type="submit"
               data-testid="create-btn"
-              disabled={hasErrors}
+              disabled={state.isFormInvalid}
               isLoading={state.isLoading}
             >
               Create
