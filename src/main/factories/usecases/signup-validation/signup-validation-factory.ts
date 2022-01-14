@@ -6,7 +6,15 @@ export const createSignupValidation = (): Validation => {
   return ValidationComposite.build({
     name: ValidationBuilder.field().required().min(3).build(),
     email: ValidationBuilder.field().required().isEmail().build(),
-    password: ValidationBuilder.field().required().min(3).build(),
-    passwordConfirmation: ValidationBuilder.field().required().min(3).build(),
+    password: ValidationBuilder.field()
+      .required()
+      .min(3)
+      .isEqual('passwordConfirmation')
+      .build(),
+    passwordConfirmation: ValidationBuilder.field()
+      .required()
+      .min(3)
+      .isEqual('password')
+      .build(),
   });
 };
