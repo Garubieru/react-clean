@@ -1,6 +1,6 @@
 import faker from 'faker';
 import { CompareFieldsValidation } from './compare-fields-validation';
-import { CompareFieldError } from '@/presentation/validation/errors';
+import { InvalidFieldError } from '@/presentation/validation/errors';
 
 const createSut = (fieldToCompare = faker.database.column()): CompareFieldsValidation =>
   new CompareFieldsValidation(fieldToCompare);
@@ -11,7 +11,7 @@ describe('CompareFieldsValidation', () => {
     const result = sut.validate(faker.random.word(), {
       [faker.database.column()]: faker.random.word(),
     });
-    expect(result).toEqual(new CompareFieldError());
+    expect(result).toEqual(new InvalidFieldError('Fields must be equal'));
   });
 
   it('Should succeed if fields are equal', () => {
