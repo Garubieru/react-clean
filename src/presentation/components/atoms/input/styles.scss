@@ -52,7 +52,7 @@
     }
 
     &:focus,
-    &:not(:focus):valid {
+    &:not(:placeholder-shown) {
       & ~ .inputPlaceholder {
         top: -10px;
         font-size: 1.25rem;
@@ -93,7 +93,7 @@
     margin-right: 10px;
     position: relative;
 
-    div {
+    .errorMsg {
       cursor: default;
       position: absolute;
       color: $white;

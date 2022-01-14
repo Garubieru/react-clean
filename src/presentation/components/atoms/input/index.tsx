@@ -38,12 +38,12 @@ const Input: React.FC<InputProps> = ({ placeholder, ...props }) => {
         onFocus={handleFocus}
         readOnly
         onChange={handleChange}
-        required
+        placeholder=" "
         {...props}
       />
       <span className={Styles.info} data-testid={`${props.name}-status`}>
         {getStatus()}
-        {error && <div>{error}</div>}
+        {error && <div className={Styles.errorMsg}>{error}</div>}
       </span>
       <label className={Styles.inputPlaceholder}>{placeholder}</label>
     </div>
