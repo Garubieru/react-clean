@@ -1,5 +1,7 @@
 import faker from 'faker';
 
+const baseUrl = Cypress.config().baseUrl;
+
 describe('Login', () => {
   beforeEach(() => {
     cy.visit('login');
@@ -47,5 +49,16 @@ describe('Login', () => {
 
     cy.getByTestId('login-button').should('be.enabled');
     cy.getByTestId('error-msg').should('not.be.visible');
+  });
+
+  it('Should show error message if invalid credentials are provided', () => {
+    cy.getByTestId('email').focus().type(faker.internet.email());
+    cy.getByTestId('password').focus().type(faker.datatype.string(3));
+    cy.getByTestId('login-button').click().getByTestId('spinner').should('exist');
+    cy.getByTestId('error-msg')
+      .should('exist')
+      .should('have.text', 'Invalid credentials');
+    cy.getByTestId('spinner').should('not.exist');
+    cy.url().should('eq', `${baseUrl}/login`);
   });
 });
