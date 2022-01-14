@@ -27,6 +27,7 @@ const Input: React.FC<InputProps> = (props) => {
     <FontAwesomeIcon
       icon={error ? faExclamationCircle : faCheckCircle}
       className={Styles[`icon-${error ? 'warning' : 'success'}`]}
+      data-testid={`${props.name}-icon-status`}
     />
   );
 
