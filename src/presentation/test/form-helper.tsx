@@ -9,7 +9,7 @@ export const testFieldStatus = (
 ): void => {
   const inputWrap = sut.getByTestId(`${fieldName}-input-wrap`);
   expect(inputWrap).toHaveAttribute('data-status', error ? 'warning' : 'success');
-  expect(inputWrap.querySelector('#error-msg')).toHaveTextContent(error || '');
+  expect(inputWrap.querySelector('.inputErrorMsg')).toHaveTextContent(error || '');
 };
 
 export const testButtonStatus = (
