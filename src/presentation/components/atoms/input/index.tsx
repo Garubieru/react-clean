@@ -15,7 +15,7 @@ const Input: React.FC<InputProps> = ({ placeholder, ...props }) => {
     const currentInput = e.currentTarget;
     currentInput.readOnly = false;
     const wrapper = e.target.parentElement;
-    wrapper.setAttribute('data-showStatus', 'true');
+    wrapper.setAttribute('data-showstatus', 'true');
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {

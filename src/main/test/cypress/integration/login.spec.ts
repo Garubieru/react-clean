@@ -1,6 +1,11 @@
 import faker from 'faker';
+import * as Helpers from '../support/form-helper';
 
-const baseUrl = Cypress.config().baseUrl;
+const simulateValidSubmit = (): void => {
+  Helpers.populateField('email', faker.internet.email());
+  Helpers.populateField('password', faker.internet.password(3));
+  Helpers.submitForm('login-button');
+};
 
 describe('Login', () => {
   beforeEach(() => {
@@ -8,64 +13,28 @@ describe('Login', () => {
   });
 
   it('Should render page with initial state', () => {
-    cy.getByTestId('email').should('have.attr', 'readonly');
-    cy.getByTestId('email-input-wrap')
-      .should('have.attr', 'data-status', 'warning')
-      .should('have.attr', 'data-showstatus', 'false');
-    cy.getByTestId('email-input-status')
-      .should('contain.text', 'Field is required')
-      .should('not.be.visible');
-
-    cy.getByTestId('password').should('have.attr', 'readonly');
-    cy.getByTestId('password-input-wrap')
-      .should('have.attr', 'data-status', 'warning')
-      .should('have.attr', 'data-showstatus', 'false');
-    cy.getByTestId('password-input-status')
-      .should('contain.text', 'Field is required')
-      .should('not.be.visible');
-
-    cy.getByTestId('login-button').should('be.disabled');
-
-    cy.getByTestId('error-msg').should('not.be.visible');
+    Helpers.testFieldStatus('email', 'Field is required');
+    Helpers.testFieldStatus('password', 'Field is required');
+    Helpers.testButtonStatus('login-button', 'disabled');
+    Helpers.testErrorContainer('error-msg');
   });
 
   it('Should show error if input is invalid', () => {
-    cy.getByTestId('email').focus().type(faker.random.word());
-    cy.getByTestId('email-input-wrap')
-      .should('have.attr', 'data-status', 'warning')
-      .should('have.attr', 'data-showstatus', 'true');
-
-    cy.getByTestId('email-input-status')
-      .should('contain.text', 'Invalid email')
-      .should('be.visible');
-
-    cy.getByTestId('password').focus().type(faker.datatype.string(2));
-    cy.getByTestId('password-input-wrap')
-      .should('have.attr', 'data-status', 'warning')
-      .should('have.attr', 'data-showstatus', 'true');
-
-    cy.getByTestId('password-input-status')
-      .should('contain.text', 'Value must have more than 3 characters')
-      .should('be.visible');
-
-    cy.getByTestId('login-button').should('be.disabled');
+    Helpers.populateField('email');
+    Helpers.testFieldStatus('email', 'Invalid email', false);
+    Helpers.populateField('password', faker.internet.password(2));
+    Helpers.testFieldStatus('password', 'Value must have more than 3 characters', false);
+    Helpers.testButtonStatus('login-button', 'disabled');
   });
 
   it('Should not show error if input is valid ', () => {
-    cy.getByTestId('email').focus().type(faker.internet.email());
-    cy.getByTestId('email-input-wrap').should('have.attr', 'data-status', 'success');
-    cy.getByTestId('email-input-status')
-      .should('not.be.visible')
-      .should('contain.text', '');
+    Helpers.populateField('email', faker.internet.email());
+    Helpers.testFieldStatus('email', '', false);
+    Helpers.populateField('password', faker.internet.password(3));
+    Helpers.testFieldStatus('password', '', false);
 
-    cy.getByTestId('password').focus().type(faker.datatype.string(3));
-    cy.getByTestId('password-input-wrap').should('have.attr', 'data-status', 'success');
-    cy.getByTestId('password-input-status')
-      .should('not.be.visible')
-      .should('contain.text', '');
-
-    cy.getByTestId('login-button').should('be.enabled');
-    cy.getByTestId('error-msg').should('not.be.visible');
+    Helpers.testButtonStatus('login-button', 'enabled');
+    Helpers.testErrorContainer('error-msg');
   });
 
   it('Should throw InvalidCredentialsError message if invalid credentials are provided', () => {
@@ -81,14 +50,10 @@ describe('Login', () => {
         },
       },
     ).as('error');
-    cy.getByTestId('email').focus().type(faker.internet.email());
-    cy.getByTestId('password').focus().type(faker.internet.password(3));
-    cy.getByTestId('login-button').click();
-    cy.getByTestId('error-msg')
-      .should('exist')
-      .should('have.text', 'Invalid credentials');
-    cy.getByTestId('spinner').should('not.exist');
-    cy.url().should('eq', `${baseUrl}/login`);
+    simulateValidSubmit();
+    Helpers.testErrorContainer('error-msg', 'Invalid credentials');
+    Helpers.testElementExists('spinner', 'not.exist');
+    Helpers.testWindowUrl('/login');
   });
 
   it('Should throw UnexpectedError if statusCode is different from 401', () => {
@@ -104,17 +69,10 @@ describe('Login', () => {
         },
       },
     );
-    cy.getByTestId('email').focus().type(faker.internet.email());
-    cy.getByTestId('password').focus().type(faker.internet.password());
-    cy.getByTestId('login-button').click();
-    cy.getByTestId('error-msg')
-      .should('exist')
-      .should('contain.text', 'An unexpected error ocurred.');
-    cy.getByTestId('spinner').should('not.exist');
-    cy.url().should('eq', `${baseUrl}/login`);
-    cy.window().then((window) =>
-      assert.isNotOk(window.localStorage.getItem('accessToken')),
-    );
+    simulateValidSubmit();
+    Helpers.testErrorContainer('error-msg', 'An unexpected error ocurred.');
+    Helpers.testElementExists('spinner', 'not.exist');
+    Helpers.testWindowUrl('/login');
   });
 
   it('Should show UnexpectedError if body returns invalid data', () => {
@@ -130,16 +88,10 @@ describe('Login', () => {
         },
       },
     );
-    cy.getByTestId('email').focus().type(faker.internet.email());
-    cy.getByTestId('password').focus().type(faker.internet.password()).type('{enter}');
-    cy.getByTestId('error-msg')
-      .should('exist')
-      .should('contain.text', 'An unexpected error ocurred.');
-    cy.getByTestId('spinner').should('not.exist');
-    cy.url().should('eq', `${baseUrl}/login`);
-    cy.window().then((window) =>
-      assert.notOk(window.localStorage.getItem('accessToken')),
-    );
+    simulateValidSubmit();
+    Helpers.testErrorContainer('error-msg', 'An unexpected error ocurred.');
+    Helpers.testElementExists('spinner', 'not.exist');
+    Helpers.testWindowUrl('/login');
   });
 
   it('Should save accessToken in localStorage if credentials are valid', () => {
@@ -155,13 +107,10 @@ describe('Login', () => {
         },
       },
     );
-    cy.getByTestId('email').focus().type(faker.internet.email());
-    cy.getByTestId('password').focus().type(faker.internet.password());
-    cy.getByTestId('login-button').click();
-    cy.getByTestId('error-msg').should('not.exist');
-    cy.getByTestId('spinner').should('not.exist');
-    cy.url().should('eq', `${baseUrl}/`);
-    cy.window().then((window) => assert.isOk(window.localStorage.getItem('accessToken')));
+    simulateValidSubmit();
+    Helpers.testElementExists('spinner', 'not.exist');
+    Helpers.testWindowUrl('/');
+    Helpers.testLocalStorage('accessToken', 'isOk');
   });
 
   it('Should prevent multiple submits', () => {
@@ -177,10 +126,9 @@ describe('Login', () => {
         },
       },
     ).as('login-request');
-    cy.getByTestId('email').focus().type(faker.internet.email());
-    cy.getByTestId('password').focus().type(faker.internet.password());
-    cy.getByTestId('login-button').dblclick();
-    cy.get('@login-request.all').should('have.length', 1);
+    simulateValidSubmit();
+    Helpers.testWindowUrl('/');
+    Helpers.testApiCalls('login-request', 1);
   });
 
   it('Should not be able to submit if form is invalid', () => {
@@ -196,8 +144,9 @@ describe('Login', () => {
         },
       },
     ).as('login-request');
-    cy.getByTestId('email').focus().type(faker.random.words());
-    cy.getByTestId('password').focus().type(faker.internet.password(2)).type('{enter}');
-    cy.get('@login-request.all').should('have.length', 0);
+    Helpers.populateField('email', faker.internet.email()).type('{enter}');
+    Helpers.testWindowUrl('/login');
+    Helpers.testApiCalls('login-request', 0);
+    Helpers.testLocalStorage('accessToken', 'isNotOk');
   });
 });
