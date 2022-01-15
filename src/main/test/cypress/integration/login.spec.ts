@@ -51,10 +51,22 @@ describe('Login', () => {
     cy.getByTestId('error-msg').should('not.be.visible');
   });
 
-  it('Should show error message if invalid credentials are provided', () => {
+  it('Should throw InvalidCredentialsError message if invalid credentials are provided', () => {
+    cy.intercept(
+      {
+        method: 'POST',
+        url: /login/,
+      },
+      {
+        statusCode: 401,
+        body: {
+          error: faker.random.words(),
+        },
+      },
+    ).as('error');
     cy.getByTestId('email').focus().type(faker.internet.email());
-    cy.getByTestId('password').focus().type(faker.datatype.string(3));
-    cy.getByTestId('login-button').click().getByTestId('spinner').should('exist');
+    cy.getByTestId('password').focus().type(faker.internet.password(3));
+    cy.getByTestId('login-button').click();
     cy.getByTestId('error-msg')
       .should('exist')
       .should('have.text', 'Invalid credentials');
@@ -62,10 +74,74 @@ describe('Login', () => {
     cy.url().should('eq', `${baseUrl}/login`);
   });
 
+  it('Should throw UnexpectedError if statusCode is different from 401', () => {
+    cy.intercept(
+      {
+        method: 'POST',
+        url: /login/,
+      },
+      {
+        statusCode: 400,
+        body: {
+          error: faker.random.word(),
+        },
+      },
+    );
+    cy.getByTestId('email').focus().type(faker.internet.email());
+    cy.getByTestId('password').focus().type(faker.internet.password());
+    cy.getByTestId('login-button').click();
+    cy.getByTestId('error-msg')
+      .should('exist')
+      .should('contain.text', 'An unexpected error ocurred.');
+    cy.getByTestId('spinner').should('not.exist');
+    cy.url().should('eq', `${baseUrl}/login`);
+    cy.window().then((window) =>
+      assert.isNotOk(window.localStorage.getItem('accessToken')),
+    );
+  });
+
+  it('Should show UnexpectedError if body returns invalid data', () => {
+    cy.intercept(
+      {
+        method: 'POST',
+        url: /login/,
+      },
+      {
+        statusCode: 200,
+        body: {
+          invalidPropery: faker.datatype.uuid(),
+        },
+      },
+    );
+    cy.getByTestId('email').focus().type(faker.internet.email());
+    cy.getByTestId('password').focus().type(faker.internet.password());
+    cy.getByTestId('login-button').click();
+    cy.getByTestId('error-msg')
+      .should('exist')
+      .should('contain.text', 'An unexpected error ocurred.');
+    cy.getByTestId('spinner').should('not.exist');
+    cy.url().should('eq', `${baseUrl}/login`);
+    cy.window().then((window) =>
+      assert.notOk(window.localStorage.getItem('accessToken')),
+    );
+  });
+
   it('Should save accessToken in localStorage if credentials are valid', () => {
-    cy.getByTestId('email').focus().type('gabrielmorishita@gmail.com');
-    cy.getByTestId('password').focus().type('Bl@ck0ps23');
-    cy.getByTestId('login-button').click().getByTestId('spinner').should('exist');
+    cy.intercept(
+      {
+        method: 'POST',
+        url: /login/,
+      },
+      {
+        statusCode: 200,
+        body: {
+          accessToken: faker.datatype.uuid(),
+        },
+      },
+    );
+    cy.getByTestId('email').focus().type(faker.internet.email());
+    cy.getByTestId('password').focus().type(faker.internet.password());
+    cy.getByTestId('login-button').click();
     cy.getByTestId('error-msg').should('not.exist');
     cy.getByTestId('spinner').should('not.exist');
     cy.url().should('eq', `${baseUrl}/`);
