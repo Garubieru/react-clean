@@ -165,4 +165,22 @@ describe('Login', () => {
     cy.getByTestId('login-button').dblclick();
     cy.get('@login-request.all').should('have.length', 1);
   });
+
+  it('Should not be able to submit if form is invalid', () => {
+    cy.intercept(
+      {
+        method: 'POST',
+        url: /login/,
+      },
+      {
+        statusCode: 200,
+        body: {
+          accessToken: faker.datatype.uuid(),
+        },
+      },
+    ).as('login-request');
+    cy.getByTestId('email').focus().type(faker.random.words());
+    cy.getByTestId('password').focus().type(faker.internet.password(2)).type('{enter}');
+    cy.get('@login-request.all').should('have.length', 0);
+  });
 });
