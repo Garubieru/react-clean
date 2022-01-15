@@ -1,21 +1,23 @@
 import React from 'react';
 import Styles from './styles.scss';
 
-interface FormProps
-  extends React.DetailedHTMLProps<
-    React.FormHTMLAttributes<HTMLFormElement>,
-    HTMLFormElement
-  > {
+interface FormContainerProps
+  extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
   title: string;
 }
 
-const Form: React.FC<FormProps> = ({ title, children, className, ...rest }) => {
+const FormContainer: React.FC<FormContainerProps> = ({
+  title,
+  children,
+  className,
+  ...rest
+}) => {
   return (
-    <form className={`${Styles.form} ${className}`} {...rest}>
+    <div className={`${Styles.form} ${className}`} {...rest}>
       <h2>{title}</h2>
       {children}
-    </form>
+    </div>
   );
 };
 
-export default Form;
+export default FormContainer;

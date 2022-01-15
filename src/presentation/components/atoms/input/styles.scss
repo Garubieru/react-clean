@@ -1,35 +1,45 @@
 @import '../../../styles/colors.scss';
 
-.inputPlaceholder {
-  position: absolute;
-  top: 9px;
-  left: 0px;
-  font-size: 1.6rem;
-  color: darken($primaryDark, 10);
-
-  pointer-events: none;
-  transition: 0.3s ease all;
-}
-
 .inputWrapper {
-  width: 100%;
-  display: flex;
-  align-items: center;
   border-bottom: 1px solid darken($primaryDark, 10);
-  color: darken($primaryDark, 10);
+  display: flex;
   position: relative;
 
-  &:focus-within {
-    &::before {
-      width: 100%;
+  &[data-showstatus='true'] {
+    &[data-status='warning'] {
+      .inputPlaceholder {
+        color: $warning !important;
+      }
+      border-color: $warning;
+      &::after {
+        background-color: $warning;
+      }
+      &::before {
+        background-color: darken($warning, 14);
+      }
+    }
+
+    &[data-status='success'] {
+      .inputPlaceholder {
+        color: $success !important;
+      }
+      border-color: $success;
+      &::after {
+        background-color: $success;
+      }
+      &::before {
+        background-color: darken($success, 14);
+      }
+    }
+
+    .errorMsg {
+      opacity: 1;
     }
   }
 
   &:hover {
     &::after {
       opacity: 1;
-      visibility: visible;
-      transition: all 0.2s;
     }
 
     .inputPlaceholder {
@@ -37,82 +47,70 @@
     }
   }
 
-  input {
-    font-size: 1.2rem;
-
-    &:focus {
-      & ~ .inputPlaceholder {
-        color: $secondaryLight;
-      }
+  &:focus-within {
+    &::before {
+      width: 100%;
     }
+  }
+
+  .styledInput {
+    font-size: 1.7rem;
+    width: 100%;
+    padding: 6px 0 3px;
 
     &:focus,
     &:not(:placeholder-shown) {
       & ~ .inputPlaceholder {
-        top: -10px;
-        font-size: 1.25rem;
+        font-size: 1.3rem;
+        bottom: 25px;
+        color: $secondaryLight;
       }
     }
+  }
+
+  .inputPlaceholder {
+    position: absolute;
+    left: 0;
+    font-size: 1.7rem;
+    bottom: 3px;
+    transition: all ease 0.2s;
+    user-select: none;
+    pointer-events: none;
+    color: darken($primaryDark, 10);
+  }
+
+  .errorMsg {
+    position: absolute;
+    left: 0;
+    bottom: -20px;
+    font-size: 1.3rem;
+    opacity: 0;
+    color: $warning;
   }
 
   &::after {
     content: '';
     position: absolute;
     bottom: -1px;
-    opacity: 0;
-    visibility: hidden;
+    left: 0;
     background-color: $primaryDark;
-    width: 100%;
+    opacity: 0;
     height: 2px;
-    z-index: 1;
-    transition: all 0.3s;
+    width: 100%;
+    transition: all ease 0.2s;
   }
 
   &::before {
     content: '';
     position: absolute;
-    left: 50%;
     bottom: -1px;
-    width: 0;
-    transform-origin: 0%;
+    left: 50%;
     transform: translateX(-50%);
     background-color: $secondaryLight;
     height: 2px;
-    z-index: 2;
-    transition: all ease 0.3s;
-  }
-
-  .info {
-    font-size: 18px;
-    color: $warning;
-    margin-right: 10px;
-    position: relative;
-    cursor: pointer;
-
-    .errorMsg {
-      cursor: default;
-      position: absolute;
-      color: $white;
-      font-weight: 600;
-      top: 10px;
-      left: 20px;
-      background: $warning;
-      border-radius: 5px;
-      white-space: nowrap;
-      padding: 4px;
-      font-size: 1.5rem;
-      opacity: 0;
-      visibility: hidden;
-      transition: 0.3s;
-      z-index: 3;
-    }
-
-    &:hover {
-      .errorMsg {
-        opacity: 1;
-        visibility: visible;
-      }
-    }
+    width: 0;
+    transition: all ease 0.2s;
+    z-index: 1;
   }
 }
 

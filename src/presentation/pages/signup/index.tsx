@@ -83,23 +83,29 @@ const Signup: React.FC<SignupProps> = ({
     <PageWrapper>
       <div className={Styles.signupContainer}>
         <FormContext.Provider value={{ state, setState }}>
-          <Form title="Signup" onSubmit={handleSubmit} data-testid="create-form">
-            <Input name="name" type="text" placeholder="Name" />
-            <Input name="email" type="email" placeholder="Email" />
-            <Input name="password" type="password" placeholder="Password" />
-            <Input
-              name="passwordConfirmation"
-              type="password"
-              placeholder="Repeat your password"
-            />
-            <Button
-              type="submit"
-              data-testid="create-btn"
-              disabled={state.isFormInvalid}
-              isLoading={state.isLoading}
+          <Form title="Signup">
+            <form
+              onSubmit={handleSubmit}
+              data-testid="signup-form"
+              className={Styles.form}
             >
-              Create
-            </Button>
+              <Input name="name" type="text" placeholder="Name" />
+              <Input name="email" type="email" placeholder="Email" />
+              <Input name="password" type="password" placeholder="Password" />
+              <Input
+                name="passwordConfirmation"
+                type="password"
+                placeholder="Repeat your password"
+              />
+              <Button
+                type="submit"
+                data-testid="create-btn"
+                disabled={state.isFormInvalid}
+                isLoading={state.isLoading}
+              >
+                Create
+              </Button>
+            </form>
             <Error />
             <Link to="/login" data-testid="login-link">
               Back to Signin
