@@ -103,7 +103,7 @@ describe('Login Component', () => {
 
   it('Should show spinner in button when submit', async () => {
     const { sut } = createSut({ populateForm: true });
-    await Helpers.submitForm(sut, 'form');
+    await Helpers.submitForm(sut, 'login-form');
     Helpers.testElementIsRendered(sut, 'spinner');
   });
 
@@ -113,7 +113,7 @@ describe('Login Component', () => {
       populateForm: true,
       authParams: authParams,
     });
-    await Helpers.submitForm(sut, 'form');
+    await Helpers.submitForm(sut, 'login-form');
 
     expect(authenticationSpy.params).toEqual(authParams);
   });
@@ -122,7 +122,7 @@ describe('Login Component', () => {
     const { sut } = createSut({
       populateForm: true,
     });
-    await Helpers.submitForm(sut, 'form');
+    await Helpers.submitForm(sut, 'login-form');
 
     Helpers.testButtonStatus(sut, 'login-button', 'disabled');
   });
@@ -132,7 +132,7 @@ describe('Login Component', () => {
       withError: true,
       populateForm: true,
     });
-    await Helpers.submitForm(sut, 'form');
+    await Helpers.submitForm(sut, 'login-form');
 
     expect(authenticationSpy.callsCount).toBe(0);
   });
@@ -141,15 +141,15 @@ describe('Login Component', () => {
     const { sut, authenticationSpy } = createSut({
       withError: true,
     });
-    await Helpers.submitForm(sut, 'form');
+    await Helpers.submitForm(sut, 'login-form');
 
     expect(authenticationSpy.callsCount).toBe(0);
   });
 
   it('Should call Authentication only once if submit is loading', async () => {
     const { sut, authenticationSpy } = createSut({ populateForm: true });
-    await Helpers.submitForm(sut, 'form');
-    await Helpers.submitForm(sut, 'form');
+    await Helpers.submitForm(sut, 'login-form');
+    await Helpers.submitForm(sut, 'login-form');
     expect(authenticationSpy.callsCount).toBe(1);
   });
 
@@ -157,7 +157,7 @@ describe('Login Component', () => {
     const { sut, authenticationSpy } = createSut({
       populateForm: true,
     });
-    await Helpers.submitForm(sut, 'form');
+    await Helpers.submitForm(sut, 'login-form');
     expect(authenticationSpy.callsCount).toBe(1);
   });
 
@@ -170,7 +170,7 @@ describe('Login Component', () => {
       .spyOn(authenticationSpy, 'auth')
       .mockReturnValueOnce(Promise.reject(new InvalidCredentialError()));
 
-    await Helpers.submitForm(sut, 'form');
+    await Helpers.submitForm(sut, 'login-form');
     Helpers.testErrorContainer(sut, 'error-msg', error.message);
   });
 
@@ -178,7 +178,7 @@ describe('Login Component', () => {
     const { sut, storeAccessTokenMock, authenticationSpy } = createSut({
       populateForm: true,
     });
-    await Helpers.submitForm(sut, 'form');
+    await Helpers.submitForm(sut, 'login-form');
     expect(storeAccessTokenMock.accessToken).toBe(authenticationSpy.account.accessToken);
     expect(history.location.pathname).toBe('/');
   });
@@ -196,7 +196,7 @@ describe('Login Component', () => {
     });
     const error = new Error('error');
     jest.spyOn(storeAccessTokenMock, 'store').mockReturnValueOnce(Promise.reject(error));
-    await Helpers.submitForm(sut, 'form');
+    await Helpers.submitForm(sut, 'login-form');
     Helpers.testErrorContainer(sut, 'error-msg', error.message);
   });
 });

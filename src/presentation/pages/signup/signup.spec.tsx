@@ -104,7 +104,7 @@ describe('Signup Component', () => {
 
   it('Should show spinner when form is submitting', async () => {
     const { sut } = createSut();
-    await Helpers.submitForm(sut, 'create-form');
+    await Helpers.submitForm(sut, 'signup-form');
     Helpers.testElementIsRendered(sut, 'spinner');
   });
 
@@ -114,7 +114,7 @@ describe('Signup Component', () => {
       populateForm: true,
       formParams: params,
     });
-    await Helpers.submitForm(sut, 'create-form');
+    await Helpers.submitForm(sut, 'signup-form');
     expect(remoteSignupSpy.params).toEqual(params);
   });
 
@@ -123,7 +123,7 @@ describe('Signup Component', () => {
       populateForm: true,
       withError: true,
     });
-    await Helpers.submitForm(sut, 'create-form');
+    await Helpers.submitForm(sut, 'signup-form');
     expect(remoteSignupSpy.callsCount).toBe(0);
   });
 
@@ -131,8 +131,8 @@ describe('Signup Component', () => {
     const { sut, remoteSignupSpy } = createSut({
       populateForm: true,
     });
-    await Helpers.submitForm(sut, 'create-form');
-    await Helpers.submitForm(sut, 'create-form');
+    await Helpers.submitForm(sut, 'signup-form');
+    await Helpers.submitForm(sut, 'signup-form');
     Helpers.testButtonStatus(sut, 'create-btn', 'disabled');
     expect(remoteSignupSpy.callsCount).toBe(1);
   });
@@ -143,13 +143,13 @@ describe('Signup Component', () => {
     });
     const error = new EmailInUseError();
     jest.spyOn(remoteSignupSpy, 'create').mockRejectedValueOnce(error);
-    await Helpers.submitForm(sut, 'create-form');
+    await Helpers.submitForm(sut, 'signup-form');
     Helpers.testErrorContainer(sut, 'error-msg', error.message);
   });
 
   it('Should call storeAccessToken.store with correct accessToken and redirect to /', async () => {
     const { sut, remoteSignupSpy, storeAccessTokenMock } = createSut();
-    await Helpers.submitForm(sut, 'create-form');
+    await Helpers.submitForm(sut, 'signup-form');
     expect(storeAccessTokenMock.accessToken).toBe(remoteSignupSpy.account.accessToken);
     expect(history.location.pathname).toBe('/');
   });
@@ -158,7 +158,7 @@ describe('Signup Component', () => {
     const { sut, storeAccessTokenMock } = createSut();
     const error = new Error('error');
     jest.spyOn(storeAccessTokenMock, 'store').mockRejectedValue(error);
-    await Helpers.submitForm(sut, 'create-form');
+    await Helpers.submitForm(sut, 'signup-form');
     Helpers.testErrorContainer(sut, 'error-msg', error.message);
   });
 

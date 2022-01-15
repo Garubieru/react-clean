@@ -9,16 +9,20 @@ describe('Login', () => {
 
   it('Should render page with initial state', () => {
     cy.getByTestId('email').should('have.attr', 'readonly');
-    cy.getByTestId('email-status')
-      .get('svg')
-      .should('have.class', 'fa-exclamation-circle');
-    cy.getByTestId('email-status').should('contain.text', 'Field is required');
+    cy.getByTestId('email-input-wrap')
+      .should('have.attr', 'data-status', 'warning')
+      .should('have.attr', 'data-showstatus', 'false');
+    cy.getByTestId('email-input-status')
+      .should('contain.text', 'Field is required')
+      .should('not.be.visible');
 
     cy.getByTestId('password').should('have.attr', 'readonly');
-    cy.getByTestId('password-status')
-      .get('svg')
-      .should('have.class', 'fa-exclamation-circle');
-    cy.getByTestId('password-status').should('contain.text', 'Field is required');
+    cy.getByTestId('password-input-wrap')
+      .should('have.attr', 'data-status', 'warning')
+      .should('have.attr', 'data-showstatus', 'false');
+    cy.getByTestId('password-input-status')
+      .should('contain.text', 'Field is required')
+      .should('not.be.visible');
 
     cy.getByTestId('login-button').should('be.disabled');
 
@@ -27,25 +31,38 @@ describe('Login', () => {
 
   it('Should show error if input is invalid', () => {
     cy.getByTestId('email').focus().type(faker.random.word());
-    cy.getByTestId('email-status').should('contain.text', 'Invalid email');
+    cy.getByTestId('email-input-wrap')
+      .should('have.attr', 'data-status', 'warning')
+      .should('have.attr', 'data-showstatus', 'true');
+
+    cy.getByTestId('email-input-status')
+      .should('contain.text', 'Invalid email')
+      .should('be.visible');
 
     cy.getByTestId('password').focus().type(faker.datatype.string(2));
-    cy.getByTestId('password-status').should(
-      'contain.text',
-      'Value must have more than 3 characters',
-    );
+    cy.getByTestId('password-input-wrap')
+      .should('have.attr', 'data-status', 'warning')
+      .should('have.attr', 'data-showstatus', 'true');
+
+    cy.getByTestId('password-input-status')
+      .should('contain.text', 'Value must have more than 3 characters')
+      .should('be.visible');
 
     cy.getByTestId('login-button').should('be.disabled');
   });
 
   it('Should not show error if input is valid ', () => {
     cy.getByTestId('email').focus().type(faker.internet.email());
-    cy.getByTestId('email-status').get('svg').should('have.class', 'fa-check-circle');
-    cy.getByTestId('email-status').should('contain.text', '');
+    cy.getByTestId('email-input-wrap').should('have.attr', 'data-status', 'success');
+    cy.getByTestId('email-input-status')
+      .should('not.be.visible')
+      .should('contain.text', '');
 
     cy.getByTestId('password').focus().type(faker.datatype.string(3));
-    cy.getByTestId('password-status').get('svg').should('have.class', 'fa-check-circle');
-    cy.getByTestId('password-status').should('contain.text', '');
+    cy.getByTestId('password-input-wrap').should('have.attr', 'data-status', 'success');
+    cy.getByTestId('password-input-status')
+      .should('not.be.visible')
+      .should('contain.text', '');
 
     cy.getByTestId('login-button').should('be.enabled');
     cy.getByTestId('error-msg').should('not.be.visible');
