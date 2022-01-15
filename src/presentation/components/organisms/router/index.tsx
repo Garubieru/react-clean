@@ -6,12 +6,12 @@ type RouterProps = {
   signup: React.FC;
 };
 
-const Router: React.FC<RouterProps> = ({ login: Login, signup: Signup }) => {
+const Router: React.FC<RouterProps> = (props) => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<props.login />} />
+        <Route path="/signup" element={<props.signup />} />
       </Routes>
     </BrowserRouter>
   );
