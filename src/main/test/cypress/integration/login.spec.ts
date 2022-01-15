@@ -147,4 +147,23 @@ describe('Login', () => {
     cy.url().should('eq', `${baseUrl}/`);
     cy.window().then((window) => assert.isOk(window.localStorage.getItem('accessToken')));
   });
+
+  it('Should prevent multiple submits', () => {
+    cy.intercept(
+      {
+        method: 'POST',
+        url: /login/,
+      },
+      {
+        statusCode: 200,
+        body: {
+          accessToken: faker.datatype.uuid(),
+        },
+      },
+    ).as('login-request');
+    cy.getByTestId('email').focus().type(faker.internet.email());
+    cy.getByTestId('password').focus().type(faker.internet.password());
+    cy.getByTestId('login-button').dblclick();
+    cy.get('@login-request.all').should('have.length', 1);
+  });
 });
