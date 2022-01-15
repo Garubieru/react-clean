@@ -114,8 +114,7 @@ describe('Login', () => {
       },
     );
     cy.getByTestId('email').focus().type(faker.internet.email());
-    cy.getByTestId('password').focus().type(faker.internet.password());
-    cy.getByTestId('login-button').click();
+    cy.getByTestId('password').focus().type(faker.internet.password()).type('{enter}');
     cy.getByTestId('error-msg')
       .should('exist')
       .should('contain.text', 'An unexpected error ocurred.');
