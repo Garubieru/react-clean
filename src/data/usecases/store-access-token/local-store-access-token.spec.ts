@@ -1,6 +1,7 @@
 import faker from 'faker';
 import { LocalStoreAccessToken } from './local-store.access-token';
 import { SetStorageMock } from '@/data/test';
+import { UnexpectedError } from '@/domain/errors';
 
 type SutTypes = {
   setStorageMock: SetStorageMock;
@@ -30,5 +31,11 @@ describe('LocalStoreAccessToken', () => {
     jest.spyOn(setStorageMock, 'set').mockRejectedValueOnce(new Error());
     const promise = sut.store(faker.datatype.uuid());
     await expect(promise).rejects.toThrow(new Error());
+  });
+
+  it('Should throw error if LocalStorageAccessToken.store is called with undefined', async () => {
+    const { sut } = createSut();
+    const result = sut.store(undefined);
+    await expect(result).rejects.toThrow(new UnexpectedError());
   });
 });
