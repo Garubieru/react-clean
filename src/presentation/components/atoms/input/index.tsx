@@ -40,11 +40,7 @@ const Input: React.FC<InputProps> = ({ placeholder, ...props }) => {
         onChange={handleChange}
         {...props}
       />
-      <span
-        id="error-msg"
-        data-testid={`${props.name}-input-status`}
-        className={Styles.errorMsg}
-      >
+      <span data-testid={`${props.name}-input-status`} className={Styles.inputErrorMsg}>
         {error}
       </span>
 
