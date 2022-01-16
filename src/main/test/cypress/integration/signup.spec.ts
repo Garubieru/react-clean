@@ -32,7 +32,7 @@ describe('Signup', () => {
     Helpers.testButtonStatus('create-btn', 'disabled');
   });
 
-  it('Should not show if input is valid', () => {
+  it('Should not show error if input is valid', () => {
     Helpers.populateField('name', faker.random.alphaNumeric(3));
     Helpers.testFieldStatus('name', '', false);
 
