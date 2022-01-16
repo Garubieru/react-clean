@@ -65,6 +65,7 @@ describe('Signup', () => {
     simulateValidSubmit();
     Helpers.testElementExists('spinner', 'not.exist');
     Helpers.testErrorContainer('error-msg', 'E-mail already in use');
+    Helpers.testWindowUrl('/signup');
   });
 
   it('Should throw UnexpectedError if response statusCode is different than 403', () => {
@@ -72,6 +73,7 @@ describe('Signup', () => {
     simulateValidSubmit();
     Helpers.testElementExists('spinner', 'not.exist');
     Helpers.testErrorContainer('error-msg', 'An unexpected error ocurred.');
+    Helpers.testWindowUrl('/signup');
   });
 
   it('Should throw UnexpectedError if response returns an invalid body', () => {
@@ -79,12 +81,14 @@ describe('Signup', () => {
     simulateValidSubmit();
     Helpers.testElementExists('spinner', 'not.exist');
     Helpers.testErrorContainer('error-msg', 'An unexpected error ocurred.');
+    Helpers.testWindowUrl('/signup');
   });
 
   it('Should not be able to submit if form is invalid', () => {
     HttpSignupMocks.mockSignupSuccess();
     Helpers.populateField('email', faker.internet.email()).type('{enter}');
     Helpers.testApiCalls('request', 0);
+    Helpers.testWindowUrl('/signup');
   });
 
   it('Should store accessToken in localStorage if valid credentials are provided', () => {
