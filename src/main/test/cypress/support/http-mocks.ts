@@ -22,7 +22,22 @@ export const mockUnexpectedError = (method: string, url: RegExp): void => {
       url,
     },
     {
-      statusCode: faker.helpers.randomize([400, 500, 404, 403]),
+      statusCode: faker.helpers.randomize([400, 500, 404]),
+      body: {
+        error: faker.random.words(),
+      },
+    },
+  ).as('request');
+};
+
+export const mockEmailInUseError = (method: string, url: RegExp): void => {
+  cy.intercept(
+    {
+      method,
+      url,
+    },
+    {
+      statusCode: 403,
       body: {
         error: faker.random.words(),
       },

@@ -1,5 +1,14 @@
 import * as Helpers from '../support/form-helper';
+import * as HttpSignupMocks from '../support/signup-mocks';
 import faker from 'faker';
+
+const simulateValidSubmit = (): void => {
+  Helpers.populateField('name', faker.random.alphaNumeric(3));
+  Helpers.populateField('email', faker.internet.email());
+  const password = faker.internet.password();
+  Helpers.populateField('password', password);
+  Helpers.populateField('passwordConfirmation', password);
+};
 
 describe('Signup', () => {
   beforeEach(() => cy.visit('/signup'));
@@ -48,5 +57,29 @@ describe('Signup', () => {
     Helpers.testFieldStatus('passwordConfirmation', '', false);
 
     Helpers.testButtonStatus('create-btn', 'enabled');
+  });
+
+  it('Should throw EmailInUseError if response statusCode returns 403', () => {
+    HttpSignupMocks.mockEmailInUseSignupError();
+    simulateValidSubmit();
+    Helpers.submitForm('create-btn');
+    Helpers.testElementExists('spinner', 'not.exist');
+    Helpers.testErrorContainer('error-msg', 'E-mail already in use');
+  });
+
+  it('Should throw UnexpectedError if response statusCode is different than 403', () => {
+    HttpSignupMocks.mockUnexpectedSignupError();
+    simulateValidSubmit();
+    Helpers.submitForm('create-btn');
+    Helpers.testElementExists('spinner', 'not.exist');
+    Helpers.testErrorContainer('error-msg', 'An unexpected error ocurred.');
+  });
+
+  it('Should throw UnexpectedError if response returns an invalid body', () => {
+    HttpSignupMocks.mockInvalidSignupSuccess();
+    simulateValidSubmit();
+    Helpers.submitForm('create-btn');
+    Helpers.testElementExists('spinner', 'not.exist');
+    Helpers.testErrorContainer('error-msg', 'An unexpected error ocurred.');
   });
 });
