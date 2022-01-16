@@ -1,5 +1,6 @@
 import faker from 'faker';
 import * as Helpers from '../support/form-helper';
+import * as HttpLoginMocks from './login-mocks';
 
 const simulateValidSubmit = (): void => {
   Helpers.populateField('email', faker.internet.email());
@@ -38,18 +39,7 @@ describe('Login', () => {
   });
 
   it('Should throw InvalidCredentialsError message if invalid credentials are provided', () => {
-    cy.intercept(
-      {
-        method: 'POST',
-        url: /login/,
-      },
-      {
-        statusCode: 401,
-        body: {
-          error: faker.random.words(),
-        },
-      },
-    ).as('error');
+    HttpLoginMocks.mockInvalidLoginError();
     simulateValidSubmit();
     Helpers.testErrorContainer('error-msg', 'Invalid credentials');
     Helpers.testElementExists('spinner', 'not.exist');
@@ -57,18 +47,7 @@ describe('Login', () => {
   });
 
   it('Should throw UnexpectedError if statusCode is different from 401', () => {
-    cy.intercept(
-      {
-        method: 'POST',
-        url: /login/,
-      },
-      {
-        statusCode: 400,
-        body: {
-          error: faker.random.word(),
-        },
-      },
-    );
+    HttpLoginMocks.mockUnexpectedLoginError();
     simulateValidSubmit();
     Helpers.testErrorContainer('error-msg', 'An unexpected error ocurred.');
     Helpers.testElementExists('spinner', 'not.exist');
@@ -76,18 +55,7 @@ describe('Login', () => {
   });
 
   it('Should show UnexpectedError if body returns invalid data', () => {
-    cy.intercept(
-      {
-        method: 'POST',
-        url: /login/,
-      },
-      {
-        statusCode: 200,
-        body: {
-          invalidPropery: faker.datatype.uuid(),
-        },
-      },
-    );
+    HttpLoginMocks.mockSuccessInvalidData();
     simulateValidSubmit();
     Helpers.testErrorContainer('error-msg', 'An unexpected error ocurred.');
     Helpers.testElementExists('spinner', 'not.exist');
@@ -95,18 +63,7 @@ describe('Login', () => {
   });
 
   it('Should save accessToken in localStorage if credentials are valid', () => {
-    cy.intercept(
-      {
-        method: 'POST',
-        url: /login/,
-      },
-      {
-        statusCode: 200,
-        body: {
-          accessToken: faker.datatype.uuid(),
-        },
-      },
-    );
+    HttpLoginMocks.mockSuccessLogin();
     simulateValidSubmit();
     Helpers.testElementExists('spinner', 'not.exist');
     Helpers.testWindowUrl('/');
@@ -114,39 +71,15 @@ describe('Login', () => {
   });
 
   it('Should prevent multiple submits', () => {
-    cy.intercept(
-      {
-        method: 'POST',
-        url: /login/,
-      },
-      {
-        statusCode: 200,
-        body: {
-          accessToken: faker.datatype.uuid(),
-        },
-      },
-    ).as('login-request');
+    HttpLoginMocks.mockSuccessLogin();
     simulateValidSubmit();
     Helpers.testWindowUrl('/');
-    Helpers.testApiCalls('login-request', 1);
+    Helpers.testApiCalls('request', 1);
   });
 
   it('Should not be able to submit if form is invalid', () => {
-    cy.intercept(
-      {
-        method: 'POST',
-        url: /login/,
-      },
-      {
-        statusCode: 200,
-        body: {
-          accessToken: faker.datatype.uuid(),
-        },
-      },
-    ).as('login-request');
+    HttpLoginMocks.mockSuccessLogin();
     Helpers.populateField('email', faker.internet.email()).type('{enter}');
-    Helpers.testWindowUrl('/login');
-    Helpers.testApiCalls('login-request', 0);
-    Helpers.testLocalStorage('accessToken', 'isNotOk');
+    Helpers.testApiCalls('request', 0);
   });
 });
