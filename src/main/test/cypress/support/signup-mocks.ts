@@ -13,3 +13,6 @@ export const mockUnexpectedSignupError = (): void =>
 export const mockInvalidSignupSuccess = (): void => {
   HttpMocks.mockSuccess(method, url, { invalid: faker.datatype.uuid() });
 };
+
+export const mockSignupSuccess = (): void =>
+  HttpMocks.mockSuccess(method, url, { accessToken: faker.datatype.uuid() });

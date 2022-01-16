@@ -82,4 +82,13 @@ describe('Signup', () => {
     Helpers.testElementExists('spinner', 'not.exist');
     Helpers.testErrorContainer('error-msg', 'An unexpected error ocurred.');
   });
+
+  it('Should store accessToken in localStorage if valid credentials are provided', () => {
+    HttpSignupMocks.mockSignupSuccess();
+    simulateValidSubmit();
+    Helpers.submitForm('create-btn');
+    Helpers.testElementExists('spinner', 'not.exist');
+    Helpers.testLocalStorage('accessToken', 'isOk');
+    Helpers.testWindowUrl('/');
+  });
 });
