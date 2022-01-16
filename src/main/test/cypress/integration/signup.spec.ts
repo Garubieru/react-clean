@@ -19,12 +19,34 @@ describe('Signup', () => {
     Helpers.populateField('email', faker.random.word());
     Helpers.testFieldStatus('email', 'Invalid email', false);
 
-    Helpers.populateField('password', faker.random.word());
-    Helpers.testFieldStatus('password', 'Fields must be equal', false);
+    Helpers.populateField('password', faker.random.alphaNumeric(2));
+    Helpers.testFieldStatus('password', 'Value must have more than 3 characters', false);
 
     Helpers.populateField('passwordConfirmation', faker.random.word());
-    Helpers.testFieldStatus('passwordConfirmation', 'Fields must be equal', false);
+    Helpers.testFieldStatus(
+      'passwordConfirmation',
+      'Field must be equal to password',
+      false,
+    );
 
     Helpers.testButtonStatus('create-btn', 'disabled');
+  });
+
+  it('Should not show if input is valid', () => {
+    Helpers.populateField('name', faker.random.alphaNumeric(3));
+    Helpers.testFieldStatus('name', '', false);
+
+    Helpers.populateField('email', faker.internet.email());
+    Helpers.testFieldStatus('email', '', false);
+
+    const password = faker.internet.password();
+
+    Helpers.populateField('password', password);
+    Helpers.testFieldStatus('password', '', false);
+
+    Helpers.populateField('passwordConfirmation', password);
+    Helpers.testFieldStatus('passwordConfirmation', '', false);
+
+    Helpers.testButtonStatus('create-btn', 'enabled');
   });
 });
