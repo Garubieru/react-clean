@@ -59,6 +59,6 @@ export const testLocalStorage = (key: string, status: 'isOk' | 'isNotOk'): void 
   cy.window().then((window) => assert[status](window.localStorage.getItem(key)));
 };
 
-export const submitForm = (button: string): void => {
-  cy.getByTestId(button).click();
+export const submitForm = (button: string, doubleClick: boolean = false): void => {
+  cy.getByTestId(button)[doubleClick ? 'dblclick' : 'click']();
 };

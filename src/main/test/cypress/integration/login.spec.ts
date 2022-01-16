@@ -2,10 +2,10 @@ import faker from 'faker';
 import * as Helpers from '../support/form-helper';
 import * as HttpLoginMocks from '../support/login-mocks';
 
-const simulateValidSubmit = (): void => {
+const simulateValidSubmit = (doubleClick?: boolean): void => {
   Helpers.populateField('email', faker.internet.email());
   Helpers.populateField('password', faker.internet.password(3));
-  Helpers.submitForm('login-button');
+  Helpers.submitForm('login-button', doubleClick);
 };
 
 describe('Login', () => {
@@ -72,7 +72,7 @@ describe('Login', () => {
 
   it('Should prevent multiple submits', () => {
     HttpLoginMocks.mockSuccessLogin();
-    simulateValidSubmit();
+    simulateValidSubmit(true);
     Helpers.testWindowUrl('/');
     Helpers.testApiCalls('request', 1);
   });
