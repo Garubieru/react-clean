@@ -7,11 +7,15 @@ const createSut = (fieldToCompare = faker.database.column()): CompareFieldsValid
 
 describe('CompareFieldsValidation', () => {
   it('Should return CompareFieldError if fields are different', () => {
-    const sut = createSut();
+    const fieldToCompare = faker.database.column();
+    const sut = createSut(fieldToCompare);
     const result = sut.validate(faker.random.word(), {
-      [faker.database.column()]: faker.random.word(),
+      [fieldToCompare]: faker.random.word(),
     });
-    expect(result).toEqual(new InvalidFieldError('Fields must be equal'));
+
+    expect(result).toEqual(
+      new InvalidFieldError(`Field must be equal to ${fieldToCompare}`),
+    );
   });
 
   it('Should succeed if fields are equal', () => {

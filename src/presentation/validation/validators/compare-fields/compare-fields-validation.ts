@@ -6,7 +6,7 @@ export class CompareFieldsValidation implements FieldValidation {
 
   validate(value: string, values: Record<string, unknown>): InvalidFieldError {
     return value !== values[this.fieldToCompare]
-      ? new InvalidFieldError('Fields must be equal')
+      ? new InvalidFieldError(`Field must be equal to ${this.fieldToCompare}`)
       : null;
   }
 }
