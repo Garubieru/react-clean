@@ -1,6 +1,6 @@
 import faker from 'faker';
 import * as Helpers from '../support/form-helper';
-import * as HttpLoginMocks from './login-mocks';
+import * as HttpLoginMocks from '../support/login-mocks';
 
 const simulateValidSubmit = (): void => {
   Helpers.populateField('email', faker.internet.email());
