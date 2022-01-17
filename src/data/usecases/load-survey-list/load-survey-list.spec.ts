@@ -37,7 +37,7 @@ describe('RemoteLoadSurveyList', () => {
   it('Should throw ForbiddenError on 403', () => {
     const { sut, httpGetClientSpy } = createSut();
     httpGetClientSpy.response = {
-      statusCode: HttpStatusCode.unauthorized,
+      statusCode: HttpStatusCode.forbidden,
     };
     const promise = sut.list();
     expect(promise).rejects.toThrow(new ForbiddenError());
