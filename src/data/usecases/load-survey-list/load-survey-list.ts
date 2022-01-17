@@ -17,7 +17,7 @@ export class RemoteLoadSurveyList implements LoadSurveyList {
       case HttpStatusCode.ok: {
         return body;
       }
-      case HttpStatusCode.forbidden: {
+      case HttpStatusCode.unauthorized: {
         throw new UnathorizedError();
       }
       default: {
