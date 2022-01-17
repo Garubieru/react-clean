@@ -1,26 +1,26 @@
-import { HttpGetClient } from '@/data/protocols/http';
 import { HttpGetClientSpy } from '@/data/test';
 import { SurveyModel } from '@/domain/models';
-import { LoadSurveyList } from '@/domain/usecases';
+import { RemoteLoadSurveyList } from './load-survey-list';
 import faker from 'faker';
 
-export class RemoteLoadSurveyList implements LoadSurveyList {
-  constructor(
-    private readonly url: string,
-    private readonly httpGetClient: HttpGetClient<any, SurveyModel[]>,
-  ) {}
+type SutType = {
+  sut: RemoteLoadSurveyList;
+  httpGetClientSpy: HttpGetClientSpy<any, SurveyModel[]>;
+};
 
-  async list(): Promise<SurveyModel[]> {
-    const { body } = await this.httpGetClient.get({ url: this.url });
-    return body;
-  }
-}
+const createSut = (url = faker.internet.url()): SutType => {
+  const httpGetClientSpy = new HttpGetClientSpy<any, SurveyModel[]>();
+  const sut = new RemoteLoadSurveyList(url, httpGetClientSpy);
+  return {
+    sut,
+    httpGetClientSpy,
+  };
+};
 
 describe('RemoteLoadSurveyList', () => {
   it('Should call httpGetClient with correct url', async () => {
-    const httpGetClientSpy = new HttpGetClientSpy<any, SurveyModel[]>();
     const url = faker.internet.url();
-    const sut = new RemoteLoadSurveyList(url, httpGetClientSpy);
+    const { sut, httpGetClientSpy } = createSut(url);
     await sut.list();
     expect(httpGetClientSpy.url).toBe(url);
   });
