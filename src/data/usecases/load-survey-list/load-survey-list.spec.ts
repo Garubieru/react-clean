@@ -5,6 +5,7 @@ import { HttpStatusCode } from '@/data/protocols/http';
 import { ForbiddenError, UnexpectedError } from '@/domain/errors';
 
 import { RemoteLoadSurveyList } from './load-survey-list';
+import { mockSurveyList } from '@/domain/test';
 
 type SutType = {
   sut: RemoteLoadSurveyList;
@@ -86,5 +87,16 @@ describe('RemoteLoadSurveyList', () => {
     };
     const surveyList = await sut.list();
     expect(surveyList.length).toEqual(0);
+  });
+
+  it('Should return correct response body on 200', async () => {
+    const { sut, httpGetClientSpy } = createSut();
+    const surveyListLength = 5;
+    httpGetClientSpy.response = {
+      statusCode: HttpStatusCode.ok,
+      body: mockSurveyList(surveyListLength),
+    };
+    const surveyList = await sut.list();
+    expect(surveyList.length).toEqual(surveyListLength);
   });
 });

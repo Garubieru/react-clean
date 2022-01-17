@@ -11,7 +11,6 @@ export class HttpGetClientSpy<T, R> implements HttpGetClient<T, R> {
 
   response: HttpResponse<R> = {
     statusCode: HttpStatusCode.ok,
-    body: null,
   };
 
   async get(params: HttpGetParams<T>): Promise<HttpResponse<R>> {
