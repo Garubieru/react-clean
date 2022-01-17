@@ -24,4 +24,11 @@ describe('RemoteLoadSurveyList', () => {
     await sut.list();
     expect(httpGetClientSpy.url).toBe(url);
   });
+
+  it('Should not call httpGetClient with body param', async () => {
+    const url = faker.internet.url();
+    const { sut, httpGetClientSpy } = createSut(url);
+    await sut.list();
+    expect(httpGetClientSpy.body).toBeFalsy();
+  });
 });
