@@ -1,4 +1,4 @@
-export class UnathorizedError extends Error {
+export class ForbiddenError extends Error {
   constructor() {
     super('Unathorized.');
     this.name = 'UnathorizedError';

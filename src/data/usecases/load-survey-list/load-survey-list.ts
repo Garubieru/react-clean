@@ -2,7 +2,7 @@ import { HttpGetClient, HttpStatusCode } from '@/data/protocols/http';
 import { LoadSurveyList } from '@/domain/usecases';
 import { SurveyModel } from '@/domain/models';
 
-import { UnexpectedError, UnathorizedError } from '@/domain/errors';
+import { UnexpectedError, ForbiddenError } from '@/domain/errors';
 
 export class RemoteLoadSurveyList implements LoadSurveyList {
   constructor(
@@ -17,8 +17,8 @@ export class RemoteLoadSurveyList implements LoadSurveyList {
       case HttpStatusCode.ok: {
         return body;
       }
-      case HttpStatusCode.unauthorized: {
-        throw new UnathorizedError();
+      case HttpStatusCode.forbidden: {
+        throw new ForbiddenError();
       }
       default: {
         throw new UnexpectedError();

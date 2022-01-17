@@ -2,7 +2,7 @@ import faker from 'faker';
 import { HttpGetClientSpy } from '@/data/test';
 import { SurveyModel } from '@/domain/models';
 import { HttpStatusCode } from '@/data/protocols/http';
-import { UnathorizedError } from '@/domain/errors';
+import { ForbiddenError } from '@/domain/errors';
 
 import { RemoteLoadSurveyList } from './load-survey-list';
 
@@ -34,12 +34,12 @@ describe('RemoteLoadSurveyList', () => {
     expect(httpGetClientSpy.body).toBeFalsy();
   });
 
-  it('Should throw UnathorizedError on 403', () => {
+  it('Should throw ForbiddenError on 403', () => {
     const { sut, httpGetClientSpy } = createSut();
     httpGetClientSpy.response = {
       statusCode: HttpStatusCode.unauthorized,
     };
     const promise = sut.list();
-    expect(promise).rejects.toThrow(new UnathorizedError());
+    expect(promise).rejects.toThrow(new ForbiddenError());
   });
 });
