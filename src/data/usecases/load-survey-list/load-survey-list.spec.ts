@@ -69,4 +69,13 @@ describe('RemoteLoadSurveyList', () => {
     const promise = sut.list();
     expect(promise).rejects.toThrow(new UnexpectedError());
   });
+
+  it('Should throw UnexpectedError on 500', () => {
+    const { sut, httpGetClientSpy } = createSut();
+    httpGetClientSpy.response = {
+      statusCode: HttpStatusCode.serverError,
+    };
+    const promise = sut.list();
+    expect(promise).rejects.toThrow(new UnexpectedError());
+  });
 });
