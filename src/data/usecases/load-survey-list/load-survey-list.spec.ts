@@ -91,12 +91,12 @@ describe('RemoteLoadSurveyList', () => {
 
   it('Should return correct response body on 200', async () => {
     const { sut, httpGetClientSpy } = createSut();
-    const surveyListLength = 5;
+    const responseBody = mockSurveyList();
     httpGetClientSpy.response = {
       statusCode: HttpStatusCode.ok,
-      body: mockSurveyList(surveyListLength),
+      body: responseBody,
     };
     const surveyList = await sut.list();
-    expect(surveyList.length).toEqual(surveyListLength);
+    expect(surveyList).toEqual(responseBody);
   });
 });
