@@ -2,10 +2,14 @@ import React from 'react';
 import { LoginHeader, Footer } from '@/presentation/components';
 import Styles from './styles.scss';
 
-const PageWrapper: React.FC = (props) => {
+type PageWrapperProps = {
+  header?: React.FC;
+};
+
+const PageWrapper: React.FC<PageWrapperProps> = ({ header: Header, ...props }) => {
   return (
     <div className={Styles.pageWrapper}>
-      <LoginHeader />
+      {Header ? <Header /> : <LoginHeader />}
       <div className={Styles.pageContent}>{props.children}</div>
       <Footer />
     </div>

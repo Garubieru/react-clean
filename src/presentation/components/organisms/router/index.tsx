@@ -1,3 +1,4 @@
+import { SurveyList } from '@/presentation/pages';
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
@@ -12,6 +13,7 @@ const Router: React.FC<RouterProps> = (props) => {
       <Routes>
         <Route path="/login" element={<props.login />} />
         <Route path="/signup" element={<props.signup />} />
+        <Route path="/" element={<SurveyList />} />
       </Routes>
     </BrowserRouter>
   );
