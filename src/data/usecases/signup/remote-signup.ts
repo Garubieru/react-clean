@@ -6,7 +6,7 @@ import { AccountParams, RemoteSignupProtocol } from '@/domain/usecases/signup';
 export class RemoteSignup implements RemoteSignupProtocol {
   constructor(
     private readonly url: string,
-    private readonly httpPostClient: HttpPostClient<AccountParams, AccountModel>,
+    private readonly httpPostClient: HttpPostClient<AccountModel>,
   ) {}
 
   async create(params: AccountParams): Promise<AccountModel> {

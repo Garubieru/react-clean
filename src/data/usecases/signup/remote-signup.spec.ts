@@ -3,17 +3,16 @@ import { HttpStatusCode } from '@/data/protocols/http';
 import { HttpPostClientSpy } from '@/data/test';
 import { EmailInUseError, UnexpectedError } from '@/domain/errors';
 import { mockAccount, mockAccountCreation } from '@/domain/test';
-import { AccountParams } from '@/domain/usecases/signup';
 import { RemoteSignup } from './remote-signup';
 import { AccountModel } from '@/domain/models';
 
 type SutTypes = {
   sut: RemoteSignup;
-  httpPostClientSpy: HttpPostClientSpy<AccountParams, AccountModel>;
+  httpPostClientSpy: HttpPostClientSpy<AccountModel>;
 };
 
 const createSut = (url = faker.internet.url()): SutTypes => {
-  const httpPostClientSpy = new HttpPostClientSpy<AccountParams, AccountModel>();
+  const httpPostClientSpy = new HttpPostClientSpy<AccountModel>();
   const sut = new RemoteSignup(url, httpPostClientSpy);
   return {
     sut,
