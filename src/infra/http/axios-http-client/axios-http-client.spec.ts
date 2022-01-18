@@ -29,9 +29,9 @@ describe('AxiosHttpClient', () => {
       expect(promise).toEqual(mockedAxios.post.mock.results[0].value);
     });
 
-    it('Should return the correct statusCode and body on failure on axios.post', () => {
+    it('Should return correct statusCode and body if requests fails on axios.post', () => {
       const { sut, mockedAxios } = createSut();
-      mockedAxios.post.mockRejectedValue({ response: mockHttpResponse() });
+      mockedAxios.post.mockRejectedValueOnce({ response: mockHttpResponse() });
       const promise = sut.post(mockPostParams());
       expect(promise).toEqual(mockedAxios.post.mock.results[0].value);
     });
@@ -45,10 +45,25 @@ describe('AxiosHttpClient', () => {
       expect(mockedAxios.get).toBeCalledWith(mockedGetParams.url);
     });
 
-    it('Should return the correct statusCode and body on axios.get', () => {
+    it('Should return the correct statusCode and body on axios.get', async () => {
       const { sut, mockedAxios } = createSut();
-      const promise = sut.get(mockGetParams());
-      expect(promise).toEqual(mockedAxios.get.mock.results[0].value);
+      const httpResponse = await sut.get(mockGetParams());
+      const axiosResponse = await mockedAxios.get.mock.results[0].value;
+      expect(httpResponse).toEqual({
+        statusCode: axiosResponse.status,
+        body: axiosResponse.data,
+      });
+    });
+
+    it('Should return correct statusCode and body if request fails on axios.get', async () => {
+      const { sut, mockedAxios } = createSut();
+      const mockError = mockHttpResponse();
+      mockedAxios.get.mockRejectedValueOnce({ response: mockError });
+      const httpResponse = await sut.get(mockGetParams());
+      expect(httpResponse).toEqual({
+        statusCode: mockError.status,
+        body: mockError.data,
+      });
     });
   });
 });
