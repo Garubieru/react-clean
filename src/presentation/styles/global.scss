@@ -40,8 +40,3 @@ input[type='email'] {
 
   transition: all 0.3s;
 }
-
-input:-webkit-autofill {
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: $white;
-}
