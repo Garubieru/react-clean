@@ -1,11 +1,10 @@
 import faker from 'faker';
+import { HttpStatusCode } from '@/data/protocols/http';
 import { HttpGetClientSpy } from '@/data/test';
 import { SurveyModel } from '@/domain/models';
-import { HttpStatusCode } from '@/data/protocols/http';
-import { ForbiddenError, UnexpectedError } from '@/domain/errors';
-
-import { RemoteLoadSurveyList } from './load-survey-list';
 import { mockSurveyList } from '@/domain/test';
+import { ForbiddenError, UnexpectedError } from '@/domain/errors';
+import { RemoteLoadSurveyList } from './load-survey-list';
 
 type SutType = {
   sut: RemoteLoadSurveyList;
