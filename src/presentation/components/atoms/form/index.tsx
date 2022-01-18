@@ -13,7 +13,7 @@ const FormContainer: React.FC<FormContainerProps> = ({
   ...rest
 }) => {
   return (
-    <div className={`${Styles.form} ${className}`} {...rest}>
+    <div className={`${Styles.form}`} {...rest}>
       <h2>{title}</h2>
       {children}
     </div>
