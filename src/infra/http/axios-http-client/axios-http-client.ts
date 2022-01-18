@@ -15,7 +15,7 @@ export class AxiosHttpClient implements HttpPostClient {
       const axiosError = e as AxiosError;
       axiosResponse = axiosError.response;
     }
-    return { statusCode: axiosResponse.status, body: axiosResponse.data };
+    return this.adapt(axiosResponse);
   }
 
   async get(params: HttpGetParams): Promise<HttpResponse> {
@@ -26,6 +26,13 @@ export class AxiosHttpClient implements HttpPostClient {
       const axiosError = e as AxiosError;
       axiosResponse = axiosError.response;
     }
-    return { body: axiosResponse.data, statusCode: axiosResponse.status };
+    return this.adapt(axiosResponse);
+  }
+
+  private adapt(axiosResponse: AxiosResponse): HttpResponse {
+    return {
+      body: axiosResponse.data,
+      statusCode: axiosResponse.status,
+    };
   }
 }
