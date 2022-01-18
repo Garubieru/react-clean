@@ -9,11 +9,11 @@ import { mockSurveyList } from '@/domain/test';
 
 type SutType = {
   sut: RemoteLoadSurveyList;
-  httpGetClientSpy: HttpGetClientSpy<any, SurveyModel[]>;
+  httpGetClientSpy: HttpGetClientSpy<SurveyModel[]>;
 };
 
 const createSut = (url = faker.internet.url()): SutType => {
-  const httpGetClientSpy = new HttpGetClientSpy<any, SurveyModel[]>();
+  const httpGetClientSpy = new HttpGetClientSpy<SurveyModel[]>();
   const sut = new RemoteLoadSurveyList(url, httpGetClientSpy);
   return {
     sut,
@@ -27,12 +27,6 @@ describe('RemoteLoadSurveyList', () => {
     const { sut, httpGetClientSpy } = createSut(url);
     await sut.list();
     expect(httpGetClientSpy.url).toBe(url);
-  });
-
-  it('Should not call httpGetClient with body param', async () => {
-    const { sut, httpGetClientSpy } = createSut();
-    await sut.list();
-    expect(httpGetClientSpy.body).toBeFalsy();
   });
 
   it('Should throw ForbiddenError on 403', () => {

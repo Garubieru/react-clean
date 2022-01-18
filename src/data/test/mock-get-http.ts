@@ -5,17 +5,15 @@ import {
   HttpStatusCode,
 } from '@/data/protocols/http';
 
-export class HttpGetClientSpy<T, R> implements HttpGetClient<T, R> {
+export class HttpGetClientSpy<R> implements HttpGetClient<R> {
   url: string;
-  body: T;
 
   response: HttpResponse<R> = {
     statusCode: HttpStatusCode.ok,
   };
 
-  async get(params: HttpGetParams<T>): Promise<HttpResponse<R>> {
+  async get(params: HttpGetParams): Promise<HttpResponse<R>> {
     this.url = params.url;
-    this.body = params.body;
 
     return await Promise.resolve(this.response);
   }

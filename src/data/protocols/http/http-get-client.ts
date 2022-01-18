@@ -1,10 +1,9 @@
 import { HttpResponse } from '.';
 
-export type HttpGetParams<TBody> = {
+export type HttpGetParams = {
   url: string;
-  body?: TBody;
 };
 
-export interface HttpGetClient<T, R> {
-  get: (params: HttpGetParams<T>) => Promise<HttpResponse<R>>;
+export interface HttpGetClient<R = any> {
+  get: (params: HttpGetParams) => Promise<HttpResponse<R>>;
 }

@@ -7,7 +7,7 @@ import { UnexpectedError, ForbiddenError } from '@/domain/errors';
 export class RemoteLoadSurveyList implements LoadSurveyList {
   constructor(
     private readonly url: string,
-    private readonly httpGetClient: HttpGetClient<any, SurveyModel[]>,
+    private readonly httpGetClient: HttpGetClient<SurveyModel[]>,
   ) {}
 
   async list(): Promise<SurveyModel[]> {
