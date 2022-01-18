@@ -42,3 +42,7 @@ export const mockPostParams = (): HttpPostParams => ({
   url: faker.internet.url(),
   body: faker.random.objectElement(),
 });
+
+export const mockGetParams = (): HttpGetParams => ({
+  url: faker.internet.url(),
+});
