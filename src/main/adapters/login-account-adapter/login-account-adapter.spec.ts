@@ -1,3 +1,4 @@
+import { UnexpectedError } from '@/domain/errors';
 import { mockAccount } from '@/domain/test';
 import { SetLocalStorageAdapter } from '@/infra/cache/local-storage/set-local-storage-adapter';
 import { setLocalLoginAccountAdapter } from './login-account-adapter';
@@ -13,5 +14,9 @@ describe('LoginAccountAdapter', () => {
       'userAccount',
       JSON.stringify(mockedAccount),
     );
+  });
+
+  it('Should throw UnexpectedError if account is undefined', () => {
+    expect(() => setLocalLoginAccountAdapter(undefined)).toThrow(new UnexpectedError());
   });
 });
