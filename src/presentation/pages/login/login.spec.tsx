@@ -4,22 +4,19 @@ import faker from 'faker';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { render, RenderResult, fireEvent, cleanup } from '@testing-library/react';
-import {
-  ValidationStub,
-  AuthenticationSpy,
-  StoreLoginAccountMock,
-  Helpers,
-} from '@/presentation/test';
+import { ValidationStub, AuthenticationSpy, Helpers } from '@/presentation/test';
 import { mockAuthentication } from '@/domain/test';
 import { Login } from '@/presentation/pages';
 import { AuthenticationParams } from '@/domain/usecases';
 import { InvalidCredentialError } from '@/domain/errors';
+import { ApiContext } from '@/presentation/context/api/api-context';
+import { AccountModel } from '@/domain/models';
 
 type SutTypes = {
   sut: RenderResult;
   validationStub: ValidationStub;
   authenticationSpy: AuthenticationSpy;
-  storeLoginAccountMock: StoreLoginAccountMock;
+  setLoginAccount: jest.Mock<void, [AccountModel]>;
 };
 
 type SutParams = {
@@ -34,19 +31,17 @@ const createSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub();
   validationStub.errorMessage = params?.withError && faker.random.words();
   const authenticationSpy = new AuthenticationSpy();
-  const storeLoginAccountMock = new StoreLoginAccountMock();
+  const setLoginAccount = jest.fn();
   const sut = render(
-    <Router location={history.location} navigator={history}>
-      <Login
-        validation={validationStub}
-        authentication={authenticationSpy}
-        storeLoginAccount={storeLoginAccountMock}
-      />
-    </Router>,
+    <ApiContext.Provider value={{ setLoginAccount }}>
+      <Router location={history.location} navigator={history}>
+        <Login validation={validationStub} authentication={authenticationSpy} />
+      </Router>
+    </ApiContext.Provider>,
   );
   if (params?.populateForm) populateForm(sut, params?.authParams);
 
-  return { sut, validationStub, authenticationSpy, storeLoginAccountMock };
+  return { sut, validationStub, authenticationSpy, setLoginAccount };
 };
 
 const populateForm = (sut: RenderResult, authParams = mockAuthentication()): void => {
@@ -175,11 +170,11 @@ describe('Login Component', () => {
   });
 
   it('Should call storeLoginAccountMock.store with correct accessToken and redirect to /', async () => {
-    const { sut, storeLoginAccountMock, authenticationSpy } = createSut({
+    const { sut, setLoginAccount, authenticationSpy } = createSut({
       populateForm: true,
     });
     await Helpers.submitForm(sut, 'login-form');
-    expect(storeLoginAccountMock.account).toEqual(authenticationSpy.account);
+    expect(setLoginAccount).toHaveBeenCalledWith(authenticationSpy.account);
     expect(history.location.pathname).toBe('/');
   });
 
@@ -191,11 +186,11 @@ describe('Login Component', () => {
   });
 
   it('Should render error if storeLoginAccountMock.store fails', async () => {
-    const { sut, storeLoginAccountMock } = createSut({
+    const { sut, setLoginAccount } = createSut({
       populateForm: true,
     });
     const error = new Error('error');
-    jest.spyOn(storeLoginAccountMock, 'store').mockImplementationOnce(() => {
+    setLoginAccount.mockImplementationOnce(() => {
       throw error;
     });
     await Helpers.submitForm(sut, 'login-form');

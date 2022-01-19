@@ -3,20 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { Input, Button, Link, Error, PageWrapper, Form } from '@/presentation/components';
 import { FormContext } from '@/presentation/context/form/form-context';
 import { Validation } from '@/presentation/protocols/validation';
-import { RemoteSignupProtocol, StoreLoginAccount } from '@/domain/usecases';
+import { useApi } from '@/presentation/context/api/api-context';
+import { RemoteSignupProtocol } from '@/domain/usecases';
 import Styles from './styles.scss';
 
 type SignupProps = {
   validations: Validation;
   remoteSignup: RemoteSignupProtocol;
-  storeLoginAccount: StoreLoginAccount;
 };
 
-const Signup: React.FC<SignupProps> = ({
-  validations,
-  remoteSignup,
-  storeLoginAccount,
-}) => {
+const Signup: React.FC<SignupProps> = ({ validations, remoteSignup }) => {
+  const { setLoginAccount } = useApi();
   const navigate = useNavigate();
   const [state, setState] = useState({
     isLoading: false,
@@ -67,7 +64,7 @@ const Signup: React.FC<SignupProps> = ({
         password,
         passwordConfirmation,
       });
-      storeLoginAccount.store(account);
+      setLoginAccount(account);
       navigate('/');
     } catch (e) {
       const error = e as Error;

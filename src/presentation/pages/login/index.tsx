@@ -3,20 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { Input, Button, Link, Error, PageWrapper, Form } from '@/presentation/components';
 import { FormContext } from '@/presentation/context/form/form-context';
 import { Validation } from '@/presentation/protocols/validation';
-import { AuthenticationProtocol, StoreLoginAccount } from '@/domain/usecases';
+import { AuthenticationProtocol } from '@/domain/usecases';
 import Styles from './styles.scss';
+import { useApi } from '@/presentation/context/api/api-context';
 
 type LoginProps = {
   validation: Validation;
   authentication: AuthenticationProtocol;
-  storeLoginAccount: StoreLoginAccount;
 };
 
-const Login: React.FC<LoginProps> = ({
-  validation,
-  authentication,
-  storeLoginAccount,
-}) => {
+const Login: React.FC<LoginProps> = ({ validation, authentication }) => {
+  const { setLoginAccount } = useApi();
   const navigate = useNavigate();
   const [state, setState] = useState({
     isLoading: false,
@@ -37,7 +34,7 @@ const Login: React.FC<LoginProps> = ({
         email: state.email,
         password: state.password,
       });
-      storeLoginAccount.store(account);
+      setLoginAccount(account);
       navigate('/');
     } catch (e) {
       const errorMsg = e as Error;

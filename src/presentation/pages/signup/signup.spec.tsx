@@ -3,24 +3,21 @@ import '@testing-library/jest-dom';
 import { cleanup, fireEvent, render, RenderResult } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import {
-  RemoteSignupSpy,
-  ValidationStub,
-  Helpers,
-  StoreLoginAccountMock,
-} from '@/presentation/test';
+import { RemoteSignupSpy, ValidationStub, Helpers } from '@/presentation/test';
 
 import Signup from '.';
 import { RequiredFieldError } from '@/presentation/validation/errors';
 import { mockAccountCreation } from '@/domain/test';
 import { AccountParams } from '@/domain/usecases';
 import { EmailInUseError } from '@/domain/errors';
+import { ApiContext } from '@/presentation/context/api/api-context';
+import { AccountModel } from '@/domain/models';
 
 type SutType = {
   sut: RenderResult;
   validationStub: ValidationStub;
   remoteSignupSpy: RemoteSignupSpy;
-  storeLoginAccountMock: StoreLoginAccountMock;
+  setLoginAccount: jest.Mock<void, [AccountModel]>;
 };
 
 type SutParams = {
@@ -33,23 +30,21 @@ const history = createMemoryHistory({ initialEntries: ['/signin'] });
 const createSut = (params?: SutParams): SutType => {
   const validationStub = new ValidationStub();
   const remoteSignupSpy = new RemoteSignupSpy();
-  const storeLoginAccountMock = new StoreLoginAccountMock();
+  const setLoginAccount = jest.fn();
   if (params?.withError) validationStub.errorMessage = new RequiredFieldError().message;
   const sut = render(
-    <Router location={history.location} navigator={history}>
-      <Signup
-        validations={validationStub}
-        remoteSignup={remoteSignupSpy}
-        storeLoginAccount={storeLoginAccountMock}
-      />
-    </Router>,
+    <ApiContext.Provider value={{ setLoginAccount }}>
+      <Router location={history.location} navigator={history}>
+        <Signup validations={validationStub} remoteSignup={remoteSignupSpy} />
+      </Router>
+    </ApiContext.Provider>,
   );
   if (params?.populateForm) populateForm(sut, params?.formParams);
   return {
     sut,
     validationStub,
     remoteSignupSpy,
-    storeLoginAccountMock,
+    setLoginAccount,
   };
 };
 
@@ -148,16 +143,16 @@ describe('Signup Component', () => {
   });
 
   it('Should call storeLoginAccountMock.store with correct accessToken and redirect to /', async () => {
-    const { sut, remoteSignupSpy, storeLoginAccountMock } = createSut();
+    const { sut, remoteSignupSpy, setLoginAccount } = createSut();
     await Helpers.submitForm(sut, 'signup-form');
-    expect(storeLoginAccountMock.account).toEqual(remoteSignupSpy.account);
+    expect(setLoginAccount).toHaveBeenCalledWith(remoteSignupSpy.account);
     expect(history.location.pathname).toBe('/');
   });
 
   it('Should render error if storeLoginAccountMock.store fails', async () => {
-    const { sut, storeLoginAccountMock } = createSut();
+    const { sut, setLoginAccount } = createSut();
     const error = new Error('error');
-    jest.spyOn(storeLoginAccountMock, 'store').mockImplementationOnce(() => {
+    setLoginAccount.mockImplementationOnce(() => {
       throw error;
     });
     await Helpers.submitForm(sut, 'signup-form');
