@@ -1,3 +1,3 @@
 export * from './authentication/remote-authentication';
 export * from './signup/remote-signup';
-export * from './store-access-token/local-store.access-token';
+export * from './store-login-account/local-store-login-account';

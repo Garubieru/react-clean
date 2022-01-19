@@ -62,12 +62,12 @@ describe('Login', () => {
     Helpers.testWindowUrl('/login');
   });
 
-  it('Should save accessToken in localStorage if credentials are valid', () => {
+  it('Should save userAccount in localStorage if credentials are valid', () => {
     HttpLoginMocks.mockSuccessLogin();
     simulateValidSubmit();
     Helpers.testElementExists('spinner', 'not.exist');
     Helpers.testWindowUrl('/');
-    Helpers.testLocalStorage('accessToken', 'isOk');
+    Helpers.testLocalStorage('userAccount', 'isOk');
   });
 
   it('Should prevent multiple submits', () => {

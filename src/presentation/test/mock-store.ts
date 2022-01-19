@@ -1,8 +1,9 @@
-import { StoreAccessToken } from '@/domain/usecases';
+import { AccountModel } from '@/domain/models';
+import { StoreLoginAccount } from '@/domain/usecases';
 
-export class StoreAccessTokenMock implements StoreAccessToken {
-  accessToken: string;
-  async store(accessToken: string): Promise<void> {
-    this.accessToken = accessToken;
+export class StoreLoginAccountMock implements StoreLoginAccount {
+  account: AccountModel;
+  async store(account: AccountModel): Promise<void> {
+    this.account = account;
   }
 }

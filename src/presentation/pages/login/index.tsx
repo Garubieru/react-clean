@@ -3,19 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import { Input, Button, Link, Error, PageWrapper, Form } from '@/presentation/components';
 import { FormContext } from '@/presentation/context/form/form-context';
 import { Validation } from '@/presentation/protocols/validation';
-import { AuthenticationProtocol, StoreAccessToken } from '@/domain/usecases';
+import { AuthenticationProtocol, StoreLoginAccount } from '@/domain/usecases';
 import Styles from './styles.scss';
 
 type LoginProps = {
   validation: Validation;
   authentication: AuthenticationProtocol;
-  storeAccessToken: StoreAccessToken;
+  storeLoginAccount: StoreLoginAccount;
 };
 
 const Login: React.FC<LoginProps> = ({
   validation,
   authentication,
-  storeAccessToken,
+  storeLoginAccount,
 }) => {
   const navigate = useNavigate();
   const [state, setState] = useState({
@@ -33,11 +33,11 @@ const Login: React.FC<LoginProps> = ({
     if (state.isFormInvalid || state.isLoading) return;
     setState((prevState) => ({ ...prevState, isLoading: true }));
     try {
-      const { accessToken } = await authentication.auth({
+      const account = await authentication.auth({
         email: state.email,
         password: state.password,
       });
-      await storeAccessToken.store(accessToken);
+      await storeLoginAccount.store(account);
       navigate('/');
     } catch (e) {
       const errorMsg = e as Error;

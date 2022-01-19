@@ -3,19 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import { Input, Button, Link, Error, PageWrapper, Form } from '@/presentation/components';
 import { FormContext } from '@/presentation/context/form/form-context';
 import { Validation } from '@/presentation/protocols/validation';
-import { RemoteSignupProtocol, StoreAccessToken } from '@/domain/usecases';
+import { RemoteSignupProtocol, StoreLoginAccount } from '@/domain/usecases';
 import Styles from './styles.scss';
 
 type SignupProps = {
   validations: Validation;
   remoteSignup: RemoteSignupProtocol;
-  storeAccessToken: StoreAccessToken;
+  storeLoginAccount: StoreLoginAccount;
 };
 
 const Signup: React.FC<SignupProps> = ({
   validations,
   remoteSignup,
-  storeAccessToken,
+  storeLoginAccount,
 }) => {
   const navigate = useNavigate();
   const [state, setState] = useState({
@@ -61,13 +61,13 @@ const Signup: React.FC<SignupProps> = ({
     setState((prevState) => ({ ...prevState, isLoading: true }));
     const { email, name, password, passwordConfirmation } = state;
     try {
-      const { accessToken } = await remoteSignup.create({
+      const account = await remoteSignup.create({
         email,
         name,
         password,
         passwordConfirmation,
       });
-      await storeAccessToken.store(accessToken);
+      await storeLoginAccount.store(account);
       navigate('/');
     } catch (e) {
       const error = e as Error;

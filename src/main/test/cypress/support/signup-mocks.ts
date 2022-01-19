@@ -15,4 +15,7 @@ export const mockInvalidSignupSuccess = (): void => {
 };
 
 export const mockSignupSuccess = (): void =>
-  HttpMocks.mockSuccess(method, url, { accessToken: faker.datatype.uuid() });
+  HttpMocks.mockSuccess(method, url, {
+    accessToken: faker.datatype.uuid(),
+    name: faker.name.findName(),
+  });

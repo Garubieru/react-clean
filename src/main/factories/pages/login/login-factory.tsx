@@ -3,7 +3,7 @@ import { Login } from '@/presentation/pages';
 import {
   createRemoteAuthentication,
   createLoginValidation,
-  createLocalStoreAccessToken,
+  createLocalStoreLoginAccount,
 } from '@/main/factories';
 
 export const createLogin: React.FC = () => {
@@ -11,7 +11,7 @@ export const createLogin: React.FC = () => {
     <Login
       authentication={createRemoteAuthentication()}
       validation={createLoginValidation()}
-      storeAccessToken={createLocalStoreAccessToken()}
+      storeLoginAccount={createLocalStoreLoginAccount()}
     />
   );
 };

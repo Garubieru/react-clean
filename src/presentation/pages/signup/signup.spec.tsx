@@ -7,7 +7,7 @@ import {
   RemoteSignupSpy,
   ValidationStub,
   Helpers,
-  StoreAccessTokenMock,
+  StoreLoginAccountMock,
 } from '@/presentation/test';
 
 import Signup from '.';
@@ -20,7 +20,7 @@ type SutType = {
   sut: RenderResult;
   validationStub: ValidationStub;
   remoteSignupSpy: RemoteSignupSpy;
-  storeAccessTokenMock: StoreAccessTokenMock;
+  storeLoginAccountMock: StoreLoginAccountMock;
 };
 
 type SutParams = {
@@ -33,14 +33,14 @@ const history = createMemoryHistory({ initialEntries: ['/signin'] });
 const createSut = (params?: SutParams): SutType => {
   const validationStub = new ValidationStub();
   const remoteSignupSpy = new RemoteSignupSpy();
-  const storeAccessTokenMock = new StoreAccessTokenMock();
+  const storeLoginAccountMock = new StoreLoginAccountMock();
   if (params?.withError) validationStub.errorMessage = new RequiredFieldError().message;
   const sut = render(
     <Router location={history.location} navigator={history}>
       <Signup
         validations={validationStub}
         remoteSignup={remoteSignupSpy}
-        storeAccessToken={storeAccessTokenMock}
+        storeLoginAccount={storeLoginAccountMock}
       />
     </Router>,
   );
@@ -49,7 +49,7 @@ const createSut = (params?: SutParams): SutType => {
     sut,
     validationStub,
     remoteSignupSpy,
-    storeAccessTokenMock,
+    storeLoginAccountMock,
   };
 };
 
@@ -147,17 +147,17 @@ describe('Signup Component', () => {
     Helpers.testErrorContainer(sut, 'error-msg', error.message);
   });
 
-  it('Should call storeAccessToken.store with correct accessToken and redirect to /', async () => {
-    const { sut, remoteSignupSpy, storeAccessTokenMock } = createSut();
+  it('Should call storeLoginAccountMock.store with correct accessToken and redirect to /', async () => {
+    const { sut, remoteSignupSpy, storeLoginAccountMock } = createSut();
     await Helpers.submitForm(sut, 'signup-form');
-    expect(storeAccessTokenMock.accessToken).toBe(remoteSignupSpy.account.accessToken);
+    expect(storeLoginAccountMock.account).toEqual(remoteSignupSpy.account);
     expect(history.location.pathname).toBe('/');
   });
 
-  it('Should render error if storeAccessToken.store fails', async () => {
-    const { sut, storeAccessTokenMock } = createSut();
+  it('Should render error if storeLoginAccountMock.store fails', async () => {
+    const { sut, storeLoginAccountMock } = createSut();
     const error = new Error('error');
-    jest.spyOn(storeAccessTokenMock, 'store').mockRejectedValue(error);
+    jest.spyOn(storeLoginAccountMock, 'store').mockRejectedValue(error);
     await Helpers.submitForm(sut, 'signup-form');
     Helpers.testErrorContainer(sut, 'error-msg', error.message);
   });

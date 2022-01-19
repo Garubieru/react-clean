@@ -2,7 +2,7 @@ import React from 'react';
 import { Signup } from '@/presentation/pages';
 
 import {
-  createLocalStoreAccessToken,
+  createLocalStoreLoginAccount,
   createRemoteSignup,
   createSignupValidation,
 } from '@/main/factories/usecases';
@@ -12,7 +12,7 @@ export const createSignup: React.FC = () => {
     <Signup
       remoteSignup={createRemoteSignup()}
       validations={createSignupValidation()}
-      storeAccessToken={createLocalStoreAccessToken()}
+      storeLoginAccount={createLocalStoreLoginAccount()}
     />
   );
 };

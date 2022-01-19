@@ -7,7 +7,7 @@ import { render, RenderResult, fireEvent, cleanup } from '@testing-library/react
 import {
   ValidationStub,
   AuthenticationSpy,
-  StoreAccessTokenMock,
+  StoreLoginAccountMock,
   Helpers,
 } from '@/presentation/test';
 import { mockAuthentication } from '@/domain/test';
@@ -19,7 +19,7 @@ type SutTypes = {
   sut: RenderResult;
   validationStub: ValidationStub;
   authenticationSpy: AuthenticationSpy;
-  storeAccessTokenMock: StoreAccessTokenMock;
+  storeLoginAccountMock: StoreLoginAccountMock;
 };
 
 type SutParams = {
@@ -34,19 +34,19 @@ const createSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub();
   validationStub.errorMessage = params?.withError && faker.random.words();
   const authenticationSpy = new AuthenticationSpy();
-  const storeAccessTokenMock = new StoreAccessTokenMock();
+  const storeLoginAccountMock = new StoreLoginAccountMock();
   const sut = render(
     <Router location={history.location} navigator={history}>
       <Login
         validation={validationStub}
         authentication={authenticationSpy}
-        storeAccessToken={storeAccessTokenMock}
+        storeLoginAccount={storeLoginAccountMock}
       />
     </Router>,
   );
   if (params?.populateForm) populateForm(sut, params?.authParams);
 
-  return { sut, validationStub, authenticationSpy, storeAccessTokenMock };
+  return { sut, validationStub, authenticationSpy, storeLoginAccountMock };
 };
 
 const populateForm = (sut: RenderResult, authParams = mockAuthentication()): void => {
@@ -174,12 +174,12 @@ describe('Login Component', () => {
     Helpers.testErrorContainer(sut, 'error-msg', error.message);
   });
 
-  it('Should call StoreAccessToken.store with correct accessToken and redirect to /', async () => {
-    const { sut, storeAccessTokenMock, authenticationSpy } = createSut({
+  it('Should call storeLoginAccountMock.store with correct accessToken and redirect to /', async () => {
+    const { sut, storeLoginAccountMock, authenticationSpy } = createSut({
       populateForm: true,
     });
     await Helpers.submitForm(sut, 'login-form');
-    expect(storeAccessTokenMock.accessToken).toBe(authenticationSpy.account.accessToken);
+    expect(storeLoginAccountMock.account).toEqual(authenticationSpy.account);
     expect(history.location.pathname).toBe('/');
   });
 
@@ -190,12 +190,12 @@ describe('Login Component', () => {
     expect(history.location.pathname).toBe('/signup');
   });
 
-  it('Should render error if SaveAccessToken fails', async () => {
-    const { sut, storeAccessTokenMock } = createSut({
+  it('Should render error if storeLoginAccountMock.store fails', async () => {
+    const { sut, storeLoginAccountMock } = createSut({
       populateForm: true,
     });
     const error = new Error('error');
-    jest.spyOn(storeAccessTokenMock, 'store').mockReturnValueOnce(Promise.reject(error));
+    jest.spyOn(storeLoginAccountMock, 'store').mockReturnValueOnce(Promise.reject(error));
     await Helpers.submitForm(sut, 'login-form');
     Helpers.testErrorContainer(sut, 'error-msg', error.message);
   });

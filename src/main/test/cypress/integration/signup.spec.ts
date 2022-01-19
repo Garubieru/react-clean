@@ -91,11 +91,11 @@ describe('Signup', () => {
     Helpers.testWindowUrl('/signup');
   });
 
-  it('Should store accessToken in localStorage if valid credentials are provided', () => {
+  it('Should store userAccount in localStorage if valid credentials are provided', () => {
     HttpSignupMocks.mockSignupSuccess();
     simulateValidSubmit();
     Helpers.testElementExists('spinner', 'not.exist');
-    Helpers.testLocalStorage('accessToken', 'isOk');
+    Helpers.testLocalStorage('userAccount', 'isOk');
     Helpers.testWindowUrl('/');
   });
 

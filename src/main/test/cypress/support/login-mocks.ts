@@ -9,7 +9,10 @@ export const mockUnexpectedLoginError = (): void =>
   HttpMocks.mockUnexpectedError(method, /login/);
 
 export const mockSuccessLogin = (): void =>
-  HttpMocks.mockSuccess(method, /login/, { accessToken: faker.datatype.uuid() });
+  HttpMocks.mockSuccess(method, /login/, {
+    accessToken: faker.datatype.uuid(),
+    name: faker.name.findName(),
+  });
 
 export const mockSuccessInvalidData = (): void =>
-  HttpMocks.mockSuccess(method, /login/, { invalid: faker.datatype.uuid() });
+  HttpMocks.mockSuccess(method, /login/, { invalid: null });
