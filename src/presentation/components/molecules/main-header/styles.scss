@@ -1,0 +1,97 @@
+@import '../../../styles/colors.scss';
+
+.mainHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 100px;
+  border-bottom: 2px solid $primary;
+  height: 60px;
+
+  @media only screen and (max-width: 768px) {
+    padding: 10px 20px;
+  }
+
+  .navLogo {
+    width: 35px;
+    height: 35px;
+  }
+
+  .userContainerHeader {
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 3px;
+    transition: all ease 0.2s;
+    width: fit-content;
+
+    &:hover {
+      background: rgba($primary, $alpha: 0.2);
+
+      .userOptionsContainer {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    .userName {
+      font-size: 1.6rem;
+      font-weight: 600;
+      width: fit-content;
+
+      text-align: right;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .userIcon {
+      font-size: 35px;
+    }
+
+    .userOptionsContainer {
+      opacity: 0;
+      visibility: hidden;
+      position: absolute;
+      bottom: 0px;
+      width: 60%;
+      right: 0;
+      transition: all ease 0.2s;
+      height: 0;
+
+      .userOptionsList {
+        list-style: none;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+        background: $primaryDark;
+        border-radius: 10px 5px 5px 10px;
+        overflow: hidden;
+
+        .userOptionsItem {
+          cursor: pointer;
+          display: block;
+          display: flex;
+          align-items: center;
+          justify-content: right;
+          gap: 8px;
+          text-align: left;
+          padding: 5px 12px;
+          font-size: 1.6rem;
+
+          &:hover {
+            background: darken($primaryDark, 20);
+          }
+
+          transition: all ease 0.2s;
+
+          .optionIcon {
+            font-size: 1.4rem;
+          }
+        }
+      }
+    }
+  }
+}
