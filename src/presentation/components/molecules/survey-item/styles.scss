@@ -16,8 +16,38 @@
   background-repeat: no-repeat;
   background-image: linear-gradient(to right, rgba($primary, 0.2), rgba($primary, 0.2)),
     linear-gradient(to right, $background, $background);
+  background-position: 0 0, 54px 0;
   background-size: 54px 100%, 100% 100%;
   margin-bottom: 20px;
+
+  &:empty {
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-image: linear-gradient(to right, rgba($gray, 0.2), rgba($gray, 0.2)),
+      linear-gradient(to right, rgba($gray, 0.2), rgba($gray, 0.2)),
+      linear-gradient(to right, rgba($gray, 0.2), rgba($gray, 0.2)),
+      linear-gradient(to right, rgba($gray, 0.2), rgba($gray, 0.2)),
+      linear-gradient(to right, rgba($gray, 0.2), rgba($gray, 0.2));
+    background-size: 60px 100px, 100% 40px, 200px 18px, 180px 18px, 190px 18px;
+    background-position: 30px 78px, 0 bottom, 105px 93.5px, 105px 118.5px, 105px 143.5px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: linear-gradient(
+        to right,
+        transparent,
+        rgba($white, 0.2),
+        transparent
+      );
+      transform: translateX(-100%);
+      animation: shimmer 1.1s infinite;
+    }
+  }
 
   .surveyContent {
     flex-grow: 1;
@@ -31,6 +61,8 @@
       flex-direction: column;
       align-items: center;
       padding: 8px;
+      height: 100px;
+      width: 60px;
       background: $primaryDark;
       border-radius: 5px;
 
@@ -48,10 +80,11 @@
       }
     }
     h3 {
-      font-size: 1.8rem;
+      font-size: 18px;
       width: 100%;
       max-width: 200px;
       font-weight: 600;
+      line-height: 25px;
     }
   }
 
@@ -79,5 +112,11 @@
     position: absolute;
     top: -15px;
     right: -15px;
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
   }
 }

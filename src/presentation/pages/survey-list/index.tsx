@@ -10,7 +10,7 @@ const SurveyList: React.FC = () => {
         <ul className={Styles.surveys}>
           <SurveyItem className={Styles.survey} />
           <SurveyItem className={Styles.survey} />
-          <SurveyItem className={Styles.survey} />
+          <SurveyItem className={Styles.survey} loading />
         </ul>
       </div>
     </PageWrapper>
