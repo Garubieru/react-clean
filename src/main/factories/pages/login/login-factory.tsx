@@ -6,7 +6,7 @@ import {
   createLocalStoreLoginAccount,
 } from '@/main/factories';
 
-export const createLogin: React.FC = () => {
+export const CreateLogin: React.FC = () => {
   return (
     <Login
       authentication={createRemoteAuthentication()}

@@ -7,7 +7,7 @@ import {
   createSignupValidation,
 } from '@/main/factories/usecases';
 
-export const createSignup: React.FC = () => {
+export const CreateSignup: React.FC = () => {
   return (
     <Signup
       remoteSignup={createRemoteSignup()}
