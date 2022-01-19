@@ -37,7 +37,7 @@ const Login: React.FC<LoginProps> = ({
         email: state.email,
         password: state.password,
       });
-      await storeLoginAccount.store(account);
+      storeLoginAccount.store(account);
       navigate('/');
     } catch (e) {
       const errorMsg = e as Error;

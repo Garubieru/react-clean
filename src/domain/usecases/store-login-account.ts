@@ -1,5 +1,5 @@
 import { AccountModel } from '@/domain/models';
 
 export interface StoreLoginAccount {
-  store: (account: AccountModel) => Promise<void>;
+  store: (account: AccountModel) => void;
 }

@@ -157,7 +157,9 @@ describe('Signup Component', () => {
   it('Should render error if storeLoginAccountMock.store fails', async () => {
     const { sut, storeLoginAccountMock } = createSut();
     const error = new Error('error');
-    jest.spyOn(storeLoginAccountMock, 'store').mockRejectedValue(error);
+    jest.spyOn(storeLoginAccountMock, 'store').mockImplementationOnce(() => {
+      throw error;
+    });
     await Helpers.submitForm(sut, 'signup-form');
     Helpers.testErrorContainer(sut, 'error-msg', error.message);
   });

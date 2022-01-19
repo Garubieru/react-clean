@@ -67,7 +67,7 @@ const Signup: React.FC<SignupProps> = ({
         password,
         passwordConfirmation,
       });
-      await storeLoginAccount.store(account);
+      storeLoginAccount.store(account);
       navigate('/');
     } catch (e) {
       const error = e as Error;

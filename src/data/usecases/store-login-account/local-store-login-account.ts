@@ -5,8 +5,8 @@ import { StoreLoginAccount } from '@/domain/usecases';
 
 export class LocalStoreLoginAccount implements StoreLoginAccount {
   constructor(private readonly setStorage: SetStorage) {}
-  async store(account: AccountModel): Promise<void> {
+  store(account: AccountModel): void {
     if (!account?.accessToken) throw new UnexpectedError();
-    return await this.setStorage.set('userAccount', JSON.stringify(account));
+    this.setStorage.set('userAccount', JSON.stringify(account));
   }
 }

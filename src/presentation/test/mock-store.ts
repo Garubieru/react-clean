@@ -3,7 +3,7 @@ import { StoreLoginAccount } from '@/domain/usecases';
 
 export class StoreLoginAccountMock implements StoreLoginAccount {
   account: AccountModel;
-  async store(account: AccountModel): Promise<void> {
+  store(account: AccountModel): void {
     this.account = account;
   }
 }

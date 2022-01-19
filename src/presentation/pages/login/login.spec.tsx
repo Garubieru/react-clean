@@ -195,7 +195,9 @@ describe('Login Component', () => {
       populateForm: true,
     });
     const error = new Error('error');
-    jest.spyOn(storeLoginAccountMock, 'store').mockReturnValueOnce(Promise.reject(error));
+    jest.spyOn(storeLoginAccountMock, 'store').mockImplementationOnce(() => {
+      throw error;
+    });
     await Helpers.submitForm(sut, 'login-form');
     Helpers.testErrorContainer(sut, 'error-msg', error.message);
   });
