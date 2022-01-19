@@ -1,1 +1,1 @@
-export * from './login-account-adapter';
+export * from './login-account-adapter/login-account-adapter';
