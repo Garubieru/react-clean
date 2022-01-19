@@ -1,0 +1,23 @@
+@import '../../../styles/colors.scss';
+
+.surveyIconStatusWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+
+  &.success {
+    background-color: $success;
+  }
+
+  &.warning {
+    background-color: $warning;
+  }
+
+  img {
+    width: 18px;
+    height: 18px;
+  }
+}

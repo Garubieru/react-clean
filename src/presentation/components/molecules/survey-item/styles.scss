@@ -75,22 +75,9 @@
     }
   }
 
-  .surveyIconStatus {
+  .iconWrap {
     position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
     top: -15px;
     right: -15px;
-    border-radius: 50%;
-    background: $success;
-    width: 35px;
-    height: 35px;
-
-    img {
-      width: 20px;
-      height: 20px;
-    }
   }
 }

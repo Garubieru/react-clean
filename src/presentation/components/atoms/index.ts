@@ -6,4 +6,4 @@ export { default as Link } from './link';
 export { default as Logo } from './logo';
 export { default as Spinner } from './spinner';
 export { default as Form } from './form';
-export { default as SurveyItem } from '../molecules/survey-item';
+export { default as SurveyIconStatus, IconStatus } from './survey-icon-status';
