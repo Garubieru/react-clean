@@ -3,7 +3,7 @@ import { AccountModel } from '@/domain/models';
 
 export type ApiContextProtocol = {
   setLoginAccount?: (account: AccountModel) => void;
-  getLoginAccount?: (key: string) => AccountModel;
+  getLoginAccount?: () => AccountModel;
 };
 
 export const ApiContext = createContext<ApiContextProtocol>(null);

@@ -6,3 +6,9 @@ export const setLocalLoginAccountAdapter = (account: AccountModel): void => {
   if (!account?.accessToken) throw new UnexpectedError();
   createLocalStorage().set('userAccount', JSON.stringify(account));
 };
+
+export const getLocalLoginAccountAdapter = (): AccountModel => {
+  const userAccount = JSON.parse(createLocalStorage().get('userAccount')) as AccountModel;
+  if (!userAccount) throw new UnexpectedError();
+  return userAccount;
+};

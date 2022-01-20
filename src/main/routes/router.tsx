@@ -3,13 +3,17 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { CreateLogin, CreateSignup } from '@/main/factories/pages';
 import { SurveyList } from '@/presentation/pages';
 import { ApiContext } from '@/presentation/context/api/api-context';
-import { setLocalLoginAccountAdapter } from '@/main/adapters';
+import {
+  setLocalLoginAccountAdapter,
+  getLocalLoginAccountAdapter,
+} from '@/main/adapters';
 
 const Router: React.FC = () => {
   return (
     <ApiContext.Provider
       value={{
         setLoginAccount: setLocalLoginAccountAdapter,
+        getLoginAccount: getLocalLoginAccountAdapter,
       }}
     >
       <BrowserRouter>
