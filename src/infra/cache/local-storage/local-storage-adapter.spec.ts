@@ -1,3 +1,4 @@
+import { AccountModel } from '@/domain/models';
 import faker from 'faker';
 import 'jest-localstorage-mock';
 import { LocalStorageAdapter } from './local-storage-adapter';
@@ -5,7 +6,11 @@ import { LocalStorageAdapter } from './local-storage-adapter';
 const createSut = (): LocalStorageAdapter => new LocalStorageAdapter();
 
 describe('LocalStorageAdapter', () => {
-  beforeEach(() => localStorage.clear());
+  beforeEach(() => {
+    localStorage.clear();
+    jest.clearAllMocks();
+  });
+
   describe('set', () => {
     it('Should class localStorage.setItem with correct params', () => {
       const sut = createSut();
@@ -35,16 +40,18 @@ describe('LocalStorageAdapter', () => {
     it('Should return correct value if localStorage item is set', () => {
       const sut = createSut();
       const key = faker.database.column();
-      const item = faker.random.objectElement();
+      const item = JSON.stringify(faker.random.objectElement<AccountModel>());
+      const localStorageGetItemSpy = jest.spyOn(localStorage, 'getItem');
       localStorage.setItem(key, item);
-      const result = sut.get(key);
-      expect(result).toEqual(item);
+      sut.get(key);
+      expect(localStorageGetItemSpy.mock.results[0].value).toBe(item);
     });
 
     it('Should not return value if localStorage item is not set', () => {
       const sut = createSut();
-      const result = sut.get(faker.database.column());
-      expect(result).toBeFalsy();
+      const localStorageGetItemSpy = jest.spyOn(localStorage, 'getItem');
+      sut.get(faker.database.column());
+      expect(localStorageGetItemSpy.mock.results[0].value).toBeFalsy();
     });
   });
 });
