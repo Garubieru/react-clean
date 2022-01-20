@@ -6,11 +6,11 @@ type PageWrapperProps = {
   header?: JSX.Element;
 };
 
-const PageWrapper: React.FC<PageWrapperProps> = ({ header, ...props }) => {
+const PageWrapper: React.FC<PageWrapperProps> = ({ header, children }) => {
   return (
     <div className={Styles.pageWrapper}>
       {header || <LoginHeader />}
-      <div className={Styles.pageContent}>{props.children}</div>
+      <div className={Styles.pageContent}>{children}</div>
       <Footer />
     </div>
   );

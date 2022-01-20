@@ -4,10 +4,10 @@ import { render, RenderResult } from '@testing-library/react';
 import { createMemoryHistory, MemoryHistory } from 'history';
 import React from 'react';
 import { Router } from 'react-router-dom';
-import PrivateRoute from './private-route';
+import PrivateRoute from '.';
 
 const Page: React.FC = () => {
-  return <div>Oi</div>;
+  return <div>Page</div>;
 };
 
 type SutType = {
