@@ -6,6 +6,6 @@ export class LocalStorageAdapter implements SetStorage, GetStorage {
   }
 
   get(key: string): string {
-    return localStorage.getItem(key);
+    return localStorage.getItem(key) || null;
   }
 }
