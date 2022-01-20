@@ -1,10 +1,10 @@
 import faker from 'faker';
 import 'jest-localstorage-mock';
-import { SetLocalStorageAdapter } from './set-local-storage-adapter';
+import { LocalStorageAdapter } from './local-storage-adapter';
 
-const createSut = (): SetLocalStorageAdapter => new SetLocalStorageAdapter();
+const createSut = (): LocalStorageAdapter => new LocalStorageAdapter();
 
-describe('SetLocalStorageAdapter', () => {
+describe('LocalStorageAdapter', () => {
   beforeEach(() => localStorage.clear());
   it('Should class localStorage.setItem with correct params', async () => {
     const sut = createSut();

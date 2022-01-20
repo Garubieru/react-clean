@@ -1,1 +1,1 @@
-export * from './set-local-storage-factory';
+export * from './local-storage-factory';

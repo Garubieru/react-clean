@@ -1,16 +1,16 @@
 import { UnexpectedError } from '@/domain/errors';
 import { mockAccount } from '@/domain/test';
-import { SetLocalStorageAdapter } from '@/infra/cache/local-storage/set-local-storage-adapter';
+import { LocalStorageAdapter } from '@/infra/cache/local-storage/local-storage-adapter';
 import { setLocalLoginAccountAdapter } from './login-account-adapter';
 
-jest.mock('@/infra/cache/local-storage/set-local-storage-adapter');
+jest.mock('@/infra/cache/local-storage/local-storage-adapter');
 
 describe('LoginAccountAdapter', () => {
-  it('Should call SetLocalStorageAdapter adapter with correct values', () => {
+  it('Should call LocalStorageAdapter adapter with correct values', () => {
     const mockedAccount = mockAccount();
-    const setLocalStorageAdapterSpy = jest.spyOn(SetLocalStorageAdapter.prototype, 'set');
+    const localStorageAdapterSpy = jest.spyOn(LocalStorageAdapter.prototype, 'set');
     setLocalLoginAccountAdapter(mockedAccount);
-    expect(setLocalStorageAdapterSpy).toHaveBeenCalledWith(
+    expect(localStorageAdapterSpy).toHaveBeenCalledWith(
       'userAccount',
       JSON.stringify(mockedAccount),
     );

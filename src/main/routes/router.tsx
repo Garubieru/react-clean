@@ -7,7 +7,11 @@ import { setLocalLoginAccountAdapter } from '@/main/adapters';
 
 const Router: React.FC = () => {
   return (
-    <ApiContext.Provider value={{ setLoginAccount: setLocalLoginAccountAdapter }}>
+    <ApiContext.Provider
+      value={{
+        setLoginAccount: setLocalLoginAccountAdapter,
+      }}
+    >
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<CreateLogin />} />
