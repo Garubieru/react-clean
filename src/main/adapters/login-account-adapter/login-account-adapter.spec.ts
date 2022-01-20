@@ -37,10 +37,5 @@ describe('LoginAccountAdapter', () => {
       expect(localStorageAdapterGetSpy).toHaveBeenCalledWith('userAccount');
       expect(result).toEqual(mockedAccount);
     });
-
-    it('Should return UnexpectedError if LocalStorageAdapter.get returns undefined', () => {
-      jest.spyOn(LocalStorageAdapter.prototype, 'get').mockReturnValueOnce(null);
-      expect(() => getLocalLoginAccountAdapter()).toThrow(new UnexpectedError());
-    });
   });
 });

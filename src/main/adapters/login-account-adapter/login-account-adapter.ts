@@ -9,6 +9,5 @@ export const setLocalLoginAccountAdapter = (account: AccountModel): void => {
 
 export const getLocalLoginAccountAdapter = (): AccountModel => {
   const userAccount = JSON.parse(createLocalStorage().get('userAccount')) as AccountModel;
-  if (!userAccount) throw new UnexpectedError();
   return userAccount;
 };
