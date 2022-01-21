@@ -1,9 +1,9 @@
-import '@testing-library/jest-dom';
 import React from 'react';
 import faker from 'faker';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { render, RenderResult, fireEvent, cleanup } from '@testing-library/react';
+import { render, fireEvent, screen } from '@testing-library/react';
+
 import { ValidationStub, AuthenticationSpy, Helpers } from '@/presentation/test';
 import { mockAuthentication } from '@/domain/test';
 import { Login } from '@/presentation/pages';
@@ -13,7 +13,6 @@ import { ApiContext } from '@/presentation/context/api/api-context';
 import { AccountModel } from '@/domain/models';
 
 type SutTypes = {
-  sut: RenderResult;
   validationStub: ValidationStub;
   authenticationSpy: AuthenticationSpy;
   setLoginAccount: jest.Mock<void, [AccountModel]>;
@@ -32,132 +31,130 @@ const createSut = (params?: SutParams): SutTypes => {
   validationStub.errorMessage = params?.withError && faker.random.words();
   const authenticationSpy = new AuthenticationSpy();
   const setLoginAccount = jest.fn();
-  const sut = render(
+  render(
     <ApiContext.Provider value={{ setLoginAccount }}>
       <Router location={history.location} navigator={history}>
         <Login validation={validationStub} authentication={authenticationSpy} />
       </Router>
     </ApiContext.Provider>,
   );
-  if (params?.populateForm) populateForm(sut, params?.authParams);
+  if (params?.populateForm) populateForm(params?.authParams);
 
-  return { sut, validationStub, authenticationSpy, setLoginAccount };
+  return { validationStub, authenticationSpy, setLoginAccount };
 };
 
-const populateForm = (sut: RenderResult, authParams = mockAuthentication()): void => {
-  Helpers.populateField(sut, 'email', authParams.email);
-  Helpers.populateField(sut, 'password', authParams.password);
+const populateForm = (authParams = mockAuthentication()): void => {
+  Helpers.populateField('email', authParams.email);
+  Helpers.populateField('password', authParams.password);
 };
 
 describe('Login Component', () => {
-  afterEach(() => cleanup());
   it('Should start screen with initial state', async () => {
-    const { sut, validationStub } = createSut({ withError: true });
+    const { validationStub } = createSut({ withError: true });
 
-    Helpers.testErrorContainer(sut, 'error-msg');
+    Helpers.testErrorContainer('error-msg');
+    expect(screen.getByTestId('login-button')).toBeDisabled();
 
-    Helpers.testButtonStatus(sut, 'login-button', 'disabled');
-
-    Helpers.testFieldStatus(sut, 'email', validationStub.errorMessage);
-    Helpers.testFieldStatus(sut, 'password', validationStub.errorMessage);
+    Helpers.testFieldStatus('email', validationStub.errorMessage);
+    Helpers.testFieldStatus('password', validationStub.errorMessage);
   });
 
   it('Should throw email error if Validations fail', async () => {
-    const { sut, validationStub } = createSut({ withError: true });
-    Helpers.populateField(sut, 'email');
-    Helpers.testFieldStatus(sut, 'email', validationStub.errorMessage);
+    const { validationStub } = createSut({ withError: true });
+    Helpers.populateField('email');
+    Helpers.testFieldStatus('email', validationStub.errorMessage);
   });
 
   it('Should throw password error if Validations fail', async () => {
-    const { sut, validationStub } = createSut({ withError: true });
-    Helpers.populateField(sut, 'password');
-    Helpers.testFieldStatus(sut, 'password', validationStub.errorMessage);
+    const { validationStub } = createSut({ withError: true });
+    Helpers.populateField('password');
+    Helpers.testFieldStatus('password', validationStub.errorMessage);
   });
 
   it('Should not throw email error if Validations succeeds', async () => {
-    const { sut } = createSut();
-    Helpers.populateField(sut, 'email');
-    Helpers.testFieldStatus(sut, 'email');
+    createSut();
+    Helpers.populateField('email');
+    Helpers.testFieldStatus('email');
   });
 
   it('Should not throw password error if Validations succeeds', async () => {
-    const { sut } = createSut();
-    Helpers.populateField(sut, 'password');
-    Helpers.testFieldStatus(sut, 'password');
+    createSut();
+    Helpers.populateField('password');
+    Helpers.testFieldStatus('password');
   });
 
   it('Should not be able to submit if form is invalid', async () => {
-    const { sut } = createSut({ withError: true, populateForm: true });
-    Helpers.testButtonStatus(sut, 'login-button', 'disabled');
+    createSut({ withError: true, populateForm: true });
+    expect(screen.getByTestId('login-button')).toBeDisabled();
   });
 
   it('Should be able to submit if form is valid', async () => {
-    const { sut } = createSut({ populateForm: true });
-    Helpers.testButtonStatus(sut, 'login-button', 'enabled');
+    createSut({ populateForm: true });
+    expect(screen.getByTestId('login-button')).toBeEnabled();
   });
 
   it('Should show spinner in button when submit', async () => {
-    const { sut } = createSut({ populateForm: true });
-    await Helpers.submitForm(sut, 'login-form');
-    Helpers.testElementIsRendered(sut, 'spinner');
+    createSut({ populateForm: true });
+    await Helpers.submitForm('login-form');
+    expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
 
   it('Should call Authentication with correct values', async () => {
     const authParams = mockAuthentication();
-    const { sut, authenticationSpy } = createSut({
+    const { authenticationSpy } = createSut({
       populateForm: true,
       authParams: authParams,
     });
-    await Helpers.submitForm(sut, 'login-form');
+    await Helpers.submitForm('login-form');
 
     expect(authenticationSpy.params).toEqual(authParams);
   });
 
   it('Should button be disable while submitting', async () => {
-    const { sut } = createSut({
+    createSut({
       populateForm: true,
     });
-    await Helpers.submitForm(sut, 'login-form');
+    await Helpers.submitForm('login-form');
 
-    Helpers.testButtonStatus(sut, 'login-button', 'disabled');
+    expect(screen.getByTestId('login-button')).toBeDisabled();
   });
 
   it('Should not call Authentication if form is invalid', async () => {
-    const { sut, authenticationSpy } = createSut({
+    const { authenticationSpy } = createSut({
       withError: true,
       populateForm: true,
     });
-    await Helpers.submitForm(sut, 'login-form');
+    await Helpers.submitForm('login-form');
 
     expect(authenticationSpy.callsCount).toBe(0);
   });
 
   it('Should not call Authentication if form is not fullfiled', async () => {
-    const { sut, authenticationSpy } = createSut({
+    const { authenticationSpy } = createSut({
       withError: true,
     });
-    await Helpers.submitForm(sut, 'login-form');
+    await Helpers.submitForm('login-form');
 
     expect(authenticationSpy.callsCount).toBe(0);
   });
 
   it('Should call Authentication only once if submit is loading', async () => {
-    const { sut, authenticationSpy } = createSut({ populateForm: true });
-    await Helpers.submitForm(sut, 'login-form');
-    await Helpers.submitForm(sut, 'login-form');
+    const { authenticationSpy } = createSut({ populateForm: true });
+    await Helpers.submitForm('login-form');
+    await Helpers.submitForm('login-form');
     expect(authenticationSpy.callsCount).toBe(1);
   });
 
   it('Should call Authentication if form is valid', async () => {
-    const { sut, authenticationSpy } = createSut({
+    const { authenticationSpy } = createSut({
       populateForm: true,
     });
-    await Helpers.submitForm(sut, 'login-form');
+    await Helpers.submitForm('login-form');
     expect(authenticationSpy.callsCount).toBe(1);
   });
 
   it('Should render error if Authentication fails', async () => {
-    const { sut, authenticationSpy } = createSut({
+    const { authenticationSpy } = createSut({
       populateForm: true,
     });
     const error = new InvalidCredentialError();
@@ -165,35 +162,35 @@ describe('Login Component', () => {
       .spyOn(authenticationSpy, 'auth')
       .mockReturnValueOnce(Promise.reject(new InvalidCredentialError()));
 
-    await Helpers.submitForm(sut, 'login-form');
-    Helpers.testErrorContainer(sut, 'error-msg', error.message);
+    await Helpers.submitForm('login-form');
+    Helpers.testErrorContainer('error-msg', error.message);
   });
 
   it('Should call storeLoginAccountMock.store with correct accessToken and redirect to /', async () => {
-    const { sut, setLoginAccount, authenticationSpy } = createSut({
+    const { setLoginAccount, authenticationSpy } = createSut({
       populateForm: true,
     });
-    await Helpers.submitForm(sut, 'login-form');
+    await Helpers.submitForm('login-form');
     expect(setLoginAccount).toHaveBeenCalledWith(authenticationSpy.account);
     expect(history.location.pathname).toBe('/');
   });
 
   it('Should go to sign up page on click', async () => {
-    const { sut } = createSut();
-    const link = sut.getByTestId('signup-link');
+    createSut();
+    const link = screen.getByTestId('signup-link');
     fireEvent.click(link);
     expect(history.location.pathname).toBe('/signup');
   });
 
   it('Should render error if storeLoginAccountMock.store fails', async () => {
-    const { sut, setLoginAccount } = createSut({
+    const { setLoginAccount } = createSut({
       populateForm: true,
     });
     const error = new Error('error');
     setLoginAccount.mockImplementationOnce(() => {
       throw error;
     });
-    await Helpers.submitForm(sut, 'login-form');
-    Helpers.testErrorContainer(sut, 'error-msg', error.message);
+    await Helpers.submitForm('login-form');
+    Helpers.testErrorContainer('error-msg', error.message);
   });
 });
