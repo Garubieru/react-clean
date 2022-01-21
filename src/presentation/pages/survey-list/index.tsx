@@ -8,7 +8,7 @@ const SurveyList: React.FC = () => {
     <PageWrapper header={<MainHeader />}>
       <div className={Styles.surveyListContainer}>
         <h2>Surveys</h2>
-        <ul className={Styles.surveys}>
+        <ul className={Styles.surveys} data-testid="surveysList">
           <SurveyItem className={Styles.survey} loading />
           <SurveyItem className={Styles.survey} loading />
           <SurveyItem className={Styles.survey} loading />
