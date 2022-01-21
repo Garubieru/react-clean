@@ -1,6 +1,5 @@
-import { fireEvent, waitFor, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import faker from 'faker';
+import { fireEvent, waitFor, screen } from '@testing-library/react';
 
 export const testFieldStatus = (fieldName: string, error?: string): void => {
   const inputWrap = screen.getByTestId(`${fieldName}-input-wrap`);

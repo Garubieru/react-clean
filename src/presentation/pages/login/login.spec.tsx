@@ -1,16 +1,18 @@
 import React from 'react';
-import faker from 'faker';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { render, fireEvent, screen } from '@testing-library/react';
 
 import { ValidationStub, AuthenticationSpy, Helpers } from '@/presentation/test';
+import { ApiContext } from '@/presentation/context/api/api-context';
+import { RequiredFieldError } from '@/presentation/validation/errors';
+
 import { mockAuthentication } from '@/domain/test';
-import { Login } from '@/presentation/pages';
 import { AuthenticationParams } from '@/domain/usecases';
 import { InvalidCredentialError } from '@/domain/errors';
-import { ApiContext } from '@/presentation/context/api/api-context';
 import { AccountModel } from '@/domain/models';
+
+import Login from '.';
 
 type SutTypes = {
   validationStub: ValidationStub;
@@ -28,7 +30,7 @@ const history = createMemoryHistory({ initialEntries: ['/login'] });
 
 const createSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub();
-  validationStub.errorMessage = params?.withError && faker.random.words();
+  validationStub.errorMessage = params?.withError && new RequiredFieldError().message;
   const authenticationSpy = new AuthenticationSpy();
   const setLoginAccount = jest.fn();
   render(

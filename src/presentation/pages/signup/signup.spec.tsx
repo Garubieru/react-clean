@@ -1,14 +1,15 @@
 import React from 'react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, fireEvent, screen } from '@testing-library/react';
 
-import { RemoteSignupSpy, ValidationStub, Helpers } from '@/presentation/test';
-import { RequiredFieldError } from '@/presentation/validation/errors';
-import { mockAccountCreation } from '@/domain/test';
-import { AccountParams } from '@/domain/usecases';
-import { EmailInUseError } from '@/domain/errors';
+import { ValidationStub, RemoteSignupSpy, Helpers } from '@/presentation/test';
 import { ApiContext } from '@/presentation/context/api/api-context';
+import { RequiredFieldError } from '@/presentation/validation/errors';
+
+import { mockAccountCreation } from '@/domain/test';
+import { EmailInUseError } from '@/domain/errors';
+import { AccountParams } from '@/domain/usecases';
 import { AccountModel } from '@/domain/models';
 
 import Signup from '.';
