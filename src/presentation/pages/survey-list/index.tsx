@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { MainHeader, PageWrapper } from '@/presentation/components';
 import { SurveyItem } from './components';
 import Styles from './styles.scss';
+import { LoadSurveyList } from '@/domain/usecases';
 
-const SurveyList: React.FC = () => {
+type SurveyListProps = {
+  loadSurveyList: LoadSurveyList;
+};
+
+const SurveyList: React.FC<SurveyListProps> = ({ loadSurveyList }) => {
+  useEffect(() => {
+    const listSurveys = async (): Promise<void> => {
+      await loadSurveyList.list();
+    };
+
+    listSurveys();
+  });
   return (
     <PageWrapper header={<MainHeader />}>
       <div className={Styles.surveyListContainer}>
