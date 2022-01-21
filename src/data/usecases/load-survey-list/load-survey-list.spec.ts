@@ -28,49 +28,49 @@ describe('RemoteLoadSurveyList', () => {
     expect(httpGetClientSpy.url).toBe(url);
   });
 
-  it('Should throw ForbiddenError on 403', () => {
+  it('Should throw ForbiddenError on 403', async () => {
     const { sut, httpGetClientSpy } = createSut();
     httpGetClientSpy.response = {
       statusCode: HttpStatusCode.forbidden,
     };
     const promise = sut.list();
-    expect(promise).rejects.toThrow(new ForbiddenError());
+    await expect(promise).rejects.toThrow(new ForbiddenError());
   });
 
-  it('Should throw UnexpectedError on 401', () => {
+  it('Should throw UnexpectedError on 401', async () => {
     const { sut, httpGetClientSpy } = createSut();
     httpGetClientSpy.response = {
       statusCode: HttpStatusCode.unauthorized,
     };
     const promise = sut.list();
-    expect(promise).rejects.toThrow(new UnexpectedError());
+    await expect(promise).rejects.toThrow(new UnexpectedError());
   });
 
-  it('Should throw UnexpectedError on 400', () => {
+  it('Should throw UnexpectedError on 400', async () => {
     const { sut, httpGetClientSpy } = createSut();
     httpGetClientSpy.response = {
       statusCode: HttpStatusCode.badRequest,
     };
     const promise = sut.list();
-    expect(promise).rejects.toThrow(new UnexpectedError());
+    await expect(promise).rejects.toThrow(new UnexpectedError());
   });
 
-  it('Should throw UnexpectedError on 404', () => {
+  it('Should throw UnexpectedError on 404', async () => {
     const { sut, httpGetClientSpy } = createSut();
     httpGetClientSpy.response = {
       statusCode: HttpStatusCode.notFound,
     };
     const promise = sut.list();
-    expect(promise).rejects.toThrow(new UnexpectedError());
+    await expect(promise).rejects.toThrow(new UnexpectedError());
   });
 
-  it('Should throw UnexpectedError on 500', () => {
+  it('Should throw UnexpectedError on 500', async () => {
     const { sut, httpGetClientSpy } = createSut();
     httpGetClientSpy.response = {
       statusCode: HttpStatusCode.serverError,
     };
     const promise = sut.list();
-    expect(promise).rejects.toThrow(new UnexpectedError());
+    await expect(promise).rejects.toThrow(new UnexpectedError());
   });
 
   it('Should return empty array on 204', async () => {
