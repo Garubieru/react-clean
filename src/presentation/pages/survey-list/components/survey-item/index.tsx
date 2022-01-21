@@ -1,6 +1,6 @@
 import React from 'react';
 import Styles from './styles.scss';
-import { SurveyIconStatus, IconStatus } from '@/presentation/components';
+import SurveyIconStatus, { IconStatus } from '../survey-icon-status';
 
 type SurveyItemProps = {
   className?: string;
