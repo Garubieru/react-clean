@@ -79,7 +79,8 @@
         font-size: 1.4rem;
       }
     }
-    h3 {
+
+    .surveyQuestion {
       font-size: 18px;
       width: 100%;
       max-width: 200px;
@@ -108,7 +109,7 @@
     }
   }
 
-  .iconWrap {
+  .surveyIcon {
     position: absolute;
     top: -15px;
     right: -15px;

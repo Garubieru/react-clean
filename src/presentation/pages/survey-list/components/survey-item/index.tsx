@@ -1,25 +1,31 @@
 import React from 'react';
 import Styles from './styles.scss';
 import SurveyIconStatus, { IconStatus } from '../survey-icon-status';
+import { SurveyModel } from '@/domain/models';
 
 type SurveyItemProps = {
   className?: string;
   loading?: boolean;
+  surveyData?: SurveyModel;
 };
 
-const SurveyItem: React.FC<SurveyItemProps> = (props) => {
+const SurveyItem: React.FC<SurveyItemProps> = ({ className, loading, surveyData }) => {
+  const surveyTime = surveyData?.date;
   return (
-    <li className={[Styles.surveyItem, props.className].join(' ')}>
-      {!props.loading && (
+    <li className={[Styles.surveyItem, className].join(' ')} data-testid="survey-item">
+      {!loading && (
         <>
-          <SurveyIconStatus className={Styles.iconWrap} iconName={IconStatus.thumsDown} />
+          <SurveyIconStatus
+            className={Styles.surveyIcon}
+            iconName={surveyData.didAnswer ? IconStatus.thumbsUp : IconStatus.thumbsDown}
+          />
           <div className={Styles.surveyContent}>
             <time className={Styles.surveyTime}>
-              <span className={Styles.surveyDay}>20</span>
-              <span className={Styles.surveyMonth}>12</span>
-              <span className={Styles.surveyYear}>2020</span>
+              <span className={Styles.surveyDay}>{surveyTime.getDay()}</span>
+              <span className={Styles.surveyMonth}>{surveyTime.getMonth()}</span>
+              <span className={Styles.surveyYear}>{surveyTime.getFullYear()}</span>
             </time>
-            <h3>What is your favorite framework duly do dole memem?</h3>
+            <h3 className={Styles.surveyQuestion}>{surveyData.question}</h3>
           </div>
           <footer>See results</footer>
         </>

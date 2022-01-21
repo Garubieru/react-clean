@@ -12,7 +12,7 @@ export const mockSurvey = (answerLength: number = 2): SurveyModel => {
     id: faker.datatype.uuid(),
     didAnswer: faker.datatype.boolean(),
     answers: Array.from({ length: answerLength }, mockAnswer),
-    date: faker.date.recent().toISOString(),
+    date: faker.date.recent(),
     question: faker.random.words(),
   };
 };
