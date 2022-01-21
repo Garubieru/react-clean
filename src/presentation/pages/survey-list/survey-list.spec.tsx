@@ -8,9 +8,12 @@ import { mockSurveyList } from '@/domain/test';
 
 class LoadSurveyListStub implements LoadSurveyList {
   public callsCount = 0;
+
+  constructor(public surveyItemsLength: number) {}
+
   async list(): Promise<SurveyModel[]> {
     this.callsCount++;
-    return await Promise.resolve(mockSurveyList());
+    return await Promise.resolve(mockSurveyList(this.surveyItemsLength));
   }
 }
 
@@ -18,8 +21,8 @@ type SutTypes = {
   loadSurveyListStub: LoadSurveyListStub;
 };
 
-const createSut = (): SutTypes => {
-  const loadSurveyListStub = new LoadSurveyListStub();
+const createSut = (surveyItemsLength: number = 5): SutTypes => {
+  const loadSurveyListStub = new LoadSurveyListStub(surveyItemsLength);
   render(<SurveyList loadSurveyList={loadSurveyListStub} />);
   return {
     loadSurveyListStub,
