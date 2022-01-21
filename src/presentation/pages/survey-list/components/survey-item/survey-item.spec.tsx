@@ -18,9 +18,10 @@ const getSurveyElement = (elName: string): HTMLElement => {
   return screen.getByTestId('survey-item').querySelector(`.survey${elName}`);
 };
 
-const testSurveyElement = (surveyData: SurveyModel): void => {
+const testSurveyElement = (surveyData: SurveyModel, didAnswer: boolean): void => {
+  surveyData.didAnswer = didAnswer;
+  surveyData.date = new Date('2020-01-10T00:00:00');
   createSut(false, surveyData);
-  const surveyDate = surveyData.date;
 
   expect(getSurveyElement('Icon')).toHaveClass(
     surveyData.didAnswer ? 'success' : 'warning',
@@ -29,11 +30,9 @@ const testSurveyElement = (surveyData: SurveyModel): void => {
     'src',
     surveyData.didAnswer ? IconStatus.thumbsUp : IconStatus.thumbsDown,
   );
-  expect(getSurveyElement('Day')).toHaveTextContent(surveyDate.getDay().toString());
-  expect(getSurveyElement('Month')).toHaveTextContent(
-    surveyDate.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', ''),
-  );
-  expect(getSurveyElement('Year')).toHaveTextContent(surveyDate.getFullYear().toString());
+  expect(getSurveyElement('Day')).toHaveTextContent('10');
+  expect(getSurveyElement('Month')).toHaveTextContent('jan');
+  expect(getSurveyElement('Year')).toHaveTextContent('2020');
   expect(getSurveyElement('Question')).toHaveTextContent(surveyData.question);
 };
 
@@ -46,13 +45,11 @@ describe('SurveyItem Component', () => {
 
   it('Should render SurveyItem with correct surveyData if survey is answered', () => {
     const surveyData = mockSurvey(2);
-    surveyData.didAnswer = false;
-    testSurveyElement(surveyData);
+    testSurveyElement(surveyData, false);
   });
 
   it('Should render SurveyItem with correct surveyData if survey is not answered', () => {
     const surveyData = mockSurvey(2);
-    surveyData.didAnswer = true;
-    testSurveyElement(surveyData);
+    testSurveyElement(surveyData, true);
   });
 });
