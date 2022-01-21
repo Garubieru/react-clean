@@ -15,7 +15,7 @@ const SurveyIconStatus: React.FC<SurveyIconStatusProps> = ({ iconName, className
   const iconClass = iconName === IconStatus.thumbsUp ? Styles.success : Styles.warning;
   return (
     <div className={[Styles.surveyIconStatusWrap, iconClass, className].join(' ')}>
-      <img src={iconName} />
+      <img data-testid="icon-image" src={iconName} />
     </div>
   );
 };

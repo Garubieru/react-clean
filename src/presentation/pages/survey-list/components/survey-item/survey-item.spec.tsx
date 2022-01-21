@@ -22,9 +22,10 @@ const testSurveyElement = (surveyData: SurveyModel): void => {
   createSut(false, surveyData);
   const surveyDate = surveyData.date;
 
-  const icon = getSurveyElement('Icon');
-  expect(icon).toHaveClass(surveyData.didAnswer ? 'success' : 'warning');
-  expect(icon.querySelector('img')).toHaveAttribute(
+  expect(getSurveyElement('Icon')).toHaveClass(
+    surveyData.didAnswer ? 'success' : 'warning',
+  );
+  expect(screen.getByTestId('icon-image')).toHaveAttribute(
     'src',
     surveyData.didAnswer ? IconStatus.thumbsUp : IconStatus.thumbsDown,
   );
