@@ -30,7 +30,9 @@ const testSurveyElement = (surveyData: SurveyModel): void => {
     surveyData.didAnswer ? IconStatus.thumbsUp : IconStatus.thumbsDown,
   );
   expect(getSurveyElement('Day')).toHaveTextContent(surveyDate.getDay().toString());
-  expect(getSurveyElement('Month')).toHaveTextContent(surveyDate.getMonth().toString());
+  expect(getSurveyElement('Month')).toHaveTextContent(
+    surveyDate.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', ''),
+  );
   expect(getSurveyElement('Year')).toHaveTextContent(surveyDate.getFullYear().toString());
   expect(getSurveyElement('Question')).toHaveTextContent(surveyData.question);
 };
