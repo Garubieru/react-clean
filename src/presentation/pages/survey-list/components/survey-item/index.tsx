@@ -22,7 +22,11 @@ const SurveyItem: React.FC<SurveyItemProps> = ({ className, loading, surveyData 
           <div className={Styles.surveyContent}>
             <time className={Styles.surveyTime}>
               <span className={Styles.surveyDay}>{surveyTime.getDay()}</span>
-              <span className={Styles.surveyMonth}>{surveyTime.getMonth()}</span>
+              <span className={Styles.surveyMonth}>
+                {surveyTime
+                  .toLocaleDateString('pt-BR', { month: 'short' })
+                  .replace('.', '')}
+              </span>
               <span className={Styles.surveyYear}>{surveyTime.getFullYear()}</span>
             </time>
             <h3 className={Styles.surveyQuestion}>{surveyData.question}</h3>
