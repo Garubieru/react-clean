@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { CreateLogin, CreateSignup, CreateSurveyList } from '@/main/factories/pages';
+import { CreateLogin, CreateSignup, CreateSurveyList } from '@/main/factories';
 import { PrivateRoute } from '@/presentation/components';
 import { ApiContext } from '@/presentation/context/api/api-context';
 import {
