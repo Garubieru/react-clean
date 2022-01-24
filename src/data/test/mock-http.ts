@@ -10,6 +10,7 @@ import faker from 'faker';
 
 export class HttpGetClientSpy<R> implements HttpGetClient<R> {
   url: string;
+  headers: any;
 
   response: HttpResponse<R> = {
     statusCode: HttpStatusCode.ok,
@@ -17,6 +18,7 @@ export class HttpGetClientSpy<R> implements HttpGetClient<R> {
 
   async get(params: HttpGetParams): Promise<HttpResponse<R>> {
     this.url = params.url;
+    this.headers = params.headers;
 
     return await Promise.resolve(this.response);
   }
