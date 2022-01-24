@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { LoadSurveyList } from '@/domain/usecases';
-import { SurveyModel } from '@/domain/models';
 import { MainHeader, PageWrapper } from '@/presentation/components';
 import {
   SurveyContext,
   SurveyItems,
   SurveyError,
+  SurveyState,
 } from '@/presentation/pages/survey-list/components';
 import Styles from './styles.scss';
 
 type SurveyListProps = {
   loadSurveyList: LoadSurveyList;
-};
-
-type SurveyState = {
-  surveyItems: SurveyModel[];
-  error: string;
-  reload: boolean;
 };
 
 const SurveyList: React.FC<SurveyListProps> = ({ loadSurveyList }) => {

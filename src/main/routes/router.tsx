@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { CreateLogin, CreateSignup } from '@/main/factories/pages';
-import { SurveyList } from '@/presentation/pages';
+import { CreateLogin, CreateSignup, CreateSurveyList } from '@/main/factories/pages';
 import { PrivateRoute } from '@/presentation/components';
 import { ApiContext } from '@/presentation/context/api/api-context';
 import {
@@ -21,7 +20,7 @@ const Router: React.FC = () => {
         <Routes>
           <Route path="/login" element={<CreateLogin />} />
           <Route path="/signup" element={<CreateSignup />} />
-          <Route path="/" element={<PrivateRoute element={<SurveyList />} />} />
+          <Route path="/" element={<PrivateRoute element={<CreateSurveyList />} />} />
         </Routes>
       </BrowserRouter>
     </ApiContext.Provider>

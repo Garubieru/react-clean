@@ -5,7 +5,11 @@ import Styles from './styles.scss';
 const SurveyError: React.FC = () => {
   const { surveyScreenState, setSurveyScreenState } = useSurveyContext();
   const handleReload = (): void => {
-    setSurveyScreenState((state) => ({ ...state, reload: !state.reload }));
+    setSurveyScreenState((state) => ({
+      error: '',
+      surveyItems: [],
+      reload: !state.reload,
+    }));
   };
   return (
     <div className={Styles.errorWrap} data-testid="error-wrap">

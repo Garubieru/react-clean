@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from 'react';
 import { SurveyModel } from '@/domain/models';
 
-type SurveyState = {
+export type SurveyState = {
   surveyItems: SurveyModel[];
   error: string;
   reload: boolean;
