@@ -1,5 +1,6 @@
 import { GetStorageSpy, HttpGetClientSpy, mockGetParams } from '@/data/test';
 import { AuthorizeHttpGetClientDecorator } from '@/main/decorators';
+import faker from 'faker';
 
 type SutTypes = {
   getStorageSpy: GetStorageSpy;
@@ -27,10 +28,17 @@ describe('AuthorizeHttpGetClientDecorator', () => {
   });
 
   it('Should call httpGetClient with correct values', () => {
-    const { sut, httpGetClientSpy } = createSut();
-    const mockedParams = mockGetParams();
-    sut.get(mockedParams);
-    expect(httpGetClientSpy.url).toBe(mockedParams.url);
-    expect(httpGetClientSpy.headers).toEqual(mockedParams.headers);
+    const { sut, httpGetClientSpy, getStorageSpy } = createSut();
+
+    const mockedHeaders = { Authorization: getStorageSpy.value };
+
+    const mockedRequest = {
+      url: faker.internet.url(),
+      headers: mockedHeaders,
+    };
+    sut.get(mockedRequest);
+
+    expect(httpGetClientSpy.url).toBe(mockedRequest.url);
+    expect(httpGetClientSpy.headers).toEqual(mockedHeaders);
   });
 });
