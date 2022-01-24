@@ -12,12 +12,11 @@ export class AuthorizeHttpGetClientDecorator implements HttpGetClient {
     const account: AccountModel = JSON.parse(this.getStorage.get('userAccount'));
     if (account?.accessToken) {
       Object.assign(params, {
-        headers: {
+        headers: Object.assign(params.headers || {}, {
           'x-access-token': account?.accessToken,
-        },
+        }),
       });
     }
-    this.httpGetClient.get(params);
-    return await Promise.resolve(null);
+    return await this.httpGetClient.get(params);
   }
 }
