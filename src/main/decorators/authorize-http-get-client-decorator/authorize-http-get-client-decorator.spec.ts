@@ -1,4 +1,4 @@
-import { HttpGetParams } from '@/data/protocols/http';
+import { HttpGetParams, HttpStatusCode } from '@/data/protocols/http';
 import { GetStorageSpy, HttpGetClientSpy, mockGetParams } from '@/data/test';
 import { mockAccount } from '@/domain/test';
 import { AuthorizeHttpGetClientDecorator } from '@/main/decorators';
@@ -73,5 +73,15 @@ describe('AuthorizeHttpGetClientDecorator', () => {
       'x-access-token': JSON.parse(getStorageSpy.value).accessToken,
       field: mockRequest.headers.field,
     });
+  });
+
+  it('Should httpGetClient return correct response', async () => {
+    const { sut, httpGetClientSpy } = createSut();
+    httpGetClientSpy.response = {
+      statusCode: HttpStatusCode.ok,
+      body: faker.random.objectElement(),
+    };
+    const result = await sut.get(mockGetParams());
+    expect(result).toEqual(httpGetClientSpy.response);
   });
 });
