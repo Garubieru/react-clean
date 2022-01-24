@@ -5,12 +5,13 @@ import { LoadSurveyList } from '@/domain/usecases';
 import SurveyList from '.';
 import { SurveyModel } from '@/domain/models';
 import { mockSurveyList } from '@/domain/test';
+import { UnexpectedError } from '@/domain/errors';
 
 class LoadSurveyListStub implements LoadSurveyList {
-  public callsCount = 0;
-  public surveyList = mockSurveyList(this.surveyItemsLength);
+  constructor(public surveyItemsLength: number = 5) {}
 
-  constructor(public surveyItemsLength: number) {}
+  callsCount = 0;
+  surveyList = mockSurveyList(this.surveyItemsLength);
 
   async list(): Promise<SurveyModel[]> {
     this.callsCount++;
@@ -22,8 +23,9 @@ type SutTypes = {
   loadSurveyListStub: LoadSurveyListStub;
 };
 
-const createSut = (surveyItemsLength: number = 5): SutTypes => {
-  const loadSurveyListStub = new LoadSurveyListStub(surveyItemsLength);
+const createSut = (
+  loadSurveyListStub: LoadSurveyListStub = new LoadSurveyListStub(),
+): SutTypes => {
   render(<SurveyList loadSurveyList={loadSurveyListStub} />);
   return {
     loadSurveyListStub,
@@ -35,6 +37,7 @@ describe('SurveyList Component', () => {
     createSut();
     const surveyList = screen.getByTestId('surveys-list');
     expect(surveyList.querySelectorAll('li:empty')).toHaveLength(4);
+    expect(screen.queryByTestId('error-wrap')).not.toBeInTheDocument();
     await waitFor(() => surveyList);
   });
 
@@ -44,12 +47,24 @@ describe('SurveyList Component', () => {
     await waitFor(() => screen.getByRole('heading'));
   });
 
-  it('Should render all SurveyItems properly', async () => {
+  it('Should render all SurveyItems properly on success', async () => {
     const surveyListLength = 10;
-    createSut(surveyListLength);
+    const loadSurveyListStub = new LoadSurveyListStub(surveyListLength);
+    createSut(loadSurveyListStub);
     const surveyList = screen.getByTestId('surveys-list');
     expect(surveyList.querySelectorAll('li:empty')).toHaveLength(4);
     await waitFor(() => surveyList);
-    expect(surveyList.querySelectorAll('li:not(:empty)')).toHaveLength(10);
+    expect(surveyList.querySelectorAll('li:not(:empty)')).toHaveLength(surveyListLength);
+    expect(screen.queryByTestId('error-wrap')).not.toBeInTheDocument();
+  });
+
+  it('Should render error if LoadSurveyList fails', async () => {
+    const loadSurveyListStub = new LoadSurveyListStub();
+    const error = new UnexpectedError();
+    jest.spyOn(loadSurveyListStub, 'list').mockRejectedValueOnce(error);
+    createSut(loadSurveyListStub);
+    await waitFor(() => screen.getByRole('heading'));
+    expect(screen.queryByTestId('surveys-list')).not.toBeInTheDocument();
+    expect(screen.getByTestId('error-wrap')).toHaveTextContent(error.message);
   });
 });
