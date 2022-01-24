@@ -50,7 +50,9 @@ describe('AxiosHttpClient', () => {
       const mockedGetParams = mockGetParams();
       const { sut, mockedAxios } = createSut();
       await sut.get(mockedGetParams);
-      expect(mockedAxios.get).toBeCalledWith(mockedGetParams.url);
+      expect(mockedAxios.get).toBeCalledWith(mockedGetParams.url, {
+        headers: mockedGetParams.headers,
+      });
     });
 
     it('Should return the correct statusCode and body on success in axios.get', async () => {
