@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { Input, Button, Link, Error, PageWrapper, Form } from '@/presentation/components';
 import { FormContext } from '@/presentation/context/form/form-context';
 import { Validation } from '@/presentation/protocols/validation';
-import { AuthenticationProtocol } from '@/domain/usecases';
 import Styles from './styles.scss';
 import { useApi } from '@/presentation/context/api/api-context';
+import { Authentication } from '@/domain/usecases';
 
 type LoginProps = {
   validation: Validation;
-  authentication: AuthenticationProtocol;
+  authentication: Authentication;
 };
 
 const Login: React.FC<LoginProps> = ({ validation, authentication }) => {

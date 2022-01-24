@@ -1,8 +1,8 @@
+import { LoadSurveyList } from '@/domain/usecases';
 import React, { createContext, useContext } from 'react';
-import { SurveyModel } from '@/domain/models';
 
 export type SurveyState = {
-  surveyItems: SurveyModel[];
+  surveyItems: LoadSurveyList.Model[];
   error: string;
   reload: boolean;
 };

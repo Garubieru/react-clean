@@ -1,12 +1,13 @@
 import React from 'react';
 import Styles from './styles.scss';
 import SurveyIconStatus, { IconStatus } from '../survey-icon-status';
-import { SurveyModel } from '@/domain/models';
+
+import { LoadSurveyList } from '@/domain/usecases';
 
 type SurveyItemProps = {
   className?: string;
   loading?: boolean;
-  surveyData?: SurveyModel;
+  surveyData?: LoadSurveyList.Model;
 };
 
 const SurveyItem: React.FC<SurveyItemProps> = ({ className, loading, surveyData }) => {

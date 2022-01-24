@@ -1,12 +1,11 @@
-import { AccountParams, RemoteSignupProtocol } from '@/domain/usecases';
-import { AccountModel } from '@/domain/models';
-import { mockAccount } from '@/domain/test';
+import { Signup } from '@/domain/usecases';
+import { mockSignupModel } from '@/domain/test';
 
-export class RemoteSignupSpy implements RemoteSignupProtocol {
-  account = mockAccount();
-  params: AccountParams;
+export class RemoteSignupSpy implements Signup {
+  account = mockSignupModel();
+  params: Signup.Params;
   callsCount = 0;
-  async create(params: AccountParams): Promise<AccountModel> {
+  async create(params: Signup.Params): Promise<Signup.Model> {
     this.callsCount++;
     this.params = params;
     return await Promise.resolve(this.account);

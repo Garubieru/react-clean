@@ -7,23 +7,22 @@ import { ValidationStub, RemoteSignupSpy, Helpers } from '@/presentation/test';
 import { ApiContext } from '@/presentation/context/api/api-context';
 import { RequiredFieldError } from '@/presentation/validation/errors';
 
-import { mockAccountCreation } from '@/domain/test';
+import { mockSignupParams } from '@/domain/test';
 import { EmailInUseError } from '@/domain/errors';
-import { AccountParams } from '@/domain/usecases';
-import { AccountModel } from '@/domain/models';
+import { Signup as SignupProtocol } from '@/domain/usecases';
 
 import Signup from '.';
 
 type SutType = {
   validationStub: ValidationStub;
   remoteSignupSpy: RemoteSignupSpy;
-  setLoginAccount: jest.Mock<void, [AccountModel]>;
+  setLoginAccount: jest.Mock<void, [SignupProtocol.Model]>;
 };
 
 type SutParams = {
   withError?: boolean;
   populateForm?: boolean;
-  formParams?: AccountParams;
+  formParams?: SignupProtocol.Params;
 };
 
 const history = createMemoryHistory({ initialEntries: ['/signin'] });
@@ -47,7 +46,7 @@ const createSut = (params?: SutParams): SutType => {
   };
 };
 
-const populateForm = (params = mockAccountCreation()): void => {
+const populateForm = (params = mockSignupParams()): void => {
   Helpers.populateField('name', params.name);
   Helpers.populateField('email', params.email);
   Helpers.populateField('password', params.password);
@@ -102,7 +101,7 @@ describe('Signup Component', () => {
   });
 
   it('Should call remoteSignup.create with correct params', async () => {
-    const params = mockAccountCreation();
+    const params = mockSignupParams();
     const { remoteSignupSpy } = createSut({
       populateForm: true,
       formParams: params,

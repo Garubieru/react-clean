@@ -2,14 +2,14 @@ import React from 'react';
 
 import { render, screen } from '@testing-library/react';
 import { mockSurvey } from '@/domain/test';
-import { SurveyModel } from '@/domain/models';
 
 import { IconStatus } from '../survey-icon-status';
 import SurveyItem from '.';
+import { LoadSurveyList } from '@/domain/usecases';
 
 const createSut = (
   loading: boolean = false,
-  surveyData: SurveyModel = mockSurvey(),
+  surveyData: LoadSurveyList.Model = mockSurvey(),
 ): HTMLElement => {
   render(<SurveyItem loading={loading} surveyData={surveyData} />);
   return screen.getByTestId('survey-item');

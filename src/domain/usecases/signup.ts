@@ -1,12 +1,15 @@
-import { AccountModel } from '../models';
+import { AccountModel } from '@/domain/models';
 
-export type AccountParams = {
-  name: string;
-  email: string;
-  password: string;
-  passwordConfirmation: string;
-};
+export namespace Signup {
+  export type Params = {
+    name: string;
+    email: string;
+    password: string;
+    passwordConfirmation: string;
+  };
 
-export interface RemoteSignupProtocol {
-  create: (params: AccountParams) => Promise<AccountModel>;
+  export type Model = AccountModel;
+}
+export interface Signup {
+  create: (params: Signup.Params) => Promise<Signup.Model>;
 }

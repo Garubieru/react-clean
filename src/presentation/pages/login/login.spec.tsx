@@ -7,17 +7,16 @@ import { ValidationStub, AuthenticationSpy, Helpers } from '@/presentation/test'
 import { ApiContext } from '@/presentation/context/api/api-context';
 import { RequiredFieldError } from '@/presentation/validation/errors';
 
-import { mockAuthentication } from '@/domain/test';
-import { AuthenticationParams } from '@/domain/usecases';
+import { mockAuthenticationParams } from '@/domain/test';
+import { Authentication, AuthenticationParams } from '@/domain/usecases';
 import { InvalidCredentialError } from '@/domain/errors';
-import { AccountModel } from '@/domain/models';
 
 import Login from '.';
 
 type SutTypes = {
   validationStub: ValidationStub;
   authenticationSpy: AuthenticationSpy;
-  setLoginAccount: jest.Mock<void, [AccountModel]>;
+  setLoginAccount: jest.Mock<void, [Authentication.Model]>;
 };
 
 type SutParams = {
@@ -45,7 +44,7 @@ const createSut = (params?: SutParams): SutTypes => {
   return { validationStub, authenticationSpy, setLoginAccount };
 };
 
-const populateForm = (authParams = mockAuthentication()): void => {
+const populateForm = (authParams = mockAuthenticationParams()): void => {
   Helpers.populateField('email', authParams.email);
   Helpers.populateField('password', authParams.password);
 };
@@ -102,7 +101,7 @@ describe('Login Component', () => {
   });
 
   it('Should call Authentication with correct values', async () => {
-    const authParams = mockAuthentication();
+    const authParams = mockAuthenticationParams();
     const { authenticationSpy } = createSut({
       populateForm: true,
       authParams: authParams,

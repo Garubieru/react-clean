@@ -1,7 +1,7 @@
 import { RemoteSignup } from '@/data/usecases';
-import { RemoteSignupProtocol } from '@/domain/usecases';
+import { Signup } from '@/domain/usecases';
 import { createApiUrl, createAxiosHttpClient } from '@/main/factories/http';
 
-export const createRemoteSignup = (): RemoteSignupProtocol => {
+export const createRemoteSignup = (): Signup => {
   return new RemoteSignup(createApiUrl('/signup'), createAxiosHttpClient());
 };
