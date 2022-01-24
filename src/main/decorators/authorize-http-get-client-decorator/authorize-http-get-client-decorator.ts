@@ -1,5 +1,6 @@
 import { GetStorage } from '@/data/protocols/cache';
 import { HttpGetClient, HttpGetParams, HttpResponse } from '@/data/protocols/http';
+import { AccountModel } from '@/domain/models';
 
 export class AuthorizeHttpGetClientDecorator implements HttpGetClient {
   constructor(
@@ -8,11 +9,15 @@ export class AuthorizeHttpGetClientDecorator implements HttpGetClient {
   ) {}
 
   async get(params: HttpGetParams): Promise<HttpResponse<any>> {
-    const userAccountToken = this.getStorage.get('userAccount');
-    this.httpGetClient.get({
-      url: params.url,
-      headers: { Authorization: userAccountToken },
-    });
+    const account: AccountModel = JSON.parse(this.getStorage.get('userAccount'));
+    if (account?.accessToken) {
+      Object.assign(params, {
+        headers: {
+          'x-access-token': account?.accessToken,
+        },
+      });
+    }
+    this.httpGetClient.get(params);
     return await Promise.resolve(null);
   }
 }
