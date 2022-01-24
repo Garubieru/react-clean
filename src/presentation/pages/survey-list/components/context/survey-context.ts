@@ -4,6 +4,7 @@ import { SurveyModel } from '@/domain/models';
 type SurveyState = {
   surveyItems: SurveyModel[];
   error: string;
+  reload: boolean;
 };
 
 type SurveyContextProps = {

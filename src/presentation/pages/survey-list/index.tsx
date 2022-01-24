@@ -16,12 +16,14 @@ type SurveyListProps = {
 type SurveyState = {
   surveyItems: SurveyModel[];
   error: string;
+  reload: boolean;
 };
 
 const SurveyList: React.FC<SurveyListProps> = ({ loadSurveyList }) => {
   const [surveyScreenState, setSurveyScreenState] = useState<SurveyState>({
     surveyItems: [],
     error: '',
+    reload: false,
   });
 
   useEffect(() => {
@@ -36,7 +38,7 @@ const SurveyList: React.FC<SurveyListProps> = ({ loadSurveyList }) => {
     };
 
     listSurveys();
-  }, []);
+  }, [surveyScreenState.reload]);
 
   return (
     <PageWrapper header={<MainHeader />}>
