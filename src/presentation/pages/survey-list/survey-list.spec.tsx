@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { LoadSurveyList } from '@/domain/usecases';
 import SurveyList from '.';
@@ -66,5 +66,15 @@ describe('SurveyList Component', () => {
     await waitFor(() => screen.getByRole('heading'));
     expect(screen.queryByTestId('surveys-list')).not.toBeInTheDocument();
     expect(screen.getByTestId('error-wrap')).toHaveTextContent(error.message);
+  });
+
+  it('Should recall LoadSurveyList on reload click button if LoadSurveyList fails', async () => {
+    const loadSurveyListStub = new LoadSurveyListStub();
+    jest.spyOn(loadSurveyListStub, 'list').mockRejectedValueOnce(new UnexpectedError());
+    createSut(loadSurveyListStub);
+    await waitFor(() => screen.getByRole('heading'));
+    fireEvent.click(screen.getByTestId('reload-button'));
+    expect(loadSurveyListStub.callsCount).toBe(1);
+    await waitFor(() => screen.getByRole('heading'));
   });
 });
