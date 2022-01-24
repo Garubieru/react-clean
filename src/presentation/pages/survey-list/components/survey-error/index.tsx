@@ -1,6 +1,9 @@
 import React from 'react';
 import { useSurveyContext } from '@/presentation/pages/survey-list/components';
+
 import Styles from './styles.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
 
 const SurveyError: React.FC = () => {
   const { surveyScreenState, setSurveyScreenState } = useSurveyContext();
@@ -13,10 +16,10 @@ const SurveyError: React.FC = () => {
   };
   return (
     <div className={Styles.errorWrap} data-testid="error-wrap">
-      <span>{surveyScreenState.error}</span>
       <button onClick={handleReload} data-testid="reload-button">
-        Try again
+        <FontAwesomeIcon icon={faRedoAlt}></FontAwesomeIcon>
       </button>
+      <span>{surveyScreenState.error}</span>
     </div>
   );
 };

@@ -1,0 +1,45 @@
+@import '../../../../styles/colors.scss';
+
+.errorWrap {
+  background: $background;
+  max-width: 600px;
+  height: 100%;
+
+  align-self: center;
+  justify-self: center;
+  margin: auto;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+
+  padding: 15px;
+  border: 1px solid $warning;
+  border-radius: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  span {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: $warning;
+  }
+  button {
+    background: none;
+    color: $white;
+    border: none;
+    font-size: 2.5rem;
+    cursor: pointer;
+
+    transition: all ease 0.2s;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    text-align: center;
+
+    &:hover {
+      background: rgba($white, 0.1);
+    }
+  }
+}
