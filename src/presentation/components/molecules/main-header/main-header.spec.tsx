@@ -1,11 +1,11 @@
 import React from 'react';
-import { MainHeader } from '@/presentation/components';
-import { ApiContext } from '@/presentation/context/api/api-context';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { AccountModel } from '@/domain/models';
 import { createMemoryHistory, MemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 import { mockAccount } from '@/domain/test';
+import { AccountModel } from '@/domain/models';
+import { MainHeader } from '@/presentation/components';
+import { ApiContext } from '@/presentation/context/api/api-context';
 
 type SutType = {
   setLoginAccountMock: jest.Mock<void, [AccountModel]>;
