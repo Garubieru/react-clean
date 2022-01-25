@@ -7,10 +7,8 @@ import {
   SurveyError,
   SurveyState,
 } from '@/presentation/pages/survey-list/components';
+import { useErrorHandler } from '@/presentation/hooks';
 import Styles from './styles.scss';
-import { ForbiddenError } from '@/domain/errors';
-import { useApi } from '@/presentation/context/api/api-context';
-import { useNavigate } from 'react-router-dom';
 
 type SurveyListProps = {
   loadSurveyList: LoadSurveyList;
@@ -22,22 +20,18 @@ const SurveyList: React.FC<SurveyListProps> = ({ loadSurveyList }) => {
     error: '',
     reload: false,
   });
-  const { setLoginAccount } = useApi();
-  const navigate = useNavigate();
+
+  const handleError = useErrorHandler((error) =>
+    setSurveyScreenState((state) => ({ ...state, error: error.message })),
+  );
 
   useEffect(() => {
     const listSurveys = async (): Promise<void> => {
       try {
         const items = await loadSurveyList.list();
         setSurveyScreenState((state) => ({ ...state, surveyItems: items }));
-      } catch (e) {
-        if (e instanceof ForbiddenError) {
-          setLoginAccount(null);
-          navigate('/login');
-          return;
-        }
-        const error = e as Error;
-        setSurveyScreenState((state) => ({ ...state, error: error.message }));
+      } catch (error) {
+        handleError(error);
       }
     };
 
