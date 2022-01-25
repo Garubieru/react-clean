@@ -1,9 +1,14 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
 
 import { UnexpectedError } from '@/domain/errors';
 import { LoadSurveyListStub } from '@/presentation/test';
-import SurveyList from '.';
+import { ApiContext } from '@/presentation/context/api/api-context';
+
+import { SurveyList } from '@/presentation/pages';
+import { Router } from 'react-router-dom';
+import { mockAccount } from '@/domain/test';
 
 type SutTypes = {
   loadSurveyListStub: LoadSurveyListStub;
@@ -12,7 +17,19 @@ type SutTypes = {
 const createSut = (
   loadSurveyListStub: LoadSurveyListStub = new LoadSurveyListStub(),
 ): SutTypes => {
-  render(<SurveyList loadSurveyList={loadSurveyListStub} />);
+  const history = createMemoryHistory();
+  render(
+    <ApiContext.Provider
+      value={{
+        getLoginAccount: jest.fn(() => mockAccount()),
+        setLoginAccount: jest.fn(),
+      }}
+    >
+      <Router location={history.location} navigator={history}>
+        <SurveyList loadSurveyList={loadSurveyListStub} />
+      </Router>
+    </ApiContext.Provider>,
+  );
   return {
     loadSurveyListStub,
   };
