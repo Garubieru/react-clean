@@ -17,7 +17,7 @@ describe('LocalStorageAdapter', () => {
       const key = faker.database.column();
       const value = faker.datatype.uuid();
       sut.set(key, value);
-      expect(localStorage.setItem).toHaveBeenCalledWith(key, value);
+      expect(localStorage.setItem).toHaveBeenCalledWith(key, JSON.stringify(value));
     });
 
     it('Should set localStorage with correct value', () => {
@@ -25,7 +25,7 @@ describe('LocalStorageAdapter', () => {
       const key = faker.database.column();
       const value = faker.datatype.uuid();
       sut.set(key, value);
-      expect(localStorage.getItem(key)).toBe(value);
+      expect(JSON.parse(localStorage.getItem(key))).toBe(value);
     });
   });
 

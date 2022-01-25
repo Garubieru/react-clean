@@ -1,4 +1,3 @@
-import { UnexpectedError } from '@/domain/errors';
 import { mockAccount } from '@/domain/test';
 import { LocalStorageAdapter } from '@/infra/cache/local-storage/local-storage-adapter';
 import {
@@ -16,14 +15,7 @@ describe('LoginAccountAdapter', () => {
       const mockedAccount = mockAccount();
       const localStorageAdapterSpy = jest.spyOn(LocalStorageAdapter.prototype, 'set');
       setLocalLoginAccountAdapter(mockedAccount);
-      expect(localStorageAdapterSpy).toHaveBeenCalledWith(
-        'userAccount',
-        JSON.stringify(mockedAccount),
-      );
-    });
-
-    it('Should throw UnexpectedError if account is undefined', () => {
-      expect(() => setLocalLoginAccountAdapter(undefined)).toThrow(new UnexpectedError());
+      expect(localStorageAdapterSpy).toHaveBeenCalledWith('userAccount', mockedAccount);
     });
   });
 
@@ -32,7 +24,7 @@ describe('LoginAccountAdapter', () => {
       const mockedAccount = mockAccount();
       const localStorageAdapterGetSpy = jest
         .spyOn(LocalStorageAdapter.prototype, 'get')
-        .mockReturnValueOnce(JSON.stringify(mockedAccount));
+        .mockReturnValueOnce(mockedAccount);
       const result = getLocalLoginAccountAdapter();
       expect(localStorageAdapterGetSpy).toHaveBeenCalledWith('userAccount');
       expect(result).toEqual(mockedAccount);

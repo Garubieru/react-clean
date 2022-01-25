@@ -81,6 +81,11 @@
           padding: 5px 12px;
           font-size: 1.6rem;
 
+          a {
+            color: $white;
+            text-decoration: none;
+          }
+
           &:hover {
             background: darken($primaryDark, 20);
           }

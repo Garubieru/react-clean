@@ -44,7 +44,7 @@ describe('AuthorizeHttpGetClientDecorator', () => {
 
   it('Should add headers to httpGetClient if has accessToken ', async () => {
     const { sut, httpGetClientSpy, getStorageSpy } = createSut();
-    getStorageSpy.value = JSON.stringify(mockAccount());
+    getStorageSpy.value = mockAccount();
 
     const mockRequest: HttpGetParams = {
       url: faker.internet.url(),
@@ -53,13 +53,13 @@ describe('AuthorizeHttpGetClientDecorator', () => {
     await sut.get(mockRequest);
     expect(httpGetClientSpy.url).toBe(mockRequest.url);
     expect(httpGetClientSpy.headers).toEqual({
-      'x-access-token': JSON.parse(getStorageSpy.value).accessToken,
+      'x-access-token': getStorageSpy.value.accessToken,
     });
   });
 
   it('Should keep previous headers if has accessToken', async () => {
     const { sut, httpGetClientSpy, getStorageSpy } = createSut();
-    getStorageSpy.value = JSON.stringify(mockAccount());
+    getStorageSpy.value = mockAccount();
 
     const mockRequest: HttpGetParams = {
       url: faker.internet.url(),
@@ -67,10 +67,9 @@ describe('AuthorizeHttpGetClientDecorator', () => {
         field: faker.random.word(),
       },
     };
-
     await sut.get(mockRequest);
     expect(httpGetClientSpy.headers).toEqual({
-      'x-access-token': JSON.parse(getStorageSpy.value).accessToken,
+      'x-access-token': getStorageSpy.value.accessToken,
       field: mockRequest.headers.field,
     });
   });

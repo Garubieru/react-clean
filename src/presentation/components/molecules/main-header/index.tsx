@@ -5,16 +5,18 @@ import { Logo } from '@/presentation/components';
 import Styles from './styles.scss';
 
 const MainHeader: React.FC = () => {
+  // const { getLoginAccount } = useApi();
+  // const userName = getLoginAccount().name;
   return (
     <header className={Styles.mainHeader}>
       <Logo className={Styles.navLogo} />
       <div className={Styles.userContainerHeader}>
-        <p className={Styles.userName}>Gabriel Morishita</p>
+        <p className={Styles.userName}>q</p>
         <FontAwesomeIcon className={Styles.userIcon} icon={faUserCircle} />
         <div className={Styles.userOptionsContainer}>
           <ul className={Styles.userOptionsList}>
             <li className={Styles.userOptionsItem}>
-              <span>Signout</span>
+              <a href="/login">Signout</a>
               <FontAwesomeIcon className={Styles.optionIcon} icon={faSignOutAlt} />
             </li>
           </ul>
