@@ -8,6 +8,9 @@ import {
   SurveyState,
 } from '@/presentation/pages/survey-list/components';
 import Styles from './styles.scss';
+import { ForbiddenError } from '@/domain/errors';
+import { useApi } from '@/presentation/context/api/api-context';
+import { useNavigate } from 'react-router-dom';
 
 type SurveyListProps = {
   loadSurveyList: LoadSurveyList;
@@ -19,6 +22,8 @@ const SurveyList: React.FC<SurveyListProps> = ({ loadSurveyList }) => {
     error: '',
     reload: false,
   });
+  const { setLoginAccount } = useApi();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const listSurveys = async (): Promise<void> => {
@@ -26,6 +31,11 @@ const SurveyList: React.FC<SurveyListProps> = ({ loadSurveyList }) => {
         const items = await loadSurveyList.list();
         setSurveyScreenState((state) => ({ ...state, surveyItems: items }));
       } catch (e) {
+        if (e instanceof ForbiddenError) {
+          setLoginAccount(null);
+          navigate('/login');
+          return;
+        }
         const error = e as Error;
         setSurveyScreenState((state) => ({ ...state, error: error.message }));
       }
