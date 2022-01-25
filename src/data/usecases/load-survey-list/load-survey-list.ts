@@ -3,18 +3,31 @@ import { LoadSurveyList } from '@/domain/usecases';
 
 import { UnexpectedError, ForbiddenError } from '@/domain/errors';
 
+export namespace RemoteLoadSurveyList {
+  export type Model = {
+    id: string;
+    question: string;
+    date: string;
+    didAnswer: boolean;
+  };
+}
+
 export class RemoteLoadSurveyList implements LoadSurveyList {
   constructor(
     private readonly url: string,
-    private readonly httpGetClient: HttpGetClient<LoadSurveyList.Model[]>,
+    private readonly httpGetClient: HttpGetClient<RemoteLoadSurveyList.Model[]>,
   ) {}
 
   async list(): Promise<LoadSurveyList.Model[]> {
     const { body, statusCode } = await this.httpGetClient.get({ url: this.url });
 
+    const surveyList = body
+      ? body.map((survey) => Object.assign(survey, { date: new Date(survey.date) }))
+      : [];
+
     switch (statusCode) {
       case HttpStatusCode.ok: {
-        return body;
+        return surveyList;
       }
       case HttpStatusCode.noContent: {
         return [];

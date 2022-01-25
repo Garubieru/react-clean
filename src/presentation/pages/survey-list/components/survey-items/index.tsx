@@ -26,7 +26,11 @@ const SurveyItems: React.FC = () => {
       ) : (
         <>
           {surveyScreenState.surveyItems.map((surveyItem) => (
-            <SurveyItem key={surveyItem.id} surveyData={surveyItem} />
+            <SurveyItem
+              key={surveyItem.id}
+              surveyData={surveyItem}
+              className={Styles.survey}
+            />
           ))}
         </>
       )}

@@ -4,15 +4,14 @@ import { HttpGetClientSpy } from '@/data/test';
 import { mockSurveyList } from '@/domain/test';
 import { ForbiddenError, UnexpectedError } from '@/domain/errors';
 import { RemoteLoadSurveyList } from './load-survey-list';
-import { LoadSurveyList } from '@/domain/usecases';
 
 type SutType = {
   sut: RemoteLoadSurveyList;
-  httpGetClientSpy: HttpGetClientSpy<LoadSurveyList.Model[]>;
+  httpGetClientSpy: HttpGetClientSpy<RemoteLoadSurveyList.Model[]>;
 };
 
 const createSut = (url = faker.internet.url()): SutType => {
-  const httpGetClientSpy = new HttpGetClientSpy<LoadSurveyList.Model[]>();
+  const httpGetClientSpy = new HttpGetClientSpy<RemoteLoadSurveyList.Model[]>();
   const sut = new RemoteLoadSurveyList(url, httpGetClientSpy);
   return {
     sut,
@@ -84,12 +83,37 @@ describe('RemoteLoadSurveyList', () => {
 
   it('Should return correct response body on 200', async () => {
     const { sut, httpGetClientSpy } = createSut();
-    const responseBody = mockSurveyList();
+
+    const responseBody = mockSurveyList(3).map((survey) =>
+      Object.assign(survey, { date: survey.date.toISOString() }),
+    );
+
     httpGetClientSpy.response = {
       statusCode: HttpStatusCode.ok,
       body: responseBody,
     };
+
     const surveyList = await sut.list();
-    expect(surveyList).toEqual(responseBody);
+
+    expect(surveyList).toEqual([
+      {
+        id: responseBody[0].id,
+        didAnswer: responseBody[0].didAnswer,
+        date: new Date(responseBody[0].date),
+        question: responseBody[0].question,
+      },
+      {
+        id: responseBody[1].id,
+        didAnswer: responseBody[1].didAnswer,
+        date: new Date(responseBody[1].date),
+        question: responseBody[1].question,
+      },
+      {
+        id: responseBody[2].id,
+        didAnswer: responseBody[2].didAnswer,
+        date: new Date(responseBody[2].date),
+        question: responseBody[2].question,
+      },
+    ]);
   });
 });
