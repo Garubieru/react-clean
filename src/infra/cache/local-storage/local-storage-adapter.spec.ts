@@ -20,12 +20,20 @@ describe('LocalStorageAdapter', () => {
       expect(localStorage.setItem).toHaveBeenCalledWith(key, JSON.stringify(value));
     });
 
-    it('Should set localStorage with correct value', () => {
+    it('Should set localStorage.setItem with correct value', () => {
       const sut = createSut();
       const key = faker.database.column();
       const value = faker.datatype.uuid();
       sut.set(key, value);
       expect(JSON.parse(localStorage.getItem(key))).toBe(value);
+    });
+
+    it('Should call localStorage.removeItem if value is nullable/undefined', () => {
+      const sut = createSut();
+      const key = faker.database.column();
+      sut.set(key, null);
+      expect(localStorage.removeItem).toHaveBeenCalledWith(key);
+      expect(localStorage.getItem(key)).toBeFalsy();
     });
   });
 
