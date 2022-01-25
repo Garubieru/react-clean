@@ -21,13 +21,13 @@ export class RemoteLoadSurveyList implements LoadSurveyList {
   async list(): Promise<LoadSurveyList.Model[]> {
     const { body, statusCode } = await this.httpGetClient.get({ url: this.url });
 
-    const surveyList = body
-      ? body.map((survey) => Object.assign(survey, { date: new Date(survey.date) }))
-      : [];
+    const surveyList = body || [];
 
     switch (statusCode) {
       case HttpStatusCode.ok: {
-        return surveyList;
+        return surveyList.map((survey) =>
+          Object.assign(survey, { date: new Date(survey.date) }),
+        );
       }
       case HttpStatusCode.noContent: {
         return [];
