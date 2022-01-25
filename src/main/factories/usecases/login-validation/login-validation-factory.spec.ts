@@ -1,5 +1,10 @@
-import { ValidationComposite } from '@/presentation/validation/validators';
-import { ValidationBuilder } from '@/presentation/validation/validators/builder/validation-builder';
+import { EmailValidator } from '@/infra/validators/email-validator/email-validator';
+import {
+  RequiredFieldValidation,
+  EmailValidation,
+  MinLengthValidation,
+  ValidationComposite,
+} from '@/presentation/validation/validators';
 import { createLoginValidation } from './login-validation-factory';
 
 describe('LoginValidationFactory', () => {
@@ -8,8 +13,8 @@ describe('LoginValidationFactory', () => {
 
     expect(sut).toEqual(
       ValidationComposite.build({
-        email: ValidationBuilder.field().required().isEmail().build(),
-        password: ValidationBuilder.field().required().min(3).build(),
+        email: [new RequiredFieldValidation(), new EmailValidation(new EmailValidator())],
+        password: [new RequiredFieldValidation(), new MinLengthValidation(3)],
       }),
     );
   });

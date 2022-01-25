@@ -1,5 +1,11 @@
-import { ValidationComposite } from '@/presentation/validation/validators';
-import { ValidationBuilder } from '@/presentation/validation/validators/builder/validation-builder';
+import { EmailValidator } from '@/infra/validators/email-validator/email-validator';
+import {
+  EmailValidation,
+  MinLengthValidation,
+  RequiredFieldValidation,
+  ValidationComposite,
+  CompareFieldsValidation,
+} from '@/presentation/validation/validators';
 import { createSignupValidation } from './signup-validation-factory';
 
 describe('SignupValidationFactory', () => {
@@ -7,14 +13,14 @@ describe('SignupValidationFactory', () => {
     const sut = createSignupValidation();
     expect(sut).toEqual(
       ValidationComposite.build({
-        name: ValidationBuilder.field().required().min(3).build(),
-        email: ValidationBuilder.field().required().isEmail().build(),
-        password: ValidationBuilder.field().required().min(3).build(),
-        passwordConfirmation: ValidationBuilder.field()
-          .required()
-          .min(3)
-          .isEqual('password')
-          .build(),
+        name: [new RequiredFieldValidation(), new MinLengthValidation(3)],
+        email: [new RequiredFieldValidation(), new EmailValidation(new EmailValidator())],
+        password: [new RequiredFieldValidation(), new MinLengthValidation(3)],
+        passwordConfirmation: [
+          new RequiredFieldValidation(),
+          new MinLengthValidation(3),
+          new CompareFieldsValidation('password'),
+        ],
       }),
     );
   });
