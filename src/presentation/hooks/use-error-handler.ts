@@ -1,17 +1,14 @@
+import { useLogout } from '@/presentation/hooks';
 import { ForbiddenError } from '@/domain/errors';
-import { useApi } from '@/presentation/context/api/api-context';
-import { useNavigate } from 'react-router-dom';
 
 type ErrorCallBack = (error: Error) => void;
 type ErrorResult = (error: Error) => void;
 
 export const useErrorHandler = (callback: ErrorCallBack): ErrorResult => {
-  const { setLoginAccount } = useApi();
-  const navigate = useNavigate();
+  const logout = useLogout();
   return (error) => {
     if (error instanceof ForbiddenError) {
-      setLoginAccount(null);
-      navigate('/login');
+      logout();
       return;
     }
     callback(error);

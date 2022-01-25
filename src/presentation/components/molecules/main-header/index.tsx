@@ -4,17 +4,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Logo } from '@/presentation/components';
 import Styles from './styles.scss';
 import { useApi } from '@/presentation/context/api/api-context';
-import { useNavigate } from 'react-router-dom';
+import { useLogout } from '@/presentation/hooks';
 
 const MainHeader: React.FC = () => {
-  const { setLoginAccount, getLoginAccount } = useApi();
+  const logout = useLogout();
+  const { getLoginAccount } = useApi();
   const { name } = getLoginAccount();
-  const navigate = useNavigate();
+
   const handleSignout = (e: React.MouseEvent<HTMLLIElement, MouseEvent>): void => {
     e.preventDefault();
     e.stopPropagation();
-    setLoginAccount(null);
-    navigate('/login');
+    logout();
   };
 
   return (
