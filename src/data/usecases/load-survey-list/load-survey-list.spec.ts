@@ -83,7 +83,7 @@ describe('RemoteLoadSurveyList', () => {
   it('Should return correct response body on 200', async () => {
     const { sut, httpGetClientSpy } = createSut();
 
-    const responseBody = mockRemoteSurveyList(3);
+    const responseBody = mockRemoteSurveyList();
 
     httpGetClientSpy.response = {
       statusCode: HttpStatusCode.ok,
@@ -110,6 +110,18 @@ describe('RemoteLoadSurveyList', () => {
         didAnswer: responseBody[2].didAnswer,
         date: new Date(responseBody[2].date),
         question: responseBody[2].question,
+      },
+      {
+        id: responseBody[3].id,
+        didAnswer: responseBody[3].didAnswer,
+        date: new Date(responseBody[3].date),
+        question: responseBody[3].question,
+      },
+      {
+        id: responseBody[4].id,
+        didAnswer: responseBody[4].didAnswer,
+        date: new Date(responseBody[4].date),
+        question: responseBody[4].question,
       },
     ]);
   });

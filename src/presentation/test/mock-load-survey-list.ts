@@ -2,7 +2,7 @@ import { LoadSurveyList } from '@/domain/usecases';
 import { mockSurveyList } from '@/domain/test';
 
 export class LoadSurveyListStub implements LoadSurveyList {
-  constructor(public surveyItemsLength: number = 5) {}
+  constructor(public surveyItemsLength?: number) {}
 
   callsCount = 0;
   surveyList = mockSurveyList(this.surveyItemsLength);
