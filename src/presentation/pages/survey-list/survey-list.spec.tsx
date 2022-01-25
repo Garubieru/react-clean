@@ -1,28 +1,32 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
+import { createMemoryHistory, MemoryHistory } from 'history';
 
-import { UnexpectedError } from '@/domain/errors';
+import { ForbiddenError, UnexpectedError } from '@/domain/errors';
 import { LoadSurveyListStub } from '@/presentation/test';
 import { ApiContext } from '@/presentation/context/api/api-context';
 
 import { SurveyList } from '@/presentation/pages';
 import { Router } from 'react-router-dom';
 import { mockAccount } from '@/domain/test';
+import { AccountModel } from '@/domain/models';
 
 type SutTypes = {
   loadSurveyListStub: LoadSurveyListStub;
+  setLoginAccountMock: jest.Mock<void, [AccountModel]>;
+  history: MemoryHistory;
 };
 
 const createSut = (
   loadSurveyListStub: LoadSurveyListStub = new LoadSurveyListStub(),
 ): SutTypes => {
-  const history = createMemoryHistory();
+  const history = createMemoryHistory({ initialEntries: ['/'] });
+  const setLoginAccountMock = jest.fn();
   render(
     <ApiContext.Provider
       value={{
         getLoginAccount: jest.fn(() => mockAccount()),
-        setLoginAccount: jest.fn(),
+        setLoginAccount: setLoginAccountMock,
       }}
     >
       <Router location={history.location} navigator={history}>
@@ -32,6 +36,8 @@ const createSut = (
   );
   return {
     loadSurveyListStub,
+    setLoginAccountMock,
+    history,
   };
 };
 
@@ -79,5 +85,14 @@ describe('SurveyList Component', () => {
     fireEvent.click(screen.getByTestId('reload-button'));
     expect(loadSurveyListStub.callsCount).toBe(1);
     await waitFor(() => screen.getByRole('heading'));
+  });
+
+  it('Should redirect to /login and logout if LoadSurveyList returns ForbiddenError', async () => {
+    const loadSurveyListStub = new LoadSurveyListStub();
+    jest.spyOn(loadSurveyListStub, 'list').mockRejectedValueOnce(new ForbiddenError());
+    const { history, setLoginAccountMock } = createSut(loadSurveyListStub);
+    await waitFor(() => screen.getByRole('heading'));
+    expect(setLoginAccountMock).toHaveBeenCalledWith(null);
+    expect(history.location.pathname).toBe('/login');
   });
 });
