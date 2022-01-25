@@ -1,7 +1,6 @@
 import faker from 'faker';
 import { HttpStatusCode } from '@/data/protocols/http';
-import { HttpGetClientSpy } from '@/data/test';
-import { mockSurveyList } from '@/domain/test';
+import { HttpGetClientSpy, mockRemoteSurveyList } from '@/data/test';
 import { ForbiddenError, UnexpectedError } from '@/domain/errors';
 import { RemoteLoadSurveyList } from './load-survey-list';
 
@@ -84,9 +83,7 @@ describe('RemoteLoadSurveyList', () => {
   it('Should return correct response body on 200', async () => {
     const { sut, httpGetClientSpy } = createSut();
 
-    const responseBody = mockSurveyList(3).map((survey) =>
-      Object.assign(survey, { date: survey.date.toISOString() }),
-    );
+    const responseBody = mockRemoteSurveyList(3);
 
     httpGetClientSpy.response = {
       statusCode: HttpStatusCode.ok,

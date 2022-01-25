@@ -1,6 +1,6 @@
 import faker from 'faker';
 import { Signup } from '@/domain/usecases';
-import { mockAccount } from './mock-account';
+import { mockAccount } from '@/domain/test';
 
 export const mockSignupParams = (
   password = faker.internet.password(),
