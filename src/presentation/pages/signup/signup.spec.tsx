@@ -5,7 +5,7 @@ import { render, fireEvent, screen } from '@testing-library/react';
 
 import { ValidationStub, RemoteSignupSpy, Helpers } from '@/presentation/test';
 import { ApiContext } from '@/presentation/context/api/api-context';
-import { RequiredFieldError } from '@/presentation/validation/errors';
+import { RequiredFieldError } from '@/validation/errors';
 
 import { mockSignupParams } from '@/domain/test';
 import { EmailInUseError } from '@/domain/errors';

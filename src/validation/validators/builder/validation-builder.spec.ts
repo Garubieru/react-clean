@@ -4,9 +4,9 @@ import {
   EmailValidation,
   MinLengthValidation,
   CompareFieldsValidation,
-} from '@/presentation/validation/validators';
+  ValidationBuilder as sut,
+} from '@/validation/validators';
 
-import { ValidationBuilder as sut } from './validation-builder';
 import faker from 'faker';
 
 describe('ValidationBuilder', () => {

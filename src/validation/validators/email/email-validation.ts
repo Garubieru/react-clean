@@ -1,8 +1,5 @@
-import {
-  FieldValidation,
-  EmailValidatorProtocol,
-} from '@/presentation/validation/protocols';
-import { InvalidFieldError } from '@/presentation/validation/errors';
+import { FieldValidation, EmailValidatorProtocol } from '@/validation/protocols';
+import { InvalidFieldError } from '@/validation/errors';
 
 export class EmailValidation implements FieldValidation {
   constructor(private readonly emailValidator: EmailValidatorProtocol) {}

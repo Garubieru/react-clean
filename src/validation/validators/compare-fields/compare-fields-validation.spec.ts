@@ -1,6 +1,6 @@
 import faker from 'faker';
-import { CompareFieldsValidation } from './compare-fields-validation';
-import { InvalidFieldError } from '@/presentation/validation/errors';
+import { CompareFieldsValidation } from '@/validation/validators';
+import { InvalidFieldError } from '@/validation/errors';
 
 const createSut = (fieldToCompare = faker.database.column()): CompareFieldsValidation =>
   new CompareFieldsValidation(fieldToCompare);

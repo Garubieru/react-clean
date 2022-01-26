@@ -4,7 +4,7 @@ import {
   EmailValidation,
   MinLengthValidation,
   ValidationComposite,
-} from '@/presentation/validation/validators';
+} from '@/validation/validators';
 import { createLoginValidation } from './login-validation-factory';
 
 describe('LoginValidationFactory', () => {

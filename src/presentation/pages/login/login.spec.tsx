@@ -5,7 +5,7 @@ import { render, fireEvent, screen } from '@testing-library/react';
 
 import { ValidationStub, AuthenticationSpy, Helpers } from '@/presentation/test';
 import { ApiContext } from '@/presentation/context/api/api-context';
-import { RequiredFieldError } from '@/presentation/validation/errors';
+import { RequiredFieldError } from '@/validation/errors';
 
 import { mockAuthenticationParams } from '@/domain/test';
 import { Authentication, AuthenticationParams } from '@/domain/usecases';

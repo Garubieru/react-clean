@@ -1,6 +1,5 @@
 import { Validation } from '@/presentation/protocols/validation';
-import { ValidationComposite } from '@/presentation/validation/validators';
-import { ValidationBuilder } from '@/presentation/validation/validators/builder/validation-builder';
+import { ValidationComposite, ValidationBuilder } from '@/validation/validators';
 
 export const createSignupValidation = (): Validation => {
   return ValidationComposite.build({

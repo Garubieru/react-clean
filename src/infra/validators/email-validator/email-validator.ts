@@ -1,4 +1,4 @@
-import { EmailValidatorProtocol } from '@/presentation/validation/protocols';
+import { EmailValidatorProtocol } from '@/validation/protocols';
 import isEmail from 'email-validator';
 
 export class EmailValidator implements EmailValidatorProtocol {

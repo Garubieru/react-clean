@@ -5,7 +5,7 @@ import {
   RequiredFieldValidation,
   ValidationComposite,
   CompareFieldsValidation,
-} from '@/presentation/validation/validators';
+} from '@/validation/validators';
 import { createSignupValidation } from './signup-validation-factory';
 
 describe('SignupValidationFactory', () => {

@@ -3,8 +3,8 @@ import {
   MinLengthValidation,
   RequiredFieldValidation,
   CompareFieldsValidation,
-} from '..';
-import { FieldValidation } from '@/presentation/validation/protocols';
+} from '@/validation/validators';
+import { FieldValidation } from '@/validation/protocols';
 import { EmailValidator } from '@/infra/validators/email-validator/email-validator';
 
 export class ValidationBuilder {
