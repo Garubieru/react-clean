@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Signup as SignupProtocol } from '@/domain/usecases';
+
 import { Input, Button, Link, Error, PageWrapper, Form } from '@/presentation/components';
 import { FormContext } from '@/presentation/context/form/form-context';
 import { Validation } from '@/presentation/protocols/validation';
 import { useApi } from '@/presentation/context/api/api-context';
-import { Signup as SignupProtocol } from '@/domain/usecases';
 import Styles from './styles.scss';
 
 type SignupProps = {

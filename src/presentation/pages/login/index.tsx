@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { Authentication } from '@/domain/usecases';
 import { Input, Button, Link, Error, PageWrapper, Form } from '@/presentation/components';
 import { FormContext } from '@/presentation/context/form/form-context';
 import { Validation } from '@/presentation/protocols/validation';
-import Styles from './styles.scss';
 import { useApi } from '@/presentation/context/api/api-context';
-import { Authentication } from '@/domain/usecases';
+import Styles from './styles.scss';
 
 type LoginProps = {
   validation: Validation;

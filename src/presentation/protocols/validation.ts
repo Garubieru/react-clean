@@ -1,4 +1,4 @@
-import { FieldValidation } from '../validation/protocols';
+import { FieldValidation } from '@/validation/protocols';
 
 export type ValidationFieldValues = { [field: string]: string | null };
 
