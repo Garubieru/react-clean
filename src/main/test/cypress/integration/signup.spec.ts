@@ -1,92 +1,89 @@
-import * as Helpers from '../support/form-helper';
+import * as FormHelpers from '../support/form-helpers';
+import * as Helpers from '../support/helpers';
 import * as HttpSignupMocks from '../support/signup-mocks';
 import faker from 'faker';
 
 const simulateValidSubmit = (doubleClick?: boolean): void => {
-  Helpers.populateField('name', faker.random.alphaNumeric(3));
-  Helpers.populateField('email', faker.internet.email());
+  FormHelpers.populateField('name', faker.random.alphaNumeric(3));
+  FormHelpers.populateField('email', faker.internet.email());
   const password = faker.internet.password();
-  Helpers.populateField('password', password);
-  Helpers.populateField('passwordConfirmation', password);
-  Helpers.submitForm('create-btn', doubleClick);
+  FormHelpers.populateField('password', password);
+  FormHelpers.populateField('passwordConfirmation', password);
+  FormHelpers.submitForm('create-btn', doubleClick);
 };
 
 describe('Signup', () => {
   beforeEach(() => cy.visit('/signup'));
   it('Should render page with initial state', () => {
-    Helpers.testFieldStatus('name', 'Field is required');
-    Helpers.testFieldStatus('email', 'Field is required');
-    Helpers.testFieldStatus('password', 'Field is required');
-    Helpers.testFieldStatus('passwordConfirmation', 'Field is required');
-    Helpers.testErrorContainer('error-msg');
-    Helpers.testButtonStatus('create-btn', 'disabled');
+    FormHelpers.testFieldStatus('name', 'Field is required');
+    FormHelpers.testFieldStatus('email', 'Field is required');
+    FormHelpers.testFieldStatus('password', 'Field is required');
+    FormHelpers.testFieldStatus('passwordConfirmation', 'Field is required');
+    FormHelpers.testErrorContainer('error-msg');
+    FormHelpers.testButtonStatus('create-btn', 'disabled');
   });
 
   it('Should show error if input is invalid', () => {
-    Helpers.populateField('name', faker.random.alpha({ count: 2 }));
-    Helpers.testFieldStatus('name', 'Value must have more than 3 characters', false);
+    FormHelpers.populateField('name', faker.random.alpha({ count: 2 }));
+    FormHelpers.testFieldStatus('name', 'Value must have more than 3 characters', false);
 
-    Helpers.populateField('email', faker.random.word());
-    Helpers.testFieldStatus('email', 'Invalid email', false);
+    FormHelpers.populateField('email', faker.random.word());
+    FormHelpers.testFieldStatus('email', 'Invalid email', false);
 
-    Helpers.populateField('password', faker.random.alphaNumeric(2));
-    Helpers.testFieldStatus('password', 'Value must have more than 3 characters', false);
+    FormHelpers.populateField('password', faker.random.alphaNumeric(2));
+    FormHelpers.testFieldStatus(
+      'password',
+      'Value must have more than 3 characters',
+      false,
+    );
 
-    Helpers.populateField('passwordConfirmation', faker.random.word());
-    Helpers.testFieldStatus(
+    FormHelpers.populateField('passwordConfirmation', faker.random.word());
+    FormHelpers.testFieldStatus(
       'passwordConfirmation',
       'Field must be equal to password',
       false,
     );
 
-    Helpers.testButtonStatus('create-btn', 'disabled');
+    FormHelpers.testButtonStatus('create-btn', 'disabled');
   });
 
   it('Should not show error if input is valid', () => {
-    Helpers.populateField('name', faker.random.alphaNumeric(3));
-    Helpers.testFieldStatus('name', '', false);
+    FormHelpers.populateField('name', faker.random.alphaNumeric(3));
+    FormHelpers.testFieldStatus('name', '', false);
 
-    Helpers.populateField('email', faker.internet.email());
-    Helpers.testFieldStatus('email', '', false);
+    FormHelpers.populateField('email', faker.internet.email());
+    FormHelpers.testFieldStatus('email', '', false);
 
     const password = faker.internet.password();
 
-    Helpers.populateField('password', password);
-    Helpers.testFieldStatus('password', '', false);
+    FormHelpers.populateField('password', password);
+    FormHelpers.testFieldStatus('password', '', false);
 
-    Helpers.populateField('passwordConfirmation', password);
-    Helpers.testFieldStatus('passwordConfirmation', '', false);
+    FormHelpers.populateField('passwordConfirmation', password);
+    FormHelpers.testFieldStatus('passwordConfirmation', '', false);
 
-    Helpers.testButtonStatus('create-btn', 'enabled');
+    FormHelpers.testButtonStatus('create-btn', 'enabled');
   });
 
   it('Should throw EmailInUseError if response statusCode returns 403', () => {
     HttpSignupMocks.mockEmailInUseSignupError();
     simulateValidSubmit();
-    Helpers.testElementExists('spinner', 'not.exist');
-    Helpers.testErrorContainer('error-msg', 'E-mail already in use');
+    FormHelpers.testElementExists('spinner', 'not.exist');
+    FormHelpers.testErrorContainer('error-msg', 'E-mail already in use');
     Helpers.testWindowUrl('/signup');
   });
 
   it('Should throw UnexpectedError if response statusCode is different than 403', () => {
     HttpSignupMocks.mockUnexpectedSignupError();
     simulateValidSubmit();
-    Helpers.testElementExists('spinner', 'not.exist');
-    Helpers.testErrorContainer('error-msg', 'An unexpected error ocurred.');
-    Helpers.testWindowUrl('/signup');
-  });
-
-  it('Should throw UnexpectedError if response returns an invalid body', () => {
-    HttpSignupMocks.mockInvalidSignupSuccess();
-    simulateValidSubmit();
-    Helpers.testElementExists('spinner', 'not.exist');
-    Helpers.testErrorContainer('error-msg', 'An unexpected error ocurred.');
+    FormHelpers.testElementExists('spinner', 'not.exist');
+    FormHelpers.testErrorContainer('error-msg', 'An unexpected error ocurred.');
     Helpers.testWindowUrl('/signup');
   });
 
   it('Should not be able to submit if form is invalid', () => {
     HttpSignupMocks.mockSignupSuccess();
-    Helpers.populateField('email', faker.internet.email()).type('{enter}');
+    FormHelpers.populateField('email', faker.internet.email()).type('{enter}');
     Helpers.testApiCalls('request', 0);
     Helpers.testWindowUrl('/signup');
   });
@@ -94,7 +91,7 @@ describe('Signup', () => {
   it('Should store userAccount in localStorage if valid credentials are provided', () => {
     HttpSignupMocks.mockSignupSuccess();
     simulateValidSubmit();
-    Helpers.testElementExists('spinner', 'not.exist');
+    FormHelpers.testElementExists('spinner', 'not.exist');
     Helpers.testLocalStorage('userAccount', 'isOk');
     Helpers.testWindowUrl('/');
   });

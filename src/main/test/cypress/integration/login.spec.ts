@@ -1,11 +1,12 @@
 import faker from 'faker';
-import * as Helpers from '../support/form-helper';
+import * as FormHelpers from '../support/form-helpers';
 import * as HttpLoginMocks from '../support/login-mocks';
+import * as Helpers from '../support/helpers';
 
 const simulateValidSubmit = (doubleClick?: boolean): void => {
-  Helpers.populateField('email', faker.internet.email());
-  Helpers.populateField('password', faker.internet.password(3));
-  Helpers.submitForm('login-button', doubleClick);
+  FormHelpers.populateField('email', faker.internet.email());
+  FormHelpers.populateField('password', faker.internet.password(3));
+  FormHelpers.submitForm('login-button', doubleClick);
 };
 
 describe('Login', () => {
@@ -14,58 +15,54 @@ describe('Login', () => {
   });
 
   it('Should render page with initial state', () => {
-    Helpers.testFieldStatus('email', 'Field is required');
-    Helpers.testFieldStatus('password', 'Field is required');
-    Helpers.testButtonStatus('login-button', 'disabled');
-    Helpers.testErrorContainer('error-msg');
+    FormHelpers.testFieldStatus('email', 'Field is required');
+    FormHelpers.testFieldStatus('password', 'Field is required');
+    FormHelpers.testButtonStatus('login-button', 'disabled');
+    FormHelpers.testErrorContainer('error-msg');
   });
 
   it('Should show error if input is invalid', () => {
-    Helpers.populateField('email');
-    Helpers.testFieldStatus('email', 'Invalid email', false);
-    Helpers.populateField('password', faker.internet.password(2));
-    Helpers.testFieldStatus('password', 'Value must have more than 3 characters', false);
-    Helpers.testButtonStatus('login-button', 'disabled');
+    FormHelpers.populateField('email');
+    FormHelpers.testFieldStatus('email', 'Invalid email', false);
+    FormHelpers.populateField('password', faker.internet.password(2));
+    FormHelpers.testFieldStatus(
+      'password',
+      'Value must have more than 3 characters',
+      false,
+    );
+    FormHelpers.testButtonStatus('login-button', 'disabled');
   });
 
   it('Should not show error if input is valid ', () => {
-    Helpers.populateField('email', faker.internet.email());
-    Helpers.testFieldStatus('email', '', false);
-    Helpers.populateField('password', faker.internet.password(3));
-    Helpers.testFieldStatus('password', '', false);
+    FormHelpers.populateField('email', faker.internet.email());
+    FormHelpers.testFieldStatus('email', '', false);
+    FormHelpers.populateField('password', faker.internet.password(3));
+    FormHelpers.testFieldStatus('password', '', false);
 
-    Helpers.testButtonStatus('login-button', 'enabled');
-    Helpers.testErrorContainer('error-msg');
+    FormHelpers.testButtonStatus('login-button', 'enabled');
+    FormHelpers.testErrorContainer('error-msg');
   });
 
   it('Should throw InvalidCredentialsError message if invalid credentials are provided', () => {
     HttpLoginMocks.mockInvalidLoginError();
     simulateValidSubmit();
-    Helpers.testErrorContainer('error-msg', 'Invalid credentials');
-    Helpers.testElementExists('spinner', 'not.exist');
+    FormHelpers.testErrorContainer('error-msg', 'Invalid credentials');
+    FormHelpers.testElementExists('spinner', 'not.exist');
     Helpers.testWindowUrl('/login');
   });
 
   it('Should throw UnexpectedError if statusCode is different from 401', () => {
     HttpLoginMocks.mockUnexpectedLoginError();
     simulateValidSubmit();
-    Helpers.testErrorContainer('error-msg', 'An unexpected error ocurred.');
-    Helpers.testElementExists('spinner', 'not.exist');
-    Helpers.testWindowUrl('/login');
-  });
-
-  it('Should show UnexpectedError if body returns invalid data', () => {
-    HttpLoginMocks.mockSuccessInvalidData();
-    simulateValidSubmit();
-    Helpers.testErrorContainer('error-msg', 'An unexpected error ocurred.');
-    Helpers.testElementExists('spinner', 'not.exist');
+    FormHelpers.testErrorContainer('error-msg', 'An unexpected error ocurred.');
+    FormHelpers.testElementExists('spinner', 'not.exist');
     Helpers.testWindowUrl('/login');
   });
 
   it('Should save userAccount in localStorage if credentials are valid', () => {
     HttpLoginMocks.mockSuccessLogin();
     simulateValidSubmit();
-    Helpers.testElementExists('spinner', 'not.exist');
+    FormHelpers.testElementExists('spinner', 'not.exist');
     Helpers.testWindowUrl('/');
     Helpers.testLocalStorage('userAccount', 'isOk');
   });
@@ -79,7 +76,7 @@ describe('Login', () => {
 
   it('Should not be able to submit if form is invalid', () => {
     HttpLoginMocks.mockSuccessLogin();
-    Helpers.populateField('email', faker.internet.email()).type('{enter}');
+    FormHelpers.populateField('email', faker.internet.email()).type('{enter}');
     Helpers.testApiCalls('request', 0);
   });
 });

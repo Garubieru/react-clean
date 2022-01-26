@@ -2,17 +2,19 @@ import faker from 'faker';
 import * as HttpMocks from '../support/http-mocks';
 
 const method = 'POST';
-export const mockInvalidLoginError = (): void =>
-  HttpMocks.mockInvalidCredentials(method, /login/);
+const url = /login/;
 
-export const mockUnexpectedLoginError = (): void =>
-  HttpMocks.mockUnexpectedError(method, /login/);
+export const mockInvalidLoginError = (): void => {
+  HttpMocks.mockUnauthorizedError(method, url);
+};
 
-export const mockSuccessLogin = (): void =>
-  HttpMocks.mockSuccess(method, /login/, {
+export const mockUnexpectedLoginError = (): void => {
+  HttpMocks.mockServerError(method, url);
+};
+
+export const mockSuccessLogin = (): void => {
+  HttpMocks.mockSuccess(method, url, {
     accessToken: faker.datatype.uuid(),
     name: faker.name.findName(),
   });
-
-export const mockSuccessInvalidData = (): void =>
-  HttpMocks.mockSuccess(method, /login/, { invalid: null });
+};
