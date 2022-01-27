@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useApi } from '../context/api/api-context';
+import { useApi } from '@/presentation/context/api/api-context';
 
 type UseLogoutResult = () => void;
 

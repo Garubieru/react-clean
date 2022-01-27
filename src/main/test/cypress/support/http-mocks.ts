@@ -48,7 +48,7 @@ export const mockForbiddenError = (method: string, url: RegExp): void => {
 export const mockSuccess = (method: string, url: RegExp, body: any): void => {
   cy.intercept(
     {
-      method: method,
+      method,
       url,
     },
     {
