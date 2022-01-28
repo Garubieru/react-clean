@@ -17,8 +17,6 @@ describe('SurveyList', () => {
     SurveyMocks.mockHttpSurveyUnexpectedError();
     cy.visit('');
     cy.getByTestId('error-wrap').should('have.text', 'An unexpected error ocurred.');
-    cy.getByTestId('reload-button').click();
-    Helpers.testApiCalls('request', 2);
   });
 
   it('Should show reload button on UnexpectedError and call api if is clicked', () => {
