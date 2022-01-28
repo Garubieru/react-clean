@@ -18,7 +18,7 @@ export const mockSurveyList = (length: number = 2): SurveyItem[] => {
     question: faker.random.words(),
     didAnswer: faker.datatype.boolean(),
   });
-  return Array.from({ length }, mockSurveyItem);
+  return [mockSurveyItem(), mockSurveyItem()];
 };
 
 export const mockHttpSurveyListSuccess = (surveyList = mockSurveyList()): void => {
