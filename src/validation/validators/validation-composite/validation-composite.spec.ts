@@ -38,8 +38,8 @@ describe('ValidationComposite', () => {
   });
 
   it('Should not return error if any validation succeeds in all fields', () => {
-    const field1 = faker.database.column();
-    const field2 = faker.database.column();
+    const field1 = 'field_1';
+    const field2 = 'field_2';
     const { sut } = createSut(field1, field2);
     const result = sut.validate({
       [field1]: faker.random.words(),
