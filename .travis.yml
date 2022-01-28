@@ -5,8 +5,9 @@ script:
   - prettier --check "src/**/*.(ts|tsx)"
   - eslint 'src/**'
   - npm run test:coveralls
-build:
+deploy:
   provider: heroku
   api_key: $HEROKU_API
   app: fordevs-reactclean
   skip_cleanup: true
+git
