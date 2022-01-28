@@ -11,7 +11,7 @@
     "test:staged": "npm test -- --findRelatedTests",
     "test:ci": "npm test -- --coverage",
     "test:coveralls": "npm run test:ci && coveralls < coverage/lcov.info",
-    "test:cypress": "export NODE_OPTIONS=--openssl-legacy-provider && cypress open"
+    "test:cypress": "cypress open"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.1",
