@@ -10,4 +10,3 @@ deploy:
   api_key: $HEROKU_API
   app: fordevs-reactclean
   skip_cleanup: true
-git
