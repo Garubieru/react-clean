@@ -1,5 +1,4 @@
 import * as HttpMocks from '../utils/http-mocks';
-import * as SurveyHelpers from '../utils/survey-helpers';
 import * as Helpers from '../utils/helpers';
 
 const url = /surveys/;
@@ -16,6 +15,31 @@ export const mockHttpSurveyForbidden = (): void => {
 
 export const mockHttpSurveyUnexpectedError = (): void => {
   HttpMocks.mockServerError('GET', url);
+};
+
+export const testSurvey = (
+  index: number,
+  question: string,
+  day: string,
+  month: string,
+  year: string,
+  didAnswer: boolean,
+): void => {
+  cy.getByTestId('surveys-list')
+    .children()
+    .eq(index)
+    .within((li) => {
+      assert.equal(li.find('[data-testid="survey-day"]').text(), day);
+      assert.equal(li.find('[data-testid="survey-month"]').text(), month);
+      assert.equal(li.find('[data-testid="survey-year"]').text(), year);
+      assert.equal(li.find('[data-testid="survey-question"]').text(), question);
+      cy.fixture('icons').then((icon) => {
+        assert.equal(
+          li.find('[data-testid="icon-image"]').attr('src'),
+          didAnswer ? icon.thumbsUp : icon.thumbsDown,
+        );
+      });
+    });
 };
 
 describe('SurveyList', () => {
@@ -52,8 +76,8 @@ describe('SurveyList', () => {
     cy.wait('@request');
     cy.getByTestId('surveys-list').children('li:not(:empty)').should('have.length', 2);
 
-    SurveyHelpers.testSurvey(0, 'Question 1', '03', 'fev', '2018', true);
-    SurveyHelpers.testSurvey(1, 'Question 2', '13', 'out', '2020', false);
+    testSurvey(0, 'Question 1', '03', 'fev', '2018', true);
+    testSurvey(1, 'Question 2', '13', 'out', '2020', false);
 
     Helpers.testApiCalls('request', 1);
   });
