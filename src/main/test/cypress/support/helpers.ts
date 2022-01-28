@@ -21,3 +21,7 @@ export const mockLocalStorageUser = (): void => {
     ),
   );
 };
+
+export const getLocalStorageUser = (): any => {
+  return JSON.parse(localStorage.getItem('userAccount'));
+};
