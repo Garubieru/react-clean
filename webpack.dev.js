@@ -1,19 +1,11 @@
 const path = require('path');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const common = require('./webpack.common.js');
+const { merge } = require('webpack-merge');
 
-module.exports = (webpackConfigEnv, argv) => ({
+module.exports = merge(common, {
   mode: 'development',
-  entry: './src/main/index.tsx',
-  output: {
-    path: path.resolve(__dirname, 'public/js'),
-    publicPath: '/public/js',
-    filename: 'bundle.js',
-  },
-  resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.scss'],
-    alias: { '@': path.resolve(__dirname, 'src') },
-  },
   module: {
     rules: [
       {
@@ -33,21 +25,19 @@ module.exports = (webpackConfigEnv, argv) => ({
   },
   devServer: {
     static: {
-      directory: path.resolve(__dirname, 'public'),
+      directory: path.resolve(__dirname, 'dist'),
     },
     historyApiFallback: true,
     devMiddleware: {
       writeToDisk: true,
     },
   },
-  externals: {
-    react: 'React',
-    'react-dom': 'ReactDOM',
-  },
   plugins: [
-    new CleanWebpackPlugin(),
     new Dotenv({
-      path: './.env',
+      path: './.env.local',
+    }),
+    new HtmlWebpackPlugin({
+      template: './template.dev.html',
     }),
   ],
 });
