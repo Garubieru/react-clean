@@ -85,12 +85,14 @@ describe('Login', () => {
     mockSuccessLogin();
     simulateValidSubmit(true);
     Helpers.testWindowUrl('/');
+    cy.wait('@request');
     Helpers.testApiCalls('request', 1);
   });
 
   it('Should not be able to submit if form is invalid', () => {
     mockSuccessLogin();
     FormHelpers.populateField('email', faker.internet.email()).type('{enter}');
+    cy.wait('@request');
     Helpers.testApiCalls('request', 0);
   });
 });

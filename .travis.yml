@@ -1,10 +1,18 @@
 language: node_js
 node_js:
   - 14
+addos:
+  packages:
+    - libgconf-2-4
+cache:
+  npm: true
+  directories:
+    - ~/.cache
 script:
   - prettier --check "src/**/*.(ts|tsx)"
   - eslint 'src/**'
   - npm run test:coveralls
+  - npm run test:cypress:ci
 before_deploy:
   - rvm $(travis_internal_ruby) --fuzzy do ruby -S gem install faraday -v 1.8.0
 deploy:
@@ -12,3 +20,5 @@ deploy:
   api_key: $HEROKU_API
   app: fordevs-reactclean
   skip_cleanup: true
+notifications:
+  email: false

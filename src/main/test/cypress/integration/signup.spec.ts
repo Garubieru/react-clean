@@ -101,6 +101,7 @@ describe('Signup', () => {
   it('Should not be able to submit if form is invalid', () => {
     mockSignupSuccess();
     FormHelpers.populateField('email', faker.internet.email()).type('{enter}');
+    cy.wait('@request');
     Helpers.testApiCalls('request', 0);
     Helpers.testWindowUrl('/signup');
   });
@@ -116,6 +117,7 @@ describe('Signup', () => {
   it('Should prevent multiple submit', () => {
     mockSignupSuccess();
     simulateValidSubmit(true);
+    cy.wait('@request');
     Helpers.testApiCalls('request', 1);
   });
 });
