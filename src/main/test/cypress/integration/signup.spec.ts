@@ -1,7 +1,7 @@
-import * as FormHelpers from '../support/form-helpers';
-import * as Helpers from '../support/helpers';
-import * as HttpSignupMocks from '../support/signup-mocks';
 import faker from 'faker';
+import * as FormHelpers from '../utils/form-helpers';
+import * as Helpers from '../utils/helpers';
+import * as HttpMocks from '../utils/http-mocks';
 
 const simulateValidSubmit = (doubleClick?: boolean): void => {
   FormHelpers.populateField('name', faker.random.alphaNumeric(3));
@@ -10,6 +10,23 @@ const simulateValidSubmit = (doubleClick?: boolean): void => {
   FormHelpers.populateField('password', password);
   FormHelpers.populateField('passwordConfirmation', password);
   FormHelpers.submitForm('create-btn', doubleClick);
+};
+
+const url = /signup/;
+export const mockEmailInUseSignupError = (): void => {
+  HttpMocks.mockForbiddenError('POST', url);
+};
+
+export const mockUnexpectedSignupError = (): void => {
+  HttpMocks.mockServerError('POST', url);
+};
+
+export const mockInvalidSignupSuccess = (): void => {
+  HttpMocks.mockSuccess('POST', url, { invalid: faker.datatype.uuid() });
+};
+
+export const mockSignupSuccess = (): void => {
+  HttpMocks.mockSuccess('POST', url, 'fx:account');
 };
 
 describe('Signup', () => {
@@ -66,7 +83,7 @@ describe('Signup', () => {
   });
 
   it('Should throw EmailInUseError if response statusCode returns 403', () => {
-    HttpSignupMocks.mockEmailInUseSignupError();
+    mockEmailInUseSignupError();
     simulateValidSubmit();
     FormHelpers.testElementExists('spinner', 'not.exist');
     FormHelpers.testErrorContainer('error-msg', 'E-mail already in use');
@@ -74,7 +91,7 @@ describe('Signup', () => {
   });
 
   it('Should throw UnexpectedError if response statusCode is different than 403', () => {
-    HttpSignupMocks.mockUnexpectedSignupError();
+    mockUnexpectedSignupError();
     simulateValidSubmit();
     FormHelpers.testElementExists('spinner', 'not.exist');
     FormHelpers.testErrorContainer('error-msg', 'An unexpected error ocurred.');
@@ -82,14 +99,14 @@ describe('Signup', () => {
   });
 
   it('Should not be able to submit if form is invalid', () => {
-    HttpSignupMocks.mockSignupSuccess();
+    mockSignupSuccess();
     FormHelpers.populateField('email', faker.internet.email()).type('{enter}');
     Helpers.testApiCalls('request', 0);
     Helpers.testWindowUrl('/signup');
   });
 
   it('Should store userAccount in localStorage if valid credentials are provided', () => {
-    HttpSignupMocks.mockSignupSuccess();
+    mockSignupSuccess();
     simulateValidSubmit();
     FormHelpers.testElementExists('spinner', 'not.exist');
     Helpers.testLocalStorage('userAccount', 'isOk');
@@ -97,7 +114,7 @@ describe('Signup', () => {
   });
 
   it('Should prevent multiple submit', () => {
-    HttpSignupMocks.mockSignupSuccess();
+    mockSignupSuccess();
     simulateValidSubmit(true);
     Helpers.testApiCalls('request', 1);
   });

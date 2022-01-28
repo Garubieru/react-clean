@@ -1,4 +1,3 @@
-import faker from 'faker';
 export const baseUrl = Cypress.config().baseUrl;
 
 export const testWindowUrl = (path: string): void => {
@@ -14,12 +13,9 @@ export const testLocalStorage = (key: string, status: 'isOk' | 'isNotOk'): void 
 };
 
 export const mockLocalStorageUser = (): void => {
-  cy.window().then((window) =>
-    window.localStorage.setItem(
-      'userAccount',
-      JSON.stringify({ name: faker.name.findName(), accessToken: faker.datatype.uuid() }),
-    ),
-  );
+  cy.fixture('account').then((account) => {
+    localStorage.setItem('userAccount', JSON.stringify(account));
+  });
 };
 
 export const getLocalStorageUser = (): any => {

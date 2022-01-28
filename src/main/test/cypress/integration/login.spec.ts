@@ -1,12 +1,26 @@
 import faker from 'faker';
-import * as FormHelpers from '../support/form-helpers';
-import * as HttpLoginMocks from '../support/login-mocks';
-import * as Helpers from '../support/helpers';
+import * as FormHelpers from '../utils/form-helpers';
+import * as HttpMocks from '../utils/http-mocks';
+import * as Helpers from '../utils/helpers';
 
 const simulateValidSubmit = (doubleClick?: boolean): void => {
   FormHelpers.populateField('email', faker.internet.email());
   FormHelpers.populateField('password', faker.internet.password(3));
   FormHelpers.submitForm('login-button', doubleClick);
+};
+
+const url = /login/;
+
+export const mockInvalidLoginError = (): void => {
+  HttpMocks.mockUnauthorizedError('POST', url);
+};
+
+export const mockUnexpectedLoginError = (): void => {
+  HttpMocks.mockServerError('POST', url);
+};
+
+export const mockSuccessLogin = (): void => {
+  HttpMocks.mockSuccess('POST', url, 'fx:account');
 };
 
 describe('Login', () => {
@@ -44,7 +58,7 @@ describe('Login', () => {
   });
 
   it('Should throw InvalidCredentialsError message if invalid credentials are provided', () => {
-    HttpLoginMocks.mockInvalidLoginError();
+    mockInvalidLoginError();
     simulateValidSubmit();
     FormHelpers.testErrorContainer('error-msg', 'Invalid credentials');
     FormHelpers.testElementExists('spinner', 'not.exist');
@@ -52,7 +66,7 @@ describe('Login', () => {
   });
 
   it('Should throw UnexpectedError if statusCode is different from 401', () => {
-    HttpLoginMocks.mockUnexpectedLoginError();
+    mockUnexpectedLoginError();
     simulateValidSubmit();
     FormHelpers.testErrorContainer('error-msg', 'An unexpected error ocurred.');
     FormHelpers.testElementExists('spinner', 'not.exist');
@@ -60,7 +74,7 @@ describe('Login', () => {
   });
 
   it('Should save userAccount in localStorage if credentials are valid', () => {
-    HttpLoginMocks.mockSuccessLogin();
+    mockSuccessLogin();
     simulateValidSubmit();
     FormHelpers.testElementExists('spinner', 'not.exist');
     Helpers.testWindowUrl('/');
@@ -68,14 +82,14 @@ describe('Login', () => {
   });
 
   it('Should prevent multiple submits', () => {
-    HttpLoginMocks.mockSuccessLogin();
+    mockSuccessLogin();
     simulateValidSubmit(true);
     Helpers.testWindowUrl('/');
     Helpers.testApiCalls('request', 1);
   });
 
   it('Should not be able to submit if form is invalid', () => {
-    HttpLoginMocks.mockSuccessLogin();
+    mockSuccessLogin();
     FormHelpers.populateField('email', faker.internet.email()).type('{enter}');
     Helpers.testApiCalls('request', 0);
   });
