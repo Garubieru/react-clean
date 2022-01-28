@@ -12,21 +12,21 @@ const createSut = (field1: string, field2: string): SutTypes => {
   const fieldValidationSpy1 = new FieldValidationSpy();
   const fieldValidationSpy2 = new FieldValidationSpy();
   const fieldValidationSpy3 = new FieldValidationSpy();
-  const validations = {
-    [field1]: [fieldValidationSpy1, fieldValidationSpy3],
-    [field2]: [fieldValidationSpy2],
+  const fieldsValidationsSpy = {
+    [field1]: [fieldValidationSpy1, fieldValidationSpy2],
+    [field2]: [fieldValidationSpy3],
   };
-  const sut = ValidationComposite.build(validations);
-  return { sut, fieldsValidationsSpy: validations };
+  const sut = ValidationComposite.build(fieldsValidationsSpy);
+  return { sut, fieldsValidationsSpy };
 };
 
 describe('ValidationComposite', () => {
   it('Should return first error found if any validation fails in all fields', () => {
-    const field1 = faker.database.column();
-    const field2 = faker.database.column();
+    const field1 = 'field_1';
+    const field2 = 'field_2';
     const { sut, fieldsValidationsSpy } = createSut(field1, field2);
     const error1 = faker.random.word();
-    const error2 = faker.random.word();
+    const error2 = faker.random.words(3);
     fieldsValidationsSpy[field1][0].error = new InvalidFieldError(error1);
     fieldsValidationsSpy[field1][1].error = new InvalidFieldError(faker.random.word());
     fieldsValidationsSpy[field2][0].error = new InvalidFieldError(error2);
