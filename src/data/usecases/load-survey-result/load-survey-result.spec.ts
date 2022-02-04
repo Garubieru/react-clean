@@ -43,4 +43,22 @@ describe('RemoteLoadSurveyResult', () => {
     const promise = sut.load();
     await expect(promise).rejects.toBeInstanceOf(UnexpectedError);
   });
+
+  it('Should throw UnexpectedError on 500', async () => {
+    const { httpGetClientSpy, sut } = createSut();
+    httpGetClientSpy.response = {
+      statusCode: HttpStatusCode.serverError,
+    };
+    const promise = sut.load();
+    await expect(promise).rejects.toBeInstanceOf(UnexpectedError);
+  });
+
+  it('Should throw UnexpectedError on 400', async () => {
+    const { httpGetClientSpy, sut } = createSut();
+    httpGetClientSpy.response = {
+      statusCode: HttpStatusCode.badRequest,
+    };
+    const promise = sut.load();
+    await expect(promise).rejects.toBeInstanceOf(UnexpectedError);
+  });
 });
