@@ -4,21 +4,33 @@ import { RemoteLoadSurveyResult } from '@/data/usecases';
 import { ForbiddenError } from '@/domain/errors';
 import faker from 'faker';
 
+type SutType = {
+  sut: RemoteLoadSurveyResult;
+  httpGetClientSpy: HttpGetClientSpy<any>;
+};
+
+const createSut = (url = faker.internet.url()): SutType => {
+  const httpGetClientSpy = new HttpGetClientSpy<any>();
+  const sut = new RemoteLoadSurveyResult(url, httpGetClientSpy);
+  return {
+    sut,
+    httpGetClientSpy,
+  };
+};
+
 describe('RemoteLoadSurveyResult', () => {
   it('Should call httpGetClient with correct url', () => {
     const url = faker.internet.url();
-    const httpGetClient = new HttpGetClientSpy();
-    const sut = new RemoteLoadSurveyResult(url, httpGetClient);
+    const { httpGetClientSpy, sut } = createSut(url);
     sut.load();
-    expect(httpGetClient.url).toBe(url);
+    expect(httpGetClientSpy.url).toBe(url);
   });
 
   it('Should throw ForbiddenError on 403', async () => {
-    const httpGetClient = new HttpGetClientSpy();
-    httpGetClient.response = {
+    const { httpGetClientSpy, sut } = createSut();
+    httpGetClientSpy.response = {
       statusCode: HttpStatusCode.forbidden,
     };
-    const sut = new RemoteLoadSurveyResult(faker.internet.url(), httpGetClient);
     const promise = sut.load();
     await expect(promise).rejects.toBeInstanceOf(ForbiddenError);
   });
