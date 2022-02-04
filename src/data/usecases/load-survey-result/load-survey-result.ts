@@ -1,5 +1,5 @@
 import { HttpGetClient, HttpStatusCode } from '@/data/protocols/http';
-import { ForbiddenError } from '@/domain/errors';
+import { ForbiddenError, UnexpectedError } from '@/domain/errors';
 
 export class RemoteLoadSurveyResult {
   constructor(
@@ -11,8 +11,14 @@ export class RemoteLoadSurveyResult {
     const { statusCode } = await this.httpGetClient.get({ url: this.url });
 
     switch (statusCode) {
+      case HttpStatusCode.ok: {
+        return;
+      }
       case HttpStatusCode.forbidden: {
         throw new ForbiddenError();
+      }
+      default: {
+        throw new UnexpectedError();
       }
     }
   }
