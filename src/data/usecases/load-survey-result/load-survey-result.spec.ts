@@ -1,5 +1,5 @@
 import { HttpStatusCode } from '@/data/protocols/http';
-import { HttpGetClientSpy } from '@/data/test';
+import { HttpGetClientSpy, mockRemoteSurveyResult } from '@/data/test';
 import { RemoteLoadSurveyResult } from '@/data/usecases';
 import { ForbiddenError, UnexpectedError } from '@/domain/errors';
 import faker from 'faker';
@@ -22,6 +22,10 @@ describe('RemoteLoadSurveyResult', () => {
   it('Should call httpGetClient with correct url', async () => {
     const url = faker.internet.url();
     const { httpGetClientSpy, sut } = createSut(url);
+    httpGetClientSpy.response = {
+      statusCode: HttpStatusCode.ok,
+      body: mockRemoteSurveyResult(),
+    };
     await sut.load();
     expect(httpGetClientSpy.url).toBe(url);
   });
@@ -60,5 +64,20 @@ describe('RemoteLoadSurveyResult', () => {
     };
     const promise = sut.load();
     await expect(promise).rejects.toBeInstanceOf(UnexpectedError);
+  });
+
+  it('Should return correct survey on 200', async () => {
+    const { httpGetClientSpy, sut } = createSut();
+    const httpResponseMock = mockRemoteSurveyResult();
+    httpGetClientSpy.response = {
+      statusCode: HttpStatusCode.ok,
+      body: httpResponseMock,
+    };
+    const survey = await sut.load();
+    expect(survey).toEqual({
+      question: httpResponseMock.question,
+      date: new Date(httpResponseMock.date),
+      answers: httpResponseMock.answers,
+    });
   });
 });
