@@ -9,24 +9,28 @@
   flex-direction: column;
   flex: 1;
 
-  h1 {
-    font-size: 2.2rem;
-    position: relative;
-    align-self: center;
-    text-align: center;
-    &::after {
-      position: absolute;
-      bottom: -6px;
-      left: 50%;
-      transform: translateX(-50%);
-      content: '';
-      width: 50%;
-      height: 2px;
-      background-color: $primaryLight;
-    }
+  .surveyGeneralInfo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 
-    @media screen and (max-width: 768px) {
-      font-size: 1.8rem;
+    h1 {
+      font-size: 2.2rem;
+      position: relative;
+      text-align: left;
+      &::after {
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        content: '';
+        width: 80%;
+        height: 2px;
+        background-color: $primaryLight;
+      }
+
+      @media screen and (max-width: 768px) {
+        font-size: 1.8rem;
+      }
     }
   }
 
@@ -36,7 +40,7 @@
     flex-direction: column;
     gap: 20px;
     width: 100%;
-    margin-top: 50px;
+    margin-top: 30px;
 
     .surveyResultItem {
       cursor: pointer;

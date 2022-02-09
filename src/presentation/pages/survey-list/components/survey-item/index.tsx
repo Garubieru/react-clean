@@ -3,6 +3,7 @@ import Styles from './styles.scss';
 import SurveyIconStatus, { IconStatus } from '../survey-icon-status';
 
 import { LoadSurveyList } from '@/domain/usecases';
+import { Calendar } from '@/presentation/components';
 
 type SurveyItemProps = {
   className?: string;
@@ -21,19 +22,7 @@ const SurveyItem: React.FC<SurveyItemProps> = ({ className, loading, surveyData 
             iconName={surveyData.didAnswer ? IconStatus.thumbsUp : IconStatus.thumbsDown}
           />
           <div className={Styles.surveyContent}>
-            <time className={Styles.surveyTime}>
-              <span data-testid="survey-day" className={Styles.surveyDay}>
-                {surveyTime.getDate().toString().padStart(2, '0')}
-              </span>
-              <span data-testid="survey-month" className={Styles.surveyMonth}>
-                {surveyTime
-                  .toLocaleDateString('pt-BR', { month: 'short' })
-                  .replace('.', '')}
-              </span>
-              <span data-testid="survey-year" className={Styles.surveyYear}>
-                {surveyTime.getFullYear()}
-              </span>
-            </time>
+            <Calendar time={surveyTime} className={Styles.surveyTime} />
             <h3 data-testid="survey-question" className={Styles.surveyQuestion}>
               {surveyData.question}
             </h3>

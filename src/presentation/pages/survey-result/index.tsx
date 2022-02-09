@@ -7,6 +7,7 @@ import {
   PageWrapper,
 } from '@/presentation/components';
 import FlipMove from 'react-flip-move';
+import Calendar from '@/presentation/components/atoms/calendar';
 
 const SurveyResult: React.FC = () => {
   const [answers] = useState([
@@ -33,7 +34,13 @@ const SurveyResult: React.FC = () => {
   return (
     <PageWrapper header={<MainHeader />}>
       <div className={Styles.surveyContainer}>
-        <h1>Qual é seu framework web favorito?</h1>
+        <hgroup className={Styles.surveyGeneralInfo}>
+          <Calendar time={new Date()} />
+          <h1>
+            Qual é seu framework web favorito? Qual é seu framework web favorito? Qual é
+            seu framework web favorito? Qual é seu framework web favorito?
+          </h1>
+        </hgroup>
 
         <FlipMove
           className={Styles.surveyResultList}
