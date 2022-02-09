@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import Styles from './styles.scss';
-import { Button, MainHeader, PageWrapper, Spinner } from '@/presentation/components';
+import {
+  Button,
+  LoadingOverlay,
+  MainHeader,
+  PageWrapper,
+} from '@/presentation/components';
 import FlipMove from 'react-flip-move';
 
 const SurveyResult: React.FC = () => {
@@ -52,13 +57,7 @@ const SurveyResult: React.FC = () => {
         </FlipMove>
 
         <Button className={Styles.backButton}>Voltar</Button>
-
-        <div className={Styles.loadingOverlay}>
-          <div className={Styles.loadingContainer}>
-            <span>Please, wait...</span>
-            <Spinner className={Styles.surveySpinner} />
-          </div>
-        </div>
+        {false && <LoadingOverlay />}
       </div>
     </PageWrapper>
   );
