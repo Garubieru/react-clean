@@ -10,9 +10,13 @@ interface ButtonProps
   isLoading?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ isLoading, disabled, ...props }) => {
+const Button: React.FC<ButtonProps> = ({ isLoading, disabled, className, ...props }) => {
   return (
-    <button className={Styles.button} disabled={disabled || isLoading} {...props}>
+    <button
+      className={[Styles.button, className].join(' ')}
+      disabled={disabled || isLoading}
+      {...props}
+    >
       {!isLoading && props.children}
       {isLoading && <Spinner data-testid="spinner" />}
     </button>

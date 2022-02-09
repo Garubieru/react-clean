@@ -7,6 +7,7 @@ import {
   setLocalLoginAccountAdapter,
   getLocalLoginAccountAdapter,
 } from '@/main/adapters';
+import { SurveyResult } from '@/presentation/pages';
 
 const Router: React.FC = () => {
   return (
@@ -21,6 +22,7 @@ const Router: React.FC = () => {
           <Route path="/login" element={<CreateLogin />} />
           <Route path="/signup" element={<CreateSignup />} />
           <Route path="/" element={<PrivateRoute element={<CreateSurveyList />} />} />
+          <Route path="/survey" element={<SurveyResult />} />
         </Routes>
       </BrowserRouter>
     </ApiContext.Provider>
