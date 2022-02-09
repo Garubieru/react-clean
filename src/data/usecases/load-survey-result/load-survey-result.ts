@@ -16,7 +16,7 @@ export namespace RemoteLoadSurveyResult {
   };
 }
 
-export class RemoteLoadSurveyResult {
+export class RemoteLoadSurveyResult implements LoadSurveyResult {
   constructor(
     private readonly url: string,
     private readonly httpGetClient: HttpGetClient<RemoteLoadSurveyResult.Model>,
