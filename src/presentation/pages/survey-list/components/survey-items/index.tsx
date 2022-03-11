@@ -1,10 +1,12 @@
 import React from 'react';
-import {
-  SurveyItem,
-  useSurveyContext,
-} from '@/presentation/pages/survey-list/components';
+import { SurveyItem } from '@/presentation/pages/survey-list/components';
 
 import Styles from './styles.scss';
+import { LoadSurveyList } from '@/domain/usecases';
+
+type SurveyItemProps = {
+  surveyItems: LoadSurveyList.Model[];
+};
 
 const EmptySurveyItems: React.FC = () => {
   return (
@@ -17,15 +19,14 @@ const EmptySurveyItems: React.FC = () => {
   );
 };
 
-const SurveyItems: React.FC = () => {
-  const { surveyScreenState } = useSurveyContext();
+const SurveyItems: React.FC<SurveyItemProps> = ({ surveyItems }) => {
   return (
     <ul className={Styles.surveys} data-testid="surveys-list">
-      {surveyScreenState.surveyItems.length === 0 ? (
+      {surveyItems.length === 0 ? (
         <EmptySurveyItems />
       ) : (
         <>
-          {surveyScreenState.surveyItems.map((surveyItem) => (
+          {surveyItems.map((surveyItem) => (
             <SurveyItem
               key={surveyItem.id}
               surveyData={surveyItem}

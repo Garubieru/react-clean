@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { LoadSurveyList } from '@/domain/usecases';
 import { MainHeader, PageWrapper, ReloadError } from '@/presentation/components';
-import {
-  SurveyContext,
-  SurveyItems,
-  SurveyState,
-} from '@/presentation/pages/survey-list/components';
+import { SurveyItems } from '@/presentation/pages/survey-list/components';
 import { useErrorHandler } from '@/presentation/hooks';
 import Styles from './styles.scss';
 
 type SurveyListProps = {
   loadSurveyList: LoadSurveyList;
+};
+
+type SurveyState = {
+  surveyItems: LoadSurveyList.Model[];
+  error: string;
+  reload: boolean;
 };
 
 const SurveyList: React.FC<SurveyListProps> = ({ loadSurveyList }) => {
@@ -49,13 +51,11 @@ const SurveyList: React.FC<SurveyListProps> = ({ loadSurveyList }) => {
     <PageWrapper header={<MainHeader />}>
       <div className={Styles.surveyListContainer}>
         <h2>Surveys</h2>
-        <SurveyContext.Provider value={{ surveyScreenState, setSurveyScreenState }}>
-          {!surveyScreenState.error ? (
-            <SurveyItems />
-          ) : (
-            <ReloadError handleReload={handleReload} error={surveyScreenState.error} />
-          )}
-        </SurveyContext.Provider>
+        {!surveyScreenState.error ? (
+          <SurveyItems surveyItems={surveyScreenState.surveyItems} />
+        ) : (
+          <ReloadError handleReload={handleReload} error={surveyScreenState.error} />
+        )}
       </div>
     </PageWrapper>
   );
