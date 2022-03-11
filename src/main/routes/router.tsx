@@ -1,13 +1,17 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { CreateLogin, CreateSignup, CreateSurveyList } from '@/main/factories';
+import {
+  CreateLogin,
+  CreateSignup,
+  CreateSurveyList,
+  CreateSurveyResult,
+} from '@/main/factories';
 import { PrivateRoute } from '@/presentation/components';
 import { ApiContext } from '@/presentation/context/api/api-context';
 import {
   setLocalLoginAccountAdapter,
   getLocalLoginAccountAdapter,
 } from '@/main/adapters';
-import { SurveyResult } from '@/presentation/pages';
 
 const Router: React.FC = () => {
   return (
@@ -22,7 +26,10 @@ const Router: React.FC = () => {
           <Route path="/login" element={<CreateLogin />} />
           <Route path="/signup" element={<CreateSignup />} />
           <Route path="/" element={<PrivateRoute element={<CreateSurveyList />} />} />
-          <Route path="/survey" element={<SurveyResult />} />
+          <Route
+            path="/survey/:id"
+            element={<PrivateRoute element={<CreateSurveyResult />} />}
+          />
         </Routes>
       </BrowserRouter>
     </ApiContext.Provider>
