@@ -36,10 +36,7 @@ const SurveyResult: React.FC = () => {
       <div className={Styles.surveyContainer}>
         <hgroup className={Styles.surveyGeneralInfo}>
           <Calendar time={new Date()} />
-          <h1>
-            Qual é seu framework web favorito? Qual é seu framework web favorito? Qual é
-            seu framework web favorito? Qual é seu framework web favorito?
-          </h1>
+          <h1>Qual é seu framework web favorito?</h1>
         </hgroup>
 
         <FlipMove

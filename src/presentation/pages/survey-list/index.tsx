@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { LoadSurveyList } from '@/domain/usecases';
-import { MainHeader, PageWrapper } from '@/presentation/components';
+import { MainHeader, PageWrapper, ReloadError } from '@/presentation/components';
 import {
   SurveyContext,
   SurveyItems,
-  SurveyError,
   SurveyState,
 } from '@/presentation/pages/survey-list/components';
 import { useErrorHandler } from '@/presentation/hooks';
@@ -25,6 +24,14 @@ const SurveyList: React.FC<SurveyListProps> = ({ loadSurveyList }) => {
     setSurveyScreenState((state) => ({ ...state, error: error.message })),
   );
 
+  const handleReload = (): void => {
+    setSurveyScreenState((state) => ({
+      error: '',
+      surveyItems: [],
+      reload: !state.reload,
+    }));
+  };
+
   useEffect(() => {
     const listSurveys = async (): Promise<void> => {
       try {
@@ -43,7 +50,11 @@ const SurveyList: React.FC<SurveyListProps> = ({ loadSurveyList }) => {
       <div className={Styles.surveyListContainer}>
         <h2>Surveys</h2>
         <SurveyContext.Provider value={{ surveyScreenState, setSurveyScreenState }}>
-          {!surveyScreenState.error ? <SurveyItems /> : <SurveyError />}
+          {!surveyScreenState.error ? (
+            <SurveyItems />
+          ) : (
+            <ReloadError handleReload={handleReload} error={surveyScreenState.error} />
+          )}
         </SurveyContext.Provider>
       </div>
     </PageWrapper>
