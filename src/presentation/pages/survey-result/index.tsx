@@ -16,15 +16,18 @@ type SurveyResultType = {
 };
 
 const SurveyResult: React.FC<SurveyResultType> = ({ loadSurveyResult }) => {
-  const [state] = useState({
+  const [state, setState] = useState({
     surveyResult: null as LoadSurveyResult.Model,
     isLoading: false,
     error: '',
   });
 
+  const { surveyResult } = state;
+
   useEffect(() => {
     const loadSurvey = async (): Promise<void> => {
-      await loadSurveyResult.load();
+      const result = await loadSurveyResult.load();
+      setState((prevState) => ({ ...prevState, surveyResult: result }));
     };
     loadSurvey();
   }, []);
@@ -32,33 +35,36 @@ const SurveyResult: React.FC<SurveyResultType> = ({ loadSurveyResult }) => {
   return (
     <PageWrapper header={<MainHeader />}>
       <div className={Styles.surveyContainer} data-testid="survey-container">
-        {state.surveyResult && (
+        {surveyResult && (
           <>
             <hgroup className={Styles.surveyGeneralInfo}>
-              <Calendar time={state.surveyResult.date} />
-              <h1>
-                Qual é seu framework web favorito? Qual é seu framework web favorito? Qual
-                é seu framework web favorito? Qual é seu framework web favorito? Qual é
-              </h1>
+              <Calendar time={surveyResult.date} />
+              <h1 data-testid="survey-question">{surveyResult.question}</h1>
             </hgroup>
 
             <FlipMove
               className={Styles.surveyResultList}
               typeName="ul"
               appearAnimation="elevator"
+              data-testid="survey-result-answers"
             >
-              {state.surveyResult.answers.map((answer) => (
+              {surveyResult.answers.map((answer) => (
                 <li
                   key={answer.answer}
                   className={Styles.surveyResultItem}
                   data-active={answer.isCurrentAccountAnswer}
+                  data-testid="answer-item"
                 >
                   <div className={Styles.surveyInfoWrapper}>
-                    <img src={answer.image} alt={answer.answer} />
-                    <p>{answer.answer}</p>
+                    {answer.image && (
+                      <img data-testid="image" src={answer.image} alt={answer.answer} />
+                    )}
+                    <p data-testid="answer">{answer.answer}</p>
                   </div>
 
-                  <span className={Styles.surveyPercentage}>{answer.percent}%</span>
+                  <span data-testid="percent" className={Styles.surveyPercentage}>
+                    {answer.percent}%
+                  </span>
                 </li>
               ))}
             </FlipMove>

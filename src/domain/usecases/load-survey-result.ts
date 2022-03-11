@@ -6,7 +6,7 @@ export namespace LoadSurveyResult {
   export type Model = {
     question: string;
     answers: Array<{
-      image: string;
+      image?: string;
       answer: string;
       count: number;
       percent: number;
