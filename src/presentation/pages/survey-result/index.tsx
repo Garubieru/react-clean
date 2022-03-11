@@ -21,6 +21,7 @@ const SurveyResult: React.FC<SurveyResultType> = ({ loadSurveyResult }) => {
     surveyResult: null as LoadSurveyResult.Model,
     isLoading: false,
     error: '',
+    reload: false,
   });
 
   const { surveyResult } = state;
@@ -28,6 +29,14 @@ const SurveyResult: React.FC<SurveyResultType> = ({ loadSurveyResult }) => {
   const handleError = useErrorHandler((error) =>
     setState((prevState) => ({ ...prevState, surveyResult: null, error: error.message })),
   );
+
+  const handleReload = (): void =>
+    setState((prevState) => ({
+      surveyResult: null,
+      isLoading: false,
+      error: '',
+      reload: !prevState.reload,
+    }));
 
   useEffect(() => {
     const loadSurvey = async (): Promise<void> => {
@@ -39,7 +48,7 @@ const SurveyResult: React.FC<SurveyResultType> = ({ loadSurveyResult }) => {
       }
     };
     loadSurvey();
-  }, []);
+  }, [state.reload]);
 
   return (
     <PageWrapper header={<MainHeader />}>
@@ -83,7 +92,7 @@ const SurveyResult: React.FC<SurveyResultType> = ({ loadSurveyResult }) => {
         )}
 
         {state.isLoading && <LoadingOverlay />}
-        {state.error && <ReloadError error={state.error} handleReload={() => {}} />}
+        {state.error && <ReloadError error={state.error} handleReload={handleReload} />}
       </div>
     </PageWrapper>
   );
