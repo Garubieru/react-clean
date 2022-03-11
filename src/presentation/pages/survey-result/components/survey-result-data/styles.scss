@@ -1,0 +1,40 @@
+@import '../../../../styles/colors.scss';
+
+.surveyGeneralInfo {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  h1 {
+    font-size: 24px;
+    position: relative;
+    text-align: left;
+    line-height: 30px;
+    &::after {
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      content: '';
+      width: 80%;
+      height: 2px;
+      background-color: $primaryLight;
+    }
+
+    @media screen and (max-width: 768px) {
+      font-size: 1.8rem;
+    }
+  }
+}
+
+.surveyResultList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.backButton {
+  margin-top: 20px;
+}
