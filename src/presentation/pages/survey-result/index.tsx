@@ -10,6 +10,7 @@ import {
 import FlipMove from 'react-flip-move';
 import Calendar from '@/presentation/components/atoms/calendar';
 import { LoadSurveyResult } from '@/domain/usecases';
+import { useErrorHandler } from '@/presentation/hooks';
 
 type SurveyResultType = {
   loadSurveyResult: LoadSurveyResult;
@@ -24,10 +25,18 @@ const SurveyResult: React.FC<SurveyResultType> = ({ loadSurveyResult }) => {
 
   const { surveyResult } = state;
 
+  const handleError = useErrorHandler((error) =>
+    setState((prevState) => ({ ...prevState, surveyResult: null, error: error.message })),
+  );
+
   useEffect(() => {
     const loadSurvey = async (): Promise<void> => {
-      const result = await loadSurveyResult.load();
-      setState((prevState) => ({ ...prevState, surveyResult: result }));
+      try {
+        const result = await loadSurveyResult.load();
+        setState((prevState) => ({ ...prevState, surveyResult: result }));
+      } catch (e) {
+        handleError(e);
+      }
     };
     loadSurvey();
   }, []);

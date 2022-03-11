@@ -12,7 +12,7 @@ const ReloadError: React.FC<ReloadErrorProps> = (props) => {
   return (
     <div className={Styles.errorWrap} data-testid="error-wrap">
       <button onClick={props.handleReload} data-testid="reload-button">
-        <FontAwesomeIcon icon={faRedoAlt}></FontAwesomeIcon>
+        <FontAwesomeIcon icon={faRedoAlt} />
       </button>
       <span>{props.error}</span>
     </div>

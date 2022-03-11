@@ -6,17 +6,23 @@ import { ApiContext } from '@/presentation/context/api/api-context';
 import { mockAccount } from '@/domain/test';
 import { LoadSurveyResultSpy } from '@/presentation/test';
 import SurveyResult from '.';
+import { ForbiddenError, UnexpectedError } from '@/domain/errors';
 
 type SutType = {
   history: MemoryHistory;
   loadSurveyResultSpy: LoadSurveyResultSpy;
+  setLoginAccountMock: jest.Mock<any, any>;
 };
 
 const createSut = (loadSurveyResultSpy = new LoadSurveyResultSpy()): SutType => {
   const history = createMemoryHistory({ initialEntries: ['/'] });
+  const setLoginAccountMock = jest.fn();
   render(
     <ApiContext.Provider
-      value={{ getLoginAccount: () => mockAccount(), setLoginAccount: jest.fn() }}
+      value={{
+        getLoginAccount: () => mockAccount(),
+        setLoginAccount: setLoginAccountMock,
+      }}
     >
       <Router location={history.location} navigator={history}>
         <SurveyResult loadSurveyResult={loadSurveyResultSpy} />
@@ -26,6 +32,7 @@ const createSut = (loadSurveyResultSpy = new LoadSurveyResultSpy()): SutType => 
   return {
     history,
     loadSurveyResultSpy,
+    setLoginAccountMock,
   };
 };
 
@@ -82,5 +89,33 @@ describe('SurveyResult', () => {
     const surveyItems = screen.queryAllByTestId('answer-item');
     expect(surveyItems[0]).toHaveAttribute('data-active', 'true');
     expect(surveyItems[1]).toHaveAttribute('data-active', 'false');
+  });
+
+  it('Should render error on UnexpectedError', async () => {
+    const loadSurveyResultSpy = new LoadSurveyResultSpy();
+    const error = new UnexpectedError();
+    jest.spyOn(loadSurveyResultSpy, 'load').mockRejectedValueOnce(error);
+    createSut(loadSurveyResultSpy);
+
+    await waitFor(() => screen.getByTestId('survey-container'));
+    expect(screen.getByTestId('survey-container').childElementCount).toBe(1);
+    expect(screen.queryByTestId('loading-container')).not.toBeInTheDocument();
+    const errorWrap = screen.getByTestId('error-wrap');
+
+    expect(errorWrap).toBeInTheDocument();
+    expect(errorWrap).toHaveTextContent(error.message);
+  });
+
+  it('Should logout on ForbiddenError', async () => {
+    const loadSurveyResultSpy = new LoadSurveyResultSpy();
+    const error = new ForbiddenError();
+    jest.spyOn(loadSurveyResultSpy, 'load').mockRejectedValueOnce(error);
+    const { history, setLoginAccountMock } = createSut(loadSurveyResultSpy);
+
+    await waitFor(() => screen.getByTestId('survey-container'));
+    expect(screen.queryByTestId('loading-container')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('error-wrap')).not.toBeInTheDocument();
+    expect(history.location.pathname).toBe('/login');
+    expect(setLoginAccountMock).toHaveBeenCalledWith(null);
   });
 });
