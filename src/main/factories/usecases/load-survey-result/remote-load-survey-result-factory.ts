@@ -4,7 +4,7 @@ import { createAuthorizeHttpGetClientDecorator } from '@/main/factories/decorato
 
 export const createRemoteLoadSurveyResult = (id: string): RemoteLoadSurveyResult => {
   return new RemoteLoadSurveyResult(
-    createApiUrl(`/survey/${id}/result`),
+    createApiUrl(`/surveys/${id}/results`),
     createAuthorizeHttpGetClientDecorator(),
   );
 };
