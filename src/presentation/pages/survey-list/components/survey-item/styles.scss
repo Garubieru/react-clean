@@ -72,15 +72,20 @@
     width: 100%;
     background: $primaryDark;
     overflow: hidden;
-    line-height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-size: 1.7rem;
-    color: $white;
     cursor: pointer;
     font-weight: 600;
     transition: all ease 0.2s;
+
+    a {
+      display: block;
+      height: 100%;
+      width: 100%;
+      color: $white;
+      text-decoration: none;
+      line-height: 40px;
+      text-align: center;
+    }
 
     &:hover {
       background: $primary;
