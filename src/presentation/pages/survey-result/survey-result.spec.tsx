@@ -1,7 +1,7 @@
 import React from 'react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory, MemoryHistory } from 'history';
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ApiContext } from '@/presentation/context/api/api-context';
 import { mockAccount } from '@/domain/test';
 import { LoadSurveyResultSpy } from '@/presentation/test';
@@ -117,5 +117,16 @@ describe('SurveyResult', () => {
     expect(screen.queryByTestId('error-wrap')).not.toBeInTheDocument();
     expect(history.location.pathname).toBe('/login');
     expect(setLoginAccountMock).toHaveBeenCalledWith(null);
+  });
+
+  it('Should call LoadSurveyResult on reload', async () => {
+    const loadSurveyResultSpy = new LoadSurveyResultSpy();
+    const error = new UnexpectedError();
+    jest.spyOn(loadSurveyResultSpy, 'load').mockRejectedValueOnce(error);
+    createSut(loadSurveyResultSpy);
+    await waitFor(() => screen.getByTestId('survey-container'));
+    fireEvent.click(screen.getByTestId('reload-button'));
+    expect(loadSurveyResultSpy.callsCount).toBe(1);
+    await waitFor(() => screen.getByTestId('survey-container'));
   });
 });
