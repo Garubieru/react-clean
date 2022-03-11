@@ -96,7 +96,7 @@
       position: relative;
 
       &[data-active='true'] {
-        border: 1px solid $primary;
+        box-shadow: 0 0 2px 2px $primary;
       }
 
       &:hover {
