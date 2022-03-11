@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Styles from './styles.scss';
 import {
   Button,
@@ -11,12 +11,23 @@ import FlipMove from 'react-flip-move';
 import Calendar from '@/presentation/components/atoms/calendar';
 import { LoadSurveyResult } from '@/domain/usecases';
 
-const SurveyResult: React.FC = () => {
+type SurveyResultType = {
+  loadSurveyResult: LoadSurveyResult;
+};
+
+const SurveyResult: React.FC<SurveyResultType> = ({ loadSurveyResult }) => {
   const [state] = useState({
     surveyResult: null as LoadSurveyResult.Model,
     isLoading: false,
     error: '',
   });
+
+  useEffect(() => {
+    const loadSurvey = async (): Promise<void> => {
+      await loadSurveyResult.load();
+    };
+    loadSurvey();
+  }, []);
 
   return (
     <PageWrapper header={<MainHeader />}>
