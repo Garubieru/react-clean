@@ -8,6 +8,44 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  height: fit-content;
+
+  &:empty {
+    position: relative;
+    overflow: hidden;
+
+    background-repeat: no-repeat;
+    background-image: linear-gradient(to right, rgba($gray, 0.2), rgba($gray, 0.2)),
+      linear-gradient(to right, rgba($gray, 0.2), rgba($gray, 0.2)),
+      linear-gradient(to right, rgba($gray, 0.2), rgba($gray, 0.2)),
+      linear-gradient(to right, rgba($gray, 0.2), rgba($gray, 0.2)),
+      linear-gradient(to right, rgba($gray, 0.2), rgba($gray, 0.2)),
+      linear-gradient(to right, rgba($gray, 0.2), rgba($gray, 0.2)),
+      linear-gradient(to right, rgba($gray, 0.2), rgba($gray, 0.2));
+
+    background-size: 60px 100px, calc(70% - 200px) 24px, calc(80% - 200px) 24px,
+      calc(60% - 200px) 24px, calc(100% - 20px) 85px, calc(100% - 20px) 85px,
+      calc(100% - 20px) 85px;
+    background-position: 10px 15px, 90px 19px, 90px 49px, 90px 79px, 10px 146px,
+      10px 251px, 10px 356px;
+
+    &::after {
+      position: absolute;
+      content: '';
+      top: 15px;
+      left: 10px;
+      width: 100%;
+      height: 430px;
+      background-image: linear-gradient(
+        to right,
+        transparent,
+        rgba($background, 0.6),
+        transparent
+      );
+      transform: translateX(-100%);
+      animation: shimmer 1.1s infinite;
+    }
+  }
 
   .surveyGeneralInfo {
     display: flex;
@@ -15,9 +53,10 @@
     gap: 20px;
 
     h1 {
-      font-size: 2.2rem;
+      font-size: 24px;
       position: relative;
       text-align: left;
+      line-height: 30px;
       &::after {
         position: absolute;
         bottom: -5px;
@@ -43,14 +82,18 @@
     margin-top: 30px;
 
     .surveyResultItem {
+      overflow: hidden;
       cursor: pointer;
       background-color: $background;
       box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
       padding: 15px 20px;
       border-radius: 0.8rem;
+      height: 85px;
+      width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: relative;
 
       &[data-active='true'] {
         border: 1px solid $primary;
@@ -69,7 +112,7 @@
 
         img {
           width: 45px;
-          height: px;
+          height: 45px;
         }
         p {
           font-size: 1.7rem;
@@ -88,5 +131,11 @@
 
   .backButton {
     margin-top: 20px;
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
   }
 }

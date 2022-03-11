@@ -10,6 +10,8 @@ import FlipMove from 'react-flip-move';
 import Calendar from '@/presentation/components/atoms/calendar';
 
 const SurveyResult: React.FC = () => {
+  const isLoading = false;
+
   const [answers] = useState([
     {
       image: 'https://icon-library.com/images/react-icon/react-icon-29.jpg',
@@ -31,36 +33,45 @@ const SurveyResult: React.FC = () => {
       isCurrentAccountAnswer: false,
     },
   ]);
+
   return (
     <PageWrapper header={<MainHeader />}>
       <div className={Styles.surveyContainer}>
-        <hgroup className={Styles.surveyGeneralInfo}>
-          <Calendar time={new Date()} />
-          <h1>Qual é seu framework web favorito?</h1>
-        </hgroup>
+        {!isLoading && (
+          <>
+            <hgroup className={Styles.surveyGeneralInfo}>
+              <Calendar time={new Date()} />
+              <h1>
+                Qual é seu framework web favorito? Qual é seu framework web favorito? Qual
+                é seu framework web favorito? Qual é seu framework web favorito? Qual é
+              </h1>
+            </hgroup>
 
-        <FlipMove
-          className={Styles.surveyResultList}
-          typeName="ul"
-          appearAnimation="elevator"
-        >
-          {answers.map((answer) => (
-            <li
-              key={answer.answer}
-              className={Styles.surveyResultItem}
-              data-active={answer.isCurrentAccountAnswer}
+            <FlipMove
+              className={Styles.surveyResultList}
+              typeName="ul"
+              appearAnimation="elevator"
             >
-              <div className={Styles.surveyInfoWrapper}>
-                <img src={answer.image} alt={answer.answer} />
-                <p>{answer.answer}</p>
-              </div>
+              {answers.map((answer) => (
+                <li
+                  key={answer.answer}
+                  className={Styles.surveyResultItem}
+                  data-active={answer.isCurrentAccountAnswer}
+                >
+                  <div className={Styles.surveyInfoWrapper}>
+                    <img src={answer.image} alt={answer.answer} />
+                    <p>{answer.answer}</p>
+                  </div>
 
-              <span className={Styles.surveyPercentage}>{answer.percent}%</span>
-            </li>
-          ))}
-        </FlipMove>
+                  <span className={Styles.surveyPercentage}>{answer.percent}%</span>
+                </li>
+              ))}
+            </FlipMove>
 
-        <Button className={Styles.backButton}>Voltar</Button>
+            <Button className={Styles.backButton}>Voltar</Button>
+          </>
+        )}
+
         {false && <LoadingOverlay />}
       </div>
     </PageWrapper>
