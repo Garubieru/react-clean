@@ -5,42 +5,26 @@ import {
   LoadingOverlay,
   MainHeader,
   PageWrapper,
+  ReloadError,
 } from '@/presentation/components';
 import FlipMove from 'react-flip-move';
 import Calendar from '@/presentation/components/atoms/calendar';
+import { LoadSurveyResult } from '@/domain/usecases';
 
 const SurveyResult: React.FC = () => {
-  const isLoading = false;
-
-  const [answers] = useState([
-    {
-      image: 'https://icon-library.com/images/react-icon/react-icon-29.jpg',
-      answer: 'ReactJS',
-      percent: 50,
-      isCurrentAccountAnswer: true,
-    },
-    {
-      image:
-        'https://cdn3.iconfinder.com/data/icons/logos-and-brands-adobe/512/21_Angular-512.png',
-      answer: 'AngularJS',
-      percent: 30,
-      isCurrentAccountAnswer: false,
-    },
-    {
-      image: 'https://br.vuejs.org/images/logo.png',
-      answer: 'VueJS',
-      percent: 20,
-      isCurrentAccountAnswer: false,
-    },
-  ]);
+  const [state] = useState({
+    surveyResult: null as LoadSurveyResult.Model,
+    isLoading: false,
+    error: '',
+  });
 
   return (
     <PageWrapper header={<MainHeader />}>
-      <div className={Styles.surveyContainer}>
-        {!isLoading && (
+      <div className={Styles.surveyContainer} data-testid="survey-container">
+        {state.surveyResult && (
           <>
             <hgroup className={Styles.surveyGeneralInfo}>
-              <Calendar time={new Date()} />
+              <Calendar time={state.surveyResult.date} />
               <h1>
                 Qual é seu framework web favorito? Qual é seu framework web favorito? Qual
                 é seu framework web favorito? Qual é seu framework web favorito? Qual é
@@ -52,7 +36,7 @@ const SurveyResult: React.FC = () => {
               typeName="ul"
               appearAnimation="elevator"
             >
-              {answers.map((answer) => (
+              {state.surveyResult.answers.map((answer) => (
                 <li
                   key={answer.answer}
                   className={Styles.surveyResultItem}
@@ -72,7 +56,8 @@ const SurveyResult: React.FC = () => {
           </>
         )}
 
-        {false && <LoadingOverlay />}
+        {state.isLoading && <LoadingOverlay />}
+        {state.error && <ReloadError error={state.error} handleReload={() => {}} />}
       </div>
     </PageWrapper>
   );
