@@ -1,9 +1,12 @@
 import React from 'react';
 import Styles from './styles.scss';
-import SurveyIconStatus, { IconStatus } from '../survey-icon-status';
+import { Calendar } from '@/presentation/components';
+import {
+  IconStatus,
+  SurveyIconStatus,
+} from '@/presentation/pages/survey-list/components';
 
 import { LoadSurveyList } from '@/domain/usecases';
-import { Calendar } from '@/presentation/components';
 
 type SurveyItemProps = {
   className?: string;
