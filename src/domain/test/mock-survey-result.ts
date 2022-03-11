@@ -14,7 +14,6 @@ export const mockSurveyResult = (): LoadSurveyResult.Model => ({
     },
     {
       answer: faker.random.words(),
-      image: faker.random.image(),
       count: faker.datatype.number(),
       percent: faker.datatype.number(100),
       isCurrentAccountAnswer: faker.datatype.boolean(),
