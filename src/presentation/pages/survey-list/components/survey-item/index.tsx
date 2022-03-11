@@ -7,6 +7,7 @@ import {
 } from '@/presentation/pages/survey-list/components';
 
 import { LoadSurveyList } from '@/domain/usecases';
+import { Link } from 'react-router-dom';
 
 type SurveyItemProps = {
   className?: string;
@@ -30,7 +31,11 @@ const SurveyItem: React.FC<SurveyItemProps> = ({ className, loading, surveyData 
               {surveyData.question}
             </h3>
           </div>
-          <footer>See results</footer>
+          <footer>
+            <Link data-testid="footer-link" to={`/survey/${surveyData.id}`}>
+              See results
+            </Link>
+          </footer>
         </>
       )}
     </li>
