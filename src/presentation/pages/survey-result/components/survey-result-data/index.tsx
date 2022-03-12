@@ -1,5 +1,6 @@
 import React from 'react';
 import FlipMove from 'react-flip-move';
+import { useNavigate } from 'react-router-dom';
 import { Calendar, Button } from '@/presentation/components';
 import { SurveyResultItem } from '@/presentation/pages/survey-result/components';
 import { LoadSurveyResult } from '@/domain/usecases';
@@ -10,6 +11,7 @@ type SurveyResultDataProps = {
 };
 
 const SurveyResultData: React.FC<SurveyResultDataProps> = ({ surveyResult }) => {
+  const navigate = useNavigate();
   return (
     <>
       <hgroup className={Styles.surveyGeneralInfo}>
@@ -30,7 +32,13 @@ const SurveyResultData: React.FC<SurveyResultDataProps> = ({ surveyResult }) => 
         </>
       </FlipMove>
 
-      <Button className={Styles.backButton}>Voltar</Button>
+      <Button
+        data-testid="back-button"
+        className={Styles.backButton}
+        onClick={() => navigate(-1)}
+      >
+        Voltar
+      </Button>
     </>
   );
 };
