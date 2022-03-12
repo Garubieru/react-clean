@@ -5,8 +5,8 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ApiContext } from '@/presentation/context/api/api-context';
 import { mockAccount } from '@/domain/test';
 import { LoadSurveyResultSpy } from '@/presentation/test';
-import SurveyResult from '.';
 import { ForbiddenError, UnexpectedError } from '@/domain/errors';
+import SurveyResult from '.';
 
 type SutType = {
   history: MemoryHistory;
@@ -15,7 +15,7 @@ type SutType = {
 };
 
 const createSut = (loadSurveyResultSpy = new LoadSurveyResultSpy()): SutType => {
-  const history = createMemoryHistory({ initialEntries: ['/'] });
+  const history = createMemoryHistory({ initialEntries: ['/', '/survey'] });
   const setLoginAccountMock = jest.fn();
   render(
     <ApiContext.Provider
@@ -128,5 +128,12 @@ describe('SurveyResult', () => {
     fireEvent.click(screen.getByTestId('reload-button'));
     expect(loadSurveyResultSpy.callsCount).toBe(1);
     await waitFor(() => screen.getByTestId('survey-container'));
+  });
+
+  it('Should go back to previous page on back button click', async () => {
+    const { history } = createSut();
+    await waitFor(() => screen.getByTestId('survey-container'));
+    fireEvent.click(screen.getByTestId('back-button'));
+    expect(history.location.pathname).toBe('/');
   });
 });
