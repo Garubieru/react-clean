@@ -50,14 +50,20 @@ workflows:
     jobs:
       - install_node
       - test
+      - cypress/install
       - cypress/run:
-          executor: cypress/base-14
+          requires:
+            - cypress/install
           yarn: true
           start: yarn dev:base
           wait-on: 'http://localhost:8080'
       - build
       - deploy:
           requires:
+            - install_node
+            - test
+            - cypress_install
+            - cypress_run
             - build
           filters:
             branches:
