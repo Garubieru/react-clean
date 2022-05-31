@@ -16,24 +16,22 @@ jobs:
           node-version: '16.13'
       - run: node --version
 
-  test_and_build:
+  test:
     executor: node/default
     steps:
       - checkout
-      - run:
-          command: sudo apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
-          name: Install cypress dependecies
       - node/install-packages:
           pkg-manager: yarn
       - run:
           command: yarn test:coveralls
           name: Run tests coverages
-      - run:
-          command: npx cypress install
-          name: Install cypress
-      - run:
-          command: yarn test:cypress:ci
-          name: Run tests cypress
+
+  build:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
       - run:
           command: yarn build
           name: Build app
@@ -53,11 +51,18 @@ workflows:
   deploy:
     jobs:
       - install_node
-      - test_and_build
+      - test
+      - build
+      - cypress/run:
+          yarn: true
+          install-command: yarn install --ignore-engines
+          start: yarn dev:base
+          wait-on: 'http://localhost:8080'
       - deploy:
           requires:
             - install_node
-            - test_and_build
+            - test
+            - build
           filters:
             branches:
               only: master
