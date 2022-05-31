@@ -48,7 +48,6 @@ workflows:
     jobs:
       - install_node
       - test_and_build
-      - build
       - deploy:
           requires:
             - install_node
