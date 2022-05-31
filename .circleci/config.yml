@@ -62,8 +62,6 @@ workflows:
           requires:
             - install_node
             - test
-            - cypress_install
-            - cypress_run
             - build
           filters:
             branches:
