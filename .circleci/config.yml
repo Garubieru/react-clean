@@ -26,7 +26,7 @@ jobs:
           command: yarn test:coveralls
           name: Run tests coverages
       - run:
-          command: cypress install
+          command: npx cypress install
           name: Install cypress
       - run:
           command: yarn test:cypress:ci
