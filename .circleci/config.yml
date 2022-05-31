@@ -28,7 +28,7 @@ jobs:
       - cypress/run:
           yarn: true
           start: yarn dev:base
-          wait-on: 'http://localhost:8080'
+          wait-on: http://localhost:8080
       - run:
           command: yarn build
           name: Build app
