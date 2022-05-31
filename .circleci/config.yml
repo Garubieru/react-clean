@@ -4,6 +4,7 @@ orbs:
   node: circleci/node@5.0.2
   heroku: circleci/heroku@1.2.6
   cypress: cypress-io/cypress@1.29.0
+
 jobs:
   install_node:
     docker:
@@ -15,7 +16,7 @@ jobs:
           node-version: '16.13'
       - run: node --version
 
-  build_and_test:
+  test:
     executor: node/default
     steps:
       - checkout
@@ -24,16 +25,18 @@ jobs:
       - run:
           command: yarn test:coveralls
           name: Run tests coverages
-      - cypress/run:
-          yarn: true
-          start: yarn dev:base
-          wait-on: 'http://localhost:8080'
-      - run:
-          command: yarn build
-          name: Build app
+
       - persist_to_workspace:
           root: ~/dist
           paths: .
+  build:
+    executor: node/default
+    steps:
+      - checkout
+      - run:
+          command: yarn build
+          name: Build app
+
   deploy:
     executor: heroku/default
     steps:
@@ -46,7 +49,12 @@ workflows:
   deploy:
     jobs:
       - install_node
-      - build_and_test
+      - test
+      - cypress/run:
+          yarn: true
+          start: yarn dev:base
+          wait-on: 'http://localhost:8080'
+      - build
       - deploy:
           requires:
             - build_and_test
