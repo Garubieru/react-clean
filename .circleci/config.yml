@@ -15,7 +15,7 @@ jobs:
           node-version: '16.13'
       - run: node --version
 
-  test:
+  build_and_test:
     executor: node/default
     steps:
       - checkout
