@@ -51,6 +51,7 @@ workflows:
       - install_node
       - test
       - cypress/install:
+          executor: cypress/base-14-7-0
           yarn: true
       - cypress/run:
           requires:
