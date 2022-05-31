@@ -25,10 +25,9 @@ jobs:
       - run:
           command: yarn test:coveralls
           name: Run tests coverages
-      - cypress/run:
-          yarn: true
-          start: yarn dev:base
-          wait-on: http://localhost:8080
+      - run:
+          command: yarn test:cypress:ci
+          name: Run tests cypress
       - run:
           command: yarn build
           name: Build app
