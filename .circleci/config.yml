@@ -26,9 +26,6 @@ jobs:
           command: yarn test:coveralls
           name: Run tests coverages
 
-      - persist_to_workspace:
-          root: ~/dist
-          paths: .
   build:
     executor: node/default
     steps:
@@ -36,6 +33,9 @@ jobs:
       - run:
           command: yarn build
           name: Build app
+      - persist_to_workspace:
+          root: ~/dist
+          paths: .
 
   deploy:
     executor: heroku/default
@@ -51,6 +51,7 @@ workflows:
       - install_node
       - test
       - cypress/run:
+          executor: cypres/base-16
           yarn: true
           start: yarn dev:base
           wait-on: 'http://localhost:8080'
