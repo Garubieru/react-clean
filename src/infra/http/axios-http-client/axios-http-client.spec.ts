@@ -1,6 +1,6 @@
 import { AxiosHttpClient } from './axios-http-client';
 import { AxiosMockType, mockAxios, mockHttpResponse } from '@/infra/test';
-import { mockGetParams, mockPostParams } from '@/data/test';
+import { mockHttpRequestParams } from '@/data/test';
 
 jest.mock('axios');
 
@@ -15,65 +15,38 @@ const createSut = (): SutType => ({
 });
 
 describe('AxiosHttpClient', () => {
-  describe('post', () => {
-    it('Should call axios.post with correct VALUES', async () => {
-      const mockedParams = mockPostParams();
-      const { sut, mockedAxios } = createSut();
-      await sut.post(mockedParams);
-      expect(mockedAxios.post).toHaveBeenCalledWith(mockedParams.url, mockedParams.body);
-    });
-
-    it('Should return the correct statusCode and body on success in axios.post', async () => {
-      const { sut, mockedAxios } = createSut();
-      const httpResponse = await sut.post(mockPostParams());
-      const axiosResponse = await mockedAxios.post.mock.results[0].value;
-      expect(httpResponse).toEqual({
-        statusCode: axiosResponse.status,
-        body: axiosResponse.data,
-      });
-    });
-
-    it('Should return correct statusCode and body on fail in axios.post', async () => {
-      const { sut, mockedAxios } = createSut();
-      const mockedError = mockHttpResponse();
-      mockedAxios.post.mockRejectedValueOnce({ response: mockedError });
-      const httpResponse = await sut.post(mockPostParams());
-      expect(httpResponse).toEqual({
-        statusCode: mockedError.status,
-        body: mockedError.data,
-      });
+  it('Should call axios with correct METHOD and VALUES', async () => {
+    const mockedRequestParams = mockHttpRequestParams();
+    const { sut, mockedAxios } = createSut();
+    await sut.request(mockedRequestParams);
+    expect(mockedAxios.request).toHaveBeenCalledWith({
+      url: mockedRequestParams.url,
+      method: mockedRequestParams.method,
+      headers: mockedRequestParams.headers,
+      data: mockedRequestParams.body,
     });
   });
 
-  describe('get', () => {
-    it('Should call axios.get with correct VALUES', async () => {
-      const mockedGetParams = mockGetParams();
-      const { sut, mockedAxios } = createSut();
-      await sut.get(mockedGetParams);
-      expect(mockedAxios.get).toBeCalledWith(mockedGetParams.url, {
-        headers: mockedGetParams.headers,
-      });
+  it('Should return the correct statusCode and body on success in axios.request', async () => {
+    const { sut, mockedAxios } = createSut();
+    const httpResponse = await sut.request(mockHttpRequestParams());
+    const axiosResponse = await mockedAxios.request.mock.results[0].value;
+    expect(httpResponse).toEqual({
+      statusCode: axiosResponse.status,
+      body: axiosResponse.data,
     });
+  });
 
-    it('Should return the correct statusCode and body on success in axios.get', async () => {
-      const { sut, mockedAxios } = createSut();
-      const httpResponse = await sut.get(mockGetParams());
-      const axiosResponse = await mockedAxios.get.mock.results[0].value;
-      expect(httpResponse).toEqual({
-        statusCode: axiosResponse.status,
-        body: axiosResponse.data,
-      });
+  it('Should return correct statusCode and body on fail in axios.request', async () => {
+    const { sut, mockedAxios } = createSut();
+    const mockedError = mockHttpResponse();
+    mockedAxios.request.mockRejectedValueOnce({
+      response: mockedError,
     });
-
-    it('Should return correct statusCode and body on fail in axios.get', async () => {
-      const { sut, mockedAxios } = createSut();
-      const mockError = mockHttpResponse();
-      mockedAxios.get.mockRejectedValueOnce({ response: mockError });
-      const httpResponse = await sut.get(mockGetParams());
-      expect(httpResponse).toEqual({
-        statusCode: mockError.status,
-        body: mockError.data,
-      });
+    const httpResponse = await sut.request(mockHttpRequestParams());
+    expect(httpResponse).toEqual({
+      statusCode: mockedError.status,
+      body: mockedError.data,
     });
   });
 });

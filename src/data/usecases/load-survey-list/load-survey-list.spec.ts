@@ -1,34 +1,35 @@
 import faker from 'faker';
 import { HttpStatusCode } from '@/data/protocols/http';
-import { HttpGetClientSpy, mockRemoteSurveyList } from '@/data/test';
+import { HttpClientSpy, mockRemoteSurveyList } from '@/data/test';
 import { ForbiddenError, UnexpectedError } from '@/domain/errors';
 import { RemoteLoadSurveyList } from './load-survey-list';
 
 type SutType = {
   sut: RemoteLoadSurveyList;
-  httpGetClientSpy: HttpGetClientSpy<RemoteLoadSurveyList.Model[]>;
+  httpClientSpy: HttpClientSpy<RemoteLoadSurveyList.Model[]>;
 };
 
 const createSut = (url = faker.internet.url()): SutType => {
-  const httpGetClientSpy = new HttpGetClientSpy<RemoteLoadSurveyList.Model[]>();
-  const sut = new RemoteLoadSurveyList(url, httpGetClientSpy);
+  const httpClientSpy = new HttpClientSpy<RemoteLoadSurveyList.Model[]>();
+  const sut = new RemoteLoadSurveyList(url, httpClientSpy);
   return {
     sut,
-    httpGetClientSpy,
+    httpClientSpy,
   };
 };
 
 describe('RemoteLoadSurveyList', () => {
-  it('Should call httpGetClient with correct url', async () => {
+  it('Should call httpClient with correct url and method', async () => {
     const url = faker.internet.url();
-    const { sut, httpGetClientSpy } = createSut(url);
+    const { sut, httpClientSpy } = createSut(url);
     await sut.list();
-    expect(httpGetClientSpy.url).toBe(url);
+    expect(httpClientSpy.url).toBe(url);
+    expect(httpClientSpy.method).toBe('get');
   });
 
   it('Should throw ForbiddenError on 403', async () => {
-    const { sut, httpGetClientSpy } = createSut();
-    httpGetClientSpy.response = {
+    const { sut, httpClientSpy } = createSut();
+    httpClientSpy.response = {
       statusCode: HttpStatusCode.forbidden,
     };
     const promise = sut.list();
@@ -36,8 +37,8 @@ describe('RemoteLoadSurveyList', () => {
   });
 
   it('Should throw UnexpectedError on 401', async () => {
-    const { sut, httpGetClientSpy } = createSut();
-    httpGetClientSpy.response = {
+    const { sut, httpClientSpy } = createSut();
+    httpClientSpy.response = {
       statusCode: HttpStatusCode.unauthorized,
     };
     const promise = sut.list();
@@ -45,8 +46,8 @@ describe('RemoteLoadSurveyList', () => {
   });
 
   it('Should throw UnexpectedError on 400', async () => {
-    const { sut, httpGetClientSpy } = createSut();
-    httpGetClientSpy.response = {
+    const { sut, httpClientSpy } = createSut();
+    httpClientSpy.response = {
       statusCode: HttpStatusCode.badRequest,
     };
     const promise = sut.list();
@@ -54,8 +55,8 @@ describe('RemoteLoadSurveyList', () => {
   });
 
   it('Should throw UnexpectedError on 404', async () => {
-    const { sut, httpGetClientSpy } = createSut();
-    httpGetClientSpy.response = {
+    const { sut, httpClientSpy } = createSut();
+    httpClientSpy.response = {
       statusCode: HttpStatusCode.notFound,
     };
     const promise = sut.list();
@@ -63,8 +64,8 @@ describe('RemoteLoadSurveyList', () => {
   });
 
   it('Should throw UnexpectedError on 500', async () => {
-    const { sut, httpGetClientSpy } = createSut();
-    httpGetClientSpy.response = {
+    const { sut, httpClientSpy } = createSut();
+    httpClientSpy.response = {
       statusCode: HttpStatusCode.serverError,
     };
     const promise = sut.list();
@@ -72,8 +73,8 @@ describe('RemoteLoadSurveyList', () => {
   });
 
   it('Should return empty array on 204', async () => {
-    const { sut, httpGetClientSpy } = createSut();
-    httpGetClientSpy.response = {
+    const { sut, httpClientSpy } = createSut();
+    httpClientSpy.response = {
       statusCode: HttpStatusCode.noContent,
     };
     const surveyList = await sut.list();
@@ -81,11 +82,11 @@ describe('RemoteLoadSurveyList', () => {
   });
 
   it('Should return correct response body on 200', async () => {
-    const { sut, httpGetClientSpy } = createSut();
+    const { sut, httpClientSpy } = createSut();
 
     const responseBody = mockRemoteSurveyList();
 
-    httpGetClientSpy.response = {
+    httpClientSpy.response = {
       statusCode: HttpStatusCode.ok,
       body: responseBody,
     };
