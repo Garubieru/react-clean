@@ -28,7 +28,7 @@ jobs:
           command: yarn build
           name: Build app
       - persist_to_workspace:
-          root: ~/dist
+          root: ~/project
           paths:
             - .
 
@@ -36,7 +36,7 @@ jobs:
     executor: heroku/default
     steps:
       - attach_workspace:
-          at: ~/dist
+          at: ~/project
       - heroku/deploy-via-git:
           force: true
 
