@@ -19,9 +19,9 @@ jobs:
     executor: node/default
     steps:
       - checkout
-      - run: npm ci --only=production --ignore-scripts
       - node/install-packages:
           pkg-manager: yarn
+          override-ci-command: yarn install --frozen-lockfile --ignore-scripts
       - run:
           command: yarn test:coveralls
           name: Run tests coverages
