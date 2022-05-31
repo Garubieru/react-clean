@@ -50,7 +50,8 @@ workflows:
     jobs:
       - install_node
       - test
-      - cypress/install
+      - cypress/install:
+          yarn: true
       - cypress/run:
           requires:
             - cypress/install
