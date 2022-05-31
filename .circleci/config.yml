@@ -19,6 +19,7 @@ jobs:
     executor: node/default
     steps:
       - checkout
+      - run: npm ci --only=production --ignore-scripts
       - node/install-packages:
           pkg-manager: yarn
       - run:
