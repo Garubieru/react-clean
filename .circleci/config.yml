@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   node: circleci/node@5.0.2
   heroku: circleci/heroku@1.2.6
+  cypress: cypress-io/cypress@1
 jobs:
   install_node:
     docker:
@@ -23,9 +24,9 @@ jobs:
       - run:
           command: yarn test:coveralls
           name: Run tests coverages
-      - run:
-          command: yarn test:cypress:ci
-          name: Run cypress tests
+      - cypress/install:
+          post-install:
+            - run: yarn test:cypress:ci
       - run:
           command: yarn build
           name: Build app
@@ -41,7 +42,7 @@ jobs:
           force: true
 
 workflows:
-  test_my_app:
+  deploy:
     jobs:
       - install_node
       - build_and_test
