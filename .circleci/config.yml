@@ -3,7 +3,6 @@ version: 2.1
 orbs:
   node: circleci/node@5.0.2
   heroku: circleci/heroku@1.2.6
-  cypress: cypress-io/cypress@1.29.0
 
 jobs:
   install_node:
@@ -25,19 +24,13 @@ jobs:
       - run:
           command: yarn test:coveralls
           name: Run tests coverages
-
-  build:
-    executor: node/default
-    steps:
-      - checkout
-      - node/install-packages:
-          pkg-manager: yarn
       - run:
           command: yarn build
           name: Build app
       - persist_to_workspace:
           root: ~/dist
-          paths: .
+          paths:
+            - .
 
   deploy:
     executor: heroku/default
@@ -48,21 +41,14 @@ jobs:
           force: true
 
 workflows:
-  deploy:
+  build_test_deploy:
     jobs:
       - install_node
-      - test
-      - build
-      - cypress/run:
-          yarn: true
-          install-command: yarn install --ignore-engines
-          start: yarn dev:base
-          wait-on: 'http://localhost:8080'
+      - build_and_test
       - deploy:
           requires:
             - install_node
-            - test
-            - build
+            - build_and_test
           filters:
             branches:
               only: master
