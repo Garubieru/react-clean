@@ -51,7 +51,7 @@ workflows:
       - install_node
       - test
       - cypress/run:
-          executor: cypres/base-16
+          executor: cypress/base-16
           yarn: true
           start: yarn dev:base
           wait-on: 'http://localhost:8080'
