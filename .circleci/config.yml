@@ -50,16 +50,12 @@ workflows:
     jobs:
       - install_node
       - test
-      - cypress/install:
-          executor: cypress/base-14-7-0
-          yarn: true
+      - build
       - cypress/run:
-          requires:
-            - cypress/install
           yarn: true
+          install-command: yarn install --ignore-engines
           start: yarn dev:base
           wait-on: 'http://localhost:8080'
-      - build
       - deploy:
           requires:
             - install_node
