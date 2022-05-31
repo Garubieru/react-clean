@@ -15,7 +15,6 @@ export const mockHttpResponse = (): MockHttpResponseType => ({
 
 export const mockAxios = (): AxiosMockType => {
   const mockedAxios = axios as AxiosMockType;
-  mockedAxios.post.mockClear().mockResolvedValue(mockHttpResponse());
-  mockedAxios.get.mockClear().mockResolvedValue(mockHttpResponse());
+  mockedAxios.request.mockClear().mockResolvedValue(mockHttpResponse());
   return mockedAxios;
 };

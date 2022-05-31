@@ -1,4 +1,4 @@
-import { HttpPostClient, HttpStatusCode } from '@/data/protocols/http';
+import { HttpClient, HttpStatusCode } from '@/data/protocols/http';
 import { EmailInUseError, UnexpectedError } from '@/domain/errors';
 import { Signup } from '@/domain/usecases/signup';
 
@@ -9,14 +9,16 @@ export namespace RemoteSignup {
 export class RemoteSignup implements Signup {
   constructor(
     private readonly url: string,
-    private readonly httpPostClient: HttpPostClient<RemoteSignup.Model>,
+    private readonly httpClient: HttpClient<RemoteSignup.Model>,
   ) {}
 
   async create(params: Signup.Params): Promise<Signup.Model> {
-    const { statusCode, body } = await this.httpPostClient.post({
+    const { statusCode, body } = await this.httpClient.request({
+      method: 'post',
       url: this.url,
       body: params,
     });
+
     switch (statusCode) {
       case HttpStatusCode.ok:
         return body;
