@@ -7,14 +7,24 @@ import { mockAccount } from '@/domain/test';
 import { LoadSurveyResultSpy } from '@/presentation/test';
 import { ForbiddenError, UnexpectedError } from '@/domain/errors';
 import SurveyResult from '.';
+import { SaveSurveyResultSpy } from '@/presentation/test/mock-save-survey-result';
 
 type SutType = {
   history: MemoryHistory;
   loadSurveyResultSpy: LoadSurveyResultSpy;
+  saveSurveyResultSpy: SaveSurveyResultSpy;
   setLoginAccountMock: jest.Mock<any, any>;
 };
 
-const createSut = (loadSurveyResultSpy = new LoadSurveyResultSpy()): SutType => {
+type SutParams = {
+  loadSurveyResultSpy?: LoadSurveyResultSpy;
+  saveSurveyResultSpy?: SaveSurveyResultSpy;
+};
+
+const createSut = ({
+  loadSurveyResultSpy = new LoadSurveyResultSpy(),
+  saveSurveyResultSpy = new SaveSurveyResultSpy(),
+}: SutParams = {}): SutType => {
   const history = createMemoryHistory({ initialEntries: ['/', '/survey'] });
   const setLoginAccountMock = jest.fn();
   render(
@@ -25,13 +35,17 @@ const createSut = (loadSurveyResultSpy = new LoadSurveyResultSpy()): SutType => 
       }}
     >
       <Router location={history.location} navigator={history}>
-        <SurveyResult loadSurveyResult={loadSurveyResultSpy} />
+        <SurveyResult
+          loadSurveyResult={loadSurveyResultSpy}
+          saveSurveyResult={saveSurveyResultSpy}
+        />
       </Router>
     </ApiContext.Provider>,
   );
   return {
     history,
     loadSurveyResultSpy,
+    saveSurveyResultSpy,
     setLoginAccountMock,
   };
 };
@@ -95,7 +109,7 @@ describe('SurveyResult', () => {
     const loadSurveyResultSpy = new LoadSurveyResultSpy();
     const error = new UnexpectedError();
     jest.spyOn(loadSurveyResultSpy, 'load').mockRejectedValueOnce(error);
-    createSut(loadSurveyResultSpy);
+    createSut({ loadSurveyResultSpy });
 
     await waitFor(() => screen.getByTestId('survey-container'));
     expect(screen.getByTestId('survey-container').childElementCount).toBe(1);
@@ -110,7 +124,7 @@ describe('SurveyResult', () => {
     const loadSurveyResultSpy = new LoadSurveyResultSpy();
     const error = new ForbiddenError();
     jest.spyOn(loadSurveyResultSpy, 'load').mockRejectedValueOnce(error);
-    const { history, setLoginAccountMock } = createSut(loadSurveyResultSpy);
+    const { history, setLoginAccountMock } = createSut({ loadSurveyResultSpy });
 
     await waitFor(() => screen.getByTestId('survey-container'));
     expect(screen.queryByTestId('loading-container')).not.toBeInTheDocument();
@@ -123,7 +137,7 @@ describe('SurveyResult', () => {
     const loadSurveyResultSpy = new LoadSurveyResultSpy();
     const error = new UnexpectedError();
     jest.spyOn(loadSurveyResultSpy, 'load').mockRejectedValueOnce(error);
-    createSut(loadSurveyResultSpy);
+    createSut({ loadSurveyResultSpy });
     await waitFor(() => screen.getByTestId('survey-container'));
     fireEvent.click(screen.getByTestId('reload-button'));
     expect(loadSurveyResultSpy.callsCount).toBe(1);
@@ -140,9 +154,64 @@ describe('SurveyResult', () => {
   it('Should not present Loading component if SurveyResultItem is active on click', async () => {
     const { loadSurveyResultSpy } = createSut();
     loadSurveyResultSpy.surveyResult.answers[0].isCurrentAccountAnswer = true;
-    await waitFor(() => screen.getAllByTestId('survey-container'));
+    await waitFor(() => screen.getByTestId('survey-container'));
     const answerItem = screen.getAllByTestId('answer-item')[0];
     fireEvent.click(answerItem);
     expect(screen.queryByTestId('loading-overlay')).not.toBeInTheDocument();
+  });
+
+  it('Should call SaveSurveyResult on SurveyResultItem click if item is non active', async () => {
+    const { loadSurveyResultSpy, saveSurveyResultSpy } = createSut();
+    loadSurveyResultSpy.surveyResult.answers[0].isCurrentAccountAnswer = false;
+    await waitFor(() => screen.getByTestId('survey-container'));
+
+    const answerItem = screen.getAllByTestId('answer-item')[0];
+    fireEvent.click(answerItem);
+    expect(screen.queryByTestId('loading-overlay')).toBeInTheDocument();
+    expect(saveSurveyResultSpy.callsCount).toBe(1);
+    expect(saveSurveyResultSpy.params).toEqual({
+      answer: loadSurveyResultSpy.surveyResult.answers[0].answer,
+    });
+    await waitFor(() => screen.getByTestId('survey-container'));
+    expect(screen.queryByTestId('loading-overlay')).not.toBeInTheDocument();
+  });
+
+  it('Should present ReloadError component on SaveSurveyResult UnexpectedError and reload', async () => {
+    const saveSurveyResultSpy = new SaveSurveyResultSpy();
+    jest.spyOn(saveSurveyResultSpy, 'save').mockRejectedValueOnce(new UnexpectedError());
+    const { loadSurveyResultSpy } = createSut({ saveSurveyResultSpy });
+
+    loadSurveyResultSpy.surveyResult.answers[0].isCurrentAccountAnswer = false;
+    await waitFor(() => screen.getByTestId('survey-container'));
+
+    const answerItem = screen.getAllByTestId('answer-item')[0];
+    fireEvent.click(answerItem);
+
+    expect(screen.queryByTestId('loading-overlay')).toBeInTheDocument();
+    await waitFor(() => screen.getByTestId('survey-container'));
+
+    expect(screen.queryByTestId('loading-overlay')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('error-wrap')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId('reload-button'));
+
+    await waitFor(() => screen.getByTestId('survey-container'));
+
+    expect(loadSurveyResultSpy.callsCount).toBe(2);
+  });
+
+  it('Should logout if SaveSurveyResult.save throws ForbiddenError', async () => {
+    const saveSurveyResultSpy = new SaveSurveyResultSpy();
+    jest.spyOn(saveSurveyResultSpy, 'save').mockRejectedValueOnce(new ForbiddenError());
+    const { loadSurveyResultSpy, history, setLoginAccountMock } = createSut({
+      saveSurveyResultSpy,
+    });
+    loadSurveyResultSpy.surveyResult.answers[0].isCurrentAccountAnswer = false;
+    await waitFor(() => screen.queryByTestId('survey-container'));
+
+    fireEvent.click(screen.queryAllByTestId('answer-item')[0]);
+    await waitFor(() => screen.queryByTestId('survey-container'));
+    expect(history.location.pathname).toBe('/login');
+    expect(setLoginAccountMock).toHaveBeenCalledWith(null);
   });
 });
