@@ -1,27 +1,28 @@
-import { ForbiddenError, UnexpectedError } from '@/domain/errors';
-import { LoadSurveyResult } from '@/domain/usecases';
 import { RemoteSurveyResultModel } from '@/data/models';
 import { HttpClient, HttpStatusCode } from '@/data/protocols/http';
+import { ForbiddenError, UnexpectedError } from '@/domain/errors';
+import { SaveSurveyResult } from '@/domain/usecases';
 
-export namespace RemoteLoadSurveyResult {
+export namespace RemoteSaveSurveyResult {
   export type Model = RemoteSurveyResultModel;
 }
 
-export class RemoteLoadSurveyResult implements LoadSurveyResult {
+export class RemoteSaveSurveyResult implements SaveSurveyResult {
   constructor(
+    private readonly httpClient: HttpClient<RemoteSaveSurveyResult.Model>,
     private readonly url: string,
-    private readonly httpClient: HttpClient<RemoteLoadSurveyResult.Model>,
   ) {}
 
-  async load(): Promise<LoadSurveyResult.Model> {
+  async save(params: SaveSurveyResult.Params): Promise<SaveSurveyResult.Model> {
     const { statusCode, body } = await this.httpClient.request({
       url: this.url,
-      method: 'get',
+      method: 'put',
+      body: params,
     });
 
     switch (statusCode) {
       case HttpStatusCode.ok: {
-        return Object.assign(body, { date: new Date(body.date) });
+        return { ...body, date: new Date(body.date) };
       }
       case HttpStatusCode.forbidden: {
         throw new ForbiddenError();

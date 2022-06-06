@@ -1,7 +1,7 @@
 import faker from 'faker';
-import { RemoteLoadSurveyResult } from '@/data/usecases';
+import { RemoteSurveyResultModel } from '@/data/models';
 
-export const mockRemoteSurveyResult = (): RemoteLoadSurveyResult.Model => {
+export const mockRemoteSurveyResult = (): RemoteSurveyResultModel => {
   const mockAnswers = (): any => ({
     answer: faker.random.words(),
     count: faker.datatype.number(),
