@@ -6,15 +6,22 @@ import {
   PageWrapper,
   ReloadError,
 } from '@/presentation/components';
-import { LoadSurveyResult } from '@/domain/usecases';
+import { LoadSurveyResult, SaveSurveyResult } from '@/domain/usecases';
 import { useErrorHandler } from '@/presentation/hooks';
-import { SurveyResultData } from '@/presentation/pages/survey-result/components';
+import {
+  SurveyResultData,
+  SurveyResultContext,
+} from '@/presentation/pages/survey-result/components';
 
 type SurveyResultType = {
   loadSurveyResult: LoadSurveyResult;
+  saveSurveyResult: SaveSurveyResult;
 };
 
-const SurveyResult: React.FC<SurveyResultType> = ({ loadSurveyResult }) => {
+const SurveyResult: React.FC<SurveyResultType> = ({
+  loadSurveyResult,
+  saveSurveyResult,
+}) => {
   const [state, setState] = useState({
     surveyResult: null as LoadSurveyResult.Model,
     isLoading: false,
@@ -25,7 +32,12 @@ const SurveyResult: React.FC<SurveyResultType> = ({ loadSurveyResult }) => {
   const { surveyResult } = state;
 
   const handleError = useErrorHandler((error) =>
-    setState((prevState) => ({ ...prevState, surveyResult: null, error: error.message })),
+    setState((prevState) => ({
+      ...prevState,
+      surveyResult: null,
+      error: error.message,
+      isLoading: false,
+    })),
   );
 
   const handleReload = (): void => {
@@ -35,6 +47,23 @@ const SurveyResult: React.FC<SurveyResultType> = ({ loadSurveyResult }) => {
       error: '',
       reload: !prevState.reload,
     }));
+  };
+
+  const onAnswer = async (answer: string): Promise<void> => {
+    try {
+      setState((prevState) => ({
+        ...prevState,
+        isLoading: true,
+      }));
+      const result = await saveSurveyResult.save({ answer });
+      setState((prevState) => ({
+        ...prevState,
+        isLoading: false,
+        surveyResult: result,
+      }));
+    } catch (e) {
+      handleError(e);
+    }
   };
 
   useEffect(() => {
@@ -52,7 +81,9 @@ const SurveyResult: React.FC<SurveyResultType> = ({ loadSurveyResult }) => {
   return (
     <PageWrapper header={<MainHeader />}>
       <div className={Styles.surveyContainer} data-testid="survey-container">
-        {surveyResult && <SurveyResultData surveyResult={surveyResult} />}
+        <SurveyResultContext.Provider value={{ onAnswer }}>
+          {surveyResult && <SurveyResultData surveyResult={surveyResult} />}
+        </SurveyResultContext.Provider>
 
         {state.isLoading && <LoadingOverlay />}
         {state.error && <ReloadError error={state.error} handleReload={handleReload} />}
