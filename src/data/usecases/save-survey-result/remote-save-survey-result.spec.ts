@@ -1,10 +1,9 @@
 import faker from 'faker';
-import { HttpStatusCode } from '@/data/protocols/http';
-import { SaveSurveyResult } from '@/domain/usecases';
 import { ForbiddenError, UnexpectedError } from '@/domain/errors';
-import { HttpClientSpy } from '@/data/test/mock-http';
+import { mockSaveResultParams } from '@/domain/test';
+import { HttpStatusCode } from '@/data/protocols/http';
+import { mockRemoteSurveyResult, HttpClientSpy } from '@/data/test';
 import { RemoteSaveSurveyResult } from './remote-save-survey-result';
-import { mockRemoteSurveyResult } from '@/data/test';
 
 export type SutTypes = {
   httpClientSpy: HttpClientSpy<any>;
@@ -16,10 +15,6 @@ const createSut = (url: string = faker.internet.url()): SutTypes => {
   const sut = new RemoteSaveSurveyResult(httpClientSpy, url);
 
   return { httpClientSpy, sut };
-};
-
-const mockSaveResultParams = (): SaveSurveyResult.Params => {
-  return { answer: faker.datatype.uuid() };
 };
 
 describe('RemoteSaveSurveyResult', () => {

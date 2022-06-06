@@ -1,5 +1,9 @@
-import { LoadSurveyResult } from '@/domain/usecases';
+import { LoadSurveyResult, SaveSurveyResult } from '@/domain/usecases';
 import faker from 'faker';
+
+export const mockSaveResultParams = (): SaveSurveyResult.Params => {
+  return { answer: faker.datatype.uuid() };
+};
 
 export const mockSurveyResult = (): LoadSurveyResult.Model => ({
   date: faker.date.recent(),
