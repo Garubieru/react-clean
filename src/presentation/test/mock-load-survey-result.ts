@@ -1,4 +1,4 @@
-import { mockSurveyResult } from '@/domain/test/mock-survey-result';
+import { mockSurveyResult } from '@/domain/test';
 import { LoadSurveyResult } from '@/domain/usecases';
 
 export class LoadSurveyResultSpy implements LoadSurveyResult {

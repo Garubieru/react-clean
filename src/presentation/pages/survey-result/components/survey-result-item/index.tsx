@@ -1,9 +1,9 @@
 import React from 'react';
-import { LoadSurveyResult } from '@/domain/usecases';
 import Styles from './styles.scss';
+import { SurveyResultAnswerModel } from '@/domain/models';
 
 type SurveyResultItemProps = {
-  answerData: LoadSurveyResult.AnswerModel;
+  answerData: SurveyResultAnswerModel;
 };
 
 const SurveyResultItem: React.FC<SurveyResultItemProps> = ({ answerData }) => {
