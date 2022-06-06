@@ -136,4 +136,13 @@ describe('SurveyResult', () => {
     fireEvent.click(screen.getByTestId('back-button'));
     expect(history.location.pathname).toBe('/');
   });
+
+  it('Should not present Loading component if SurveyResultItem is active on click', async () => {
+    const { loadSurveyResultSpy } = createSut();
+    loadSurveyResultSpy.surveyResult.answers[0].isCurrentAccountAnswer = true;
+    await waitFor(() => screen.getAllByTestId('survey-container'));
+    const answerItem = screen.getAllByTestId('answer-item')[0];
+    fireEvent.click(answerItem);
+    expect(screen.queryByTestId('loading-overlay')).not.toBeInTheDocument();
+  });
 });

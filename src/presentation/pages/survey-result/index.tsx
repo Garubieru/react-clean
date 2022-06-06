@@ -28,13 +28,14 @@ const SurveyResult: React.FC<SurveyResultType> = ({ loadSurveyResult }) => {
     setState((prevState) => ({ ...prevState, surveyResult: null, error: error.message })),
   );
 
-  const handleReload = (): void =>
+  const handleReload = (): void => {
     setState((prevState) => ({
       surveyResult: null,
       isLoading: false,
       error: '',
       reload: !prevState.reload,
     }));
+  };
 
   useEffect(() => {
     const loadSurvey = async (): Promise<void> => {
