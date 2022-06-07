@@ -1,0 +1,19 @@
+{
+  "date": "2019-10-03T00:00:00",
+  "question": "Other question",
+  "answers": [
+    {
+      "image": "https://picsum.photos/id/237/200/300",
+      "answer": "Answer 1",
+      "count": 20,
+      "percent": 80,
+      "isCurrentAccountAnswer": false
+    },
+    {
+      "answer": "Answer 3",
+      "count": 40,
+      "percent": 60,
+      "isCurrentAccountAnswer": true
+    }
+  ]
+}

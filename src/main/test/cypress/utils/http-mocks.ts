@@ -1,6 +1,10 @@
 import faker from 'faker';
 
-export const mockUnauthorizedError = (method: string, url: RegExp | string): void => {
+export const mockUnauthorizedError = (
+  method: string,
+  url: RegExp | string,
+  name = 'request',
+): void => {
   cy.intercept(
     {
       method,
@@ -12,10 +16,14 @@ export const mockUnauthorizedError = (method: string, url: RegExp | string): voi
         error: faker.random.words(),
       },
     },
-  ).as('request');
+  ).as(name);
 };
 
-export const mockServerError = (method: string, url: RegExp | string): void => {
+export const mockServerError = (
+  method: string,
+  url: RegExp | string,
+  name = 'request',
+): void => {
   cy.intercept(
     {
       method,
@@ -27,10 +35,14 @@ export const mockServerError = (method: string, url: RegExp | string): void => {
         error: faker.random.words(),
       },
     },
-  ).as('request');
+  ).as(name);
 };
 
-export const mockForbiddenError = (method: string, url: RegExp | string): void => {
+export const mockForbiddenError = (
+  method: string,
+  url: RegExp | string,
+  name = 'request',
+): void => {
   cy.intercept(
     {
       method,
@@ -42,10 +54,15 @@ export const mockForbiddenError = (method: string, url: RegExp | string): void =
         error: faker.random.words(),
       },
     },
-  ).as('request');
+  ).as(name);
 };
 
-export const mockSuccess = (method: string, url: RegExp | string, body: any): void => {
+export const mockSuccess = (
+  method: string,
+  url: RegExp | string,
+  body: any,
+  name = 'request',
+): void => {
   cy.intercept(
     {
       method,
@@ -55,5 +72,5 @@ export const mockSuccess = (method: string, url: RegExp | string, body: any): vo
       statusCode: 200,
       body,
     },
-  ).as('request');
+  ).as(name);
 };
