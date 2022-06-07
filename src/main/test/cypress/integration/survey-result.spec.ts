@@ -41,18 +41,19 @@ const mockHttpSaveSurveyResultUnexpected = (): void => {
 describe('SurveyResult', () => {
   beforeEach(() => {
     Helpers.mockLocalStorageUser();
-    mockHttpSurveyResultSuccess();
-    visitSurveyResult();
   });
 
   describe('Load', () => {
     it('Should redirect to /login on ForbiddenError', () => {
       mockHttpSurveyResultForbidden();
+      visitSurveyResult();
+      cy.wait('@request');
       Helpers.testWindowUrl('/login');
     });
 
     it('Should render error on UnexpectedError and reload on click', () => {
       mockHttpSurveyResultUnexpected();
+      visitSurveyResult();
       cy.wait('@request');
       cy.getByTestId('reload-button').click();
       Helpers.testApiCalls('request', 2);
@@ -60,6 +61,7 @@ describe('SurveyResult', () => {
 
     it('Should render correct survey data on success', () => {
       mockHttpSurveyResultSuccess();
+      visitSurveyResult();
       cy.wait('@request');
       cy.getByTestId('survey-question').should('have.text', 'Question 1');
       cy.getByTestId('day').should('have.text', '03');
@@ -92,22 +94,30 @@ describe('SurveyResult', () => {
   });
 
   describe('Save', () => {
+    beforeEach(() => {
+      mockHttpSurveyResultSuccess();
+    });
+
     it('Should not call api when AnswerItem is not active', () => {
       mockHttpSaveSurveyResultSuccess();
+      visitSurveyResult();
+      cy.wait('@request');
       cy.getByTestId('answer-item').eq(1).click();
       Helpers.testApiCalls('saveSurvey', 0);
     });
 
     it('Should redirect to /login on ForbiddenError', () => {
-      cy.wait('@request');
       mockHttpSaveSurveyResultForbidden();
+      visitSurveyResult();
+      cy.wait('@request');
       cy.getByTestId('answer-item').eq(0).click();
       Helpers.testWindowUrl('/login');
     });
 
     it('Should show error message on UnexpectedError', () => {
-      cy.wait('@request');
       mockHttpSaveSurveyResultUnexpected();
+      visitSurveyResult();
+      cy.wait('@request');
       cy.getByTestId('answer-item').eq(0).click();
       cy.wait('@saveSurvey');
       cy.getByTestId('error-wrap').should('have.text', 'An unexpected error ocurred.');
@@ -116,8 +126,9 @@ describe('SurveyResult', () => {
     });
 
     it('Should call api when AnswerItem is active an re-render list', () => {
-      cy.wait('@request');
       mockHttpSaveSurveyResultSuccess();
+      visitSurveyResult();
+      cy.wait('@request');
       cy.getByTestId('answer-item').eq(0).click();
       cy.wait('@saveSurvey');
       Helpers.testApiCalls('saveSurvey', 1);
