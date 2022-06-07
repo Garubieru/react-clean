@@ -3,7 +3,7 @@ import { Router } from 'react-router-dom';
 import { createMemoryHistory, MemoryHistory } from 'history';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ApiContext } from '@/presentation/context/api/api-context';
-import { mockAccount } from '@/domain/test';
+import { mockAccount, mockSurveyResult } from '@/domain/test';
 import { LoadSurveyResultSpy } from '@/presentation/test';
 import { ForbiddenError, UnexpectedError } from '@/domain/errors';
 import SurveyResult from '.';
@@ -198,6 +198,39 @@ describe('SurveyResult', () => {
     await waitFor(() => screen.getByTestId('survey-container'));
 
     expect(loadSurveyResultSpy.callsCount).toBe(2);
+  });
+
+  it('Should present SaveSurveyResult data on success', async () => {
+    const saveSurveyResultSpy = new SaveSurveyResultSpy();
+    const surveyResult = Object.assign(mockSurveyResult(), {
+      date: new Date('02-02-2019'),
+    });
+    surveyResult.answers[0].isCurrentAccountAnswer = false;
+    surveyResult.answers[1].isCurrentAccountAnswer = true;
+    saveSurveyResultSpy.surveyResult = surveyResult;
+    const { loadSurveyResultSpy } = createSut({ saveSurveyResultSpy });
+    loadSurveyResultSpy.surveyResult.answers[0].isCurrentAccountAnswer = false;
+    await waitFor(() => screen.getByTestId('survey-container'));
+    const answer = screen.getAllByTestId('answer-item')[0];
+    fireEvent.click(answer);
+    await waitFor(() => screen.getByTestId('survey-container'));
+
+    expect(screen.getByTestId('day')).toHaveTextContent('02');
+    expect(screen.getByTestId('month')).toHaveTextContent('fev');
+    expect(screen.getByTestId('year')).toHaveTextContent('2019');
+
+    const images = screen.getAllByTestId('image');
+    expect(images[0]).toHaveAttribute('src', surveyResult.answers[0].image);
+    expect(images[0]).toHaveAttribute('alt', surveyResult.answers[0].answer);
+    expect(images[1]).toBeFalsy();
+
+    const answers = screen.getAllByTestId('answer');
+    expect(answers[0]).toHaveTextContent(surveyResult.answers[0].answer);
+    expect(answers[1]).toHaveTextContent(surveyResult.answers[1].answer);
+
+    const percents = screen.getAllByTestId('percent');
+    expect(percents[0]).toHaveTextContent(`${surveyResult.answers[0].percent}%`);
+    expect(percents[1]).toHaveTextContent(`${surveyResult.answers[1].percent}%`);
   });
 
   it('Should logout if SaveSurveyResult.save throws ForbiddenError', async () => {
