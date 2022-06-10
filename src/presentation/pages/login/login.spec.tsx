@@ -1,5 +1,6 @@
 import React from 'react';
 import { Router } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 import { createMemoryHistory } from 'history';
 import { render, fireEvent, screen } from '@testing-library/react';
 
@@ -33,11 +34,13 @@ const createSut = (params?: SutParams): SutTypes => {
   const authenticationSpy = new AuthenticationSpy();
   const setLoginAccount = jest.fn();
   render(
-    <ApiContext.Provider value={{ setLoginAccount }}>
-      <Router location={history.location} navigator={history}>
-        <Login validation={validationStub} authentication={authenticationSpy} />
-      </Router>
-    </ApiContext.Provider>,
+    <RecoilRoot>
+      <ApiContext.Provider value={{ setLoginAccount }}>
+        <Router location={history.location} navigator={history}>
+          <Login validation={validationStub} authentication={authenticationSpy} />
+        </Router>
+      </ApiContext.Provider>
+    </RecoilRoot>,
   );
   if (params?.populateForm) populateForm(params?.authParams);
 

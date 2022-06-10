@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 import {
   CreateLogin,
   CreateSignup,
@@ -15,24 +16,26 @@ import {
 
 const Router: React.FC = () => {
   return (
-    <ApiContext.Provider
-      value={{
-        setLoginAccount: setLocalLoginAccountAdapter,
-        getLoginAccount: getLocalLoginAccountAdapter,
-      }}
-    >
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<CreateLogin />} />
-          <Route path="/signup" element={<CreateSignup />} />
-          <Route path="/" element={<PrivateRoute element={<CreateSurveyList />} />} />
-          <Route
-            path="/survey/:id"
-            element={<PrivateRoute element={<CreateSurveyResult />} />}
-          />
-        </Routes>
-      </BrowserRouter>
-    </ApiContext.Provider>
+    <RecoilRoot>
+      <ApiContext.Provider
+        value={{
+          setLoginAccount: setLocalLoginAccountAdapter,
+          getLoginAccount: getLocalLoginAccountAdapter,
+        }}
+      >
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<CreateLogin />} />
+            <Route path="/signup" element={<CreateSignup />} />
+            <Route path="/" element={<PrivateRoute element={<CreateSurveyList />} />} />
+            <Route
+              path="/survey/:id"
+              element={<PrivateRoute element={<CreateSurveyResult />} />}
+            />
+          </Routes>
+        </BrowserRouter>
+      </ApiContext.Provider>
+    </RecoilRoot>
   );
 };
 

@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { useRecoilState } from 'recoil';
 import { Authentication } from '@/domain/usecases';
-import { Input, Button, Link, Error, PageWrapper, Form } from '@/presentation/components';
-import { FormContext } from '@/presentation/context/form/form-context';
+import { Button, Link, PageWrapper, Form } from '@/presentation/components';
 import { Validation } from '@/presentation/protocols/validation';
 import { useApi } from '@/presentation/context/api/api-context';
+import { loginState, Input, Error } from './components';
 import Styles from './styles.scss';
 
 type LoginProps = {
@@ -16,15 +16,7 @@ type LoginProps = {
 const Login: React.FC<LoginProps> = ({ validation, authentication }) => {
   const { setLoginAccount } = useApi();
   const navigate = useNavigate();
-  const [state, setState] = useState({
-    isLoading: false,
-    isFormInvalid: true,
-    email: '',
-    password: '',
-    emailError: '',
-    passwordError: '',
-    mainError: '',
-  });
+  const [state, setState] = useRecoilState(loginState);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -63,30 +55,24 @@ const Login: React.FC<LoginProps> = ({ validation, authentication }) => {
   return (
     <PageWrapper>
       <div className={Styles.loginContainer}>
-        <FormContext.Provider value={{ state, setState }}>
-          <Form title="Signin">
-            <form
-              onSubmit={handleSubmit}
-              className={Styles.form}
-              data-testid="login-form"
+        <Form title="Signin">
+          <form onSubmit={handleSubmit} className={Styles.form} data-testid="login-form">
+            <Input name="email" type="email" placeholder="Email" />
+            <Input name="password" type="password" placeholder="Password" />
+            <Button
+              type="submit"
+              data-testid="login-button"
+              isLoading={state.isLoading}
+              disabled={state.isFormInvalid}
             >
-              <Input name="email" type="email" placeholder="Email" />
-              <Input name="password" type="password" placeholder="Password" />
-              <Button
-                type="submit"
-                data-testid="login-button"
-                isLoading={state.isLoading}
-                disabled={state.isFormInvalid}
-              >
-                Login
-              </Button>
-            </form>
-            <Error />
-            <Link to="/signup" data-testid="signup-link">
-              Create account
-            </Link>
-          </Form>
-        </FormContext.Provider>
+              Login
+            </Button>
+          </form>
+          <Error />
+          <Link to="/signup" data-testid="signup-link">
+            Create account
+          </Link>
+        </Form>
       </div>
     </PageWrapper>
   );

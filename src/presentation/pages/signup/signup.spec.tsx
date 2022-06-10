@@ -1,6 +1,7 @@
 import React from 'react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
+import { RecoilRoot } from 'recoil';
 import { render, fireEvent, screen } from '@testing-library/react';
 
 import { ValidationStub, RemoteSignupSpy, Helpers } from '@/presentation/test';
@@ -32,11 +33,13 @@ const createSut = (params?: SutParams): SutType => {
   const setLoginAccount = jest.fn();
   if (params?.withError) validationStub.errorMessage = new RequiredFieldError().message;
   render(
-    <ApiContext.Provider value={{ setLoginAccount }}>
-      <Router location={history.location} navigator={history}>
-        <Signup validations={validationStub} remoteSignup={remoteSignupSpy} />
-      </Router>
-    </ApiContext.Provider>,
+    <RecoilRoot>
+      <ApiContext.Provider value={{ setLoginAccount }}>
+        <Router location={history.location} navigator={history}>
+          <Signup validations={validationStub} remoteSignup={remoteSignupSpy} />
+        </Router>
+      </ApiContext.Provider>
+    </RecoilRoot>,
   );
   if (params?.populateForm) populateForm(params?.formParams);
   return {

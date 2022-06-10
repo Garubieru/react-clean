@@ -1,16 +1,16 @@
 import React from 'react';
 import Styles from './styles.scss';
-import { useForm } from '@/presentation/context/form/form-context';
 
 interface InputProps
   extends React.DetailedHTMLProps<
     React.InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
-  > {}
+  > {
+  state?: any;
+  setState?: (params: any) => void;
+}
 
-const Input: React.FC<InputProps> = ({ placeholder, ...props }) => {
-  const { state, setState } = useForm();
-
+const Input: React.FC<InputProps> = ({ placeholder, state, setState, ...props }) => {
   const handleFocus = (e: React.FocusEvent<HTMLInputElement, Element>): void => {
     const currentInput = e.currentTarget;
     currentInput.readOnly = false;

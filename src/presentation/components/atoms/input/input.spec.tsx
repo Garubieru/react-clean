@@ -1,19 +1,10 @@
 import React from 'react';
 import faker from 'faker';
 import { fireEvent, render, RenderResult } from '@testing-library/react';
-import * as FormContext from '@/presentation/context/form/form-context';
 import Input from '.';
 
-// jest.mock('@/presentation/context/form/form-context');
-// export type UseFormMockType = jest.Mocked<typeof FormContext>;
-
-// const useFormMocked = FormContext as UseFormMockType;
-// useFormMocked.useForm.mockReturnValue({ state: {} });
-
 const createSut = (inputId: string): RenderResult => {
-  const mockedUseForm = jest.spyOn(FormContext, 'useForm');
-  mockedUseForm.mockReturnValue({ state: {} });
-  return render(<Input name={inputId} />);
+  return render(<Input name={inputId} state={{}} setState={null} />);
 };
 
 describe('InputComponent', () => {

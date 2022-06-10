@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 import { Signup as SignupProtocol } from '@/domain/usecases';
-
-import { Input, Button, Link, Error, PageWrapper, Form } from '@/presentation/components';
-import { FormContext } from '@/presentation/context/form/form-context';
+import { Button, Link, PageWrapper, Form } from '@/presentation/components';
 import { Validation } from '@/presentation/protocols/validation';
 import { useApi } from '@/presentation/context/api/api-context';
 import Styles from './styles.scss';
+import { signupState, Input, Error } from './components';
 
 type SignupProps = {
   validations: Validation;
@@ -16,19 +16,7 @@ type SignupProps = {
 const Signup: React.FC<SignupProps> = ({ validations, remoteSignup }) => {
   const { setLoginAccount } = useApi();
   const navigate = useNavigate();
-  const [state, setState] = useState({
-    isLoading: false,
-    isFormInvalid: true,
-    mainError: '',
-    name: '',
-    nameError: '',
-    email: '',
-    emailError: '',
-    password: '',
-    passwordError: '',
-    passwordConfirmation: '',
-    passwordConfirmationError: '',
-  });
+  const [state, setState] = useRecoilState(signupState);
 
   useEffect(() => {
     const { name, email, password, passwordConfirmation } = state;
@@ -80,36 +68,30 @@ const Signup: React.FC<SignupProps> = ({ validations, remoteSignup }) => {
   return (
     <PageWrapper>
       <div className={Styles.signupContainer}>
-        <FormContext.Provider value={{ state, setState }}>
-          <Form title="Signup">
-            <form
-              onSubmit={handleSubmit}
-              data-testid="signup-form"
-              className={Styles.form}
+        <Form title="Signup">
+          <form onSubmit={handleSubmit} data-testid="signup-form" className={Styles.form}>
+            <Input name="name" type="text" placeholder="Name" />
+            <Input name="email" type="email" placeholder="Email" />
+            <Input name="password" type="password" placeholder="Password" />
+            <Input
+              name="passwordConfirmation"
+              type="password"
+              placeholder="Repeat your password"
+            />
+            <Button
+              type="submit"
+              data-testid="create-btn"
+              disabled={state.isFormInvalid}
+              isLoading={state.isLoading}
             >
-              <Input name="name" type="text" placeholder="Name" />
-              <Input name="email" type="email" placeholder="Email" />
-              <Input name="password" type="password" placeholder="Password" />
-              <Input
-                name="passwordConfirmation"
-                type="password"
-                placeholder="Repeat your password"
-              />
-              <Button
-                type="submit"
-                data-testid="create-btn"
-                disabled={state.isFormInvalid}
-                isLoading={state.isLoading}
-              >
-                Create
-              </Button>
-            </form>
-            <Error />
-            <Link to="/login" data-testid="login-link">
-              Back to Signin
-            </Link>
-          </Form>
-        </FormContext.Provider>
+              Create
+            </Button>
+          </form>
+          <Error />
+          <Link to="/login" data-testid="login-link">
+            Back to Signin
+          </Link>
+        </Form>
       </div>
     </PageWrapper>
   );
