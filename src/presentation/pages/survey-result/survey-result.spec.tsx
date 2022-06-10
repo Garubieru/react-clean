@@ -1,13 +1,14 @@
 import React from 'react';
+import { RecoilRoot } from 'recoil';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory, MemoryHistory } from 'history';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ApiContext } from '@/presentation/context/api/api-context';
 import { mockAccount, mockSurveyResult } from '@/domain/test';
-import { LoadSurveyResultSpy } from '@/presentation/test';
 import { ForbiddenError, UnexpectedError } from '@/domain/errors';
-import SurveyResult from '.';
+import { LoadSurveyResultSpy } from '@/presentation/test';
 import { SaveSurveyResultSpy } from '@/presentation/test/mock-save-survey-result';
+import SurveyResult from '.';
 
 type SutType = {
   history: MemoryHistory;
@@ -28,19 +29,21 @@ const createSut = ({
   const history = createMemoryHistory({ initialEntries: ['/', '/survey'] });
   const setLoginAccountMock = jest.fn();
   render(
-    <ApiContext.Provider
-      value={{
-        getLoginAccount: () => mockAccount(),
-        setLoginAccount: setLoginAccountMock,
-      }}
-    >
-      <Router location={history.location} navigator={history}>
-        <SurveyResult
-          loadSurveyResult={loadSurveyResultSpy}
-          saveSurveyResult={saveSurveyResultSpy}
-        />
-      </Router>
-    </ApiContext.Provider>,
+    <RecoilRoot>
+      <ApiContext.Provider
+        value={{
+          getLoginAccount: () => mockAccount(),
+          setLoginAccount: setLoginAccountMock,
+        }}
+      >
+        <Router location={history.location} navigator={history}>
+          <SurveyResult
+            loadSurveyResult={loadSurveyResultSpy}
+            saveSurveyResult={saveSurveyResultSpy}
+          />
+        </Router>
+      </ApiContext.Provider>
+    </RecoilRoot>,
   );
   return {
     history,
@@ -246,5 +249,16 @@ describe('SurveyResult', () => {
     await waitFor(() => screen.queryByTestId('survey-container'));
     expect(history.location.pathname).toBe('/login');
     expect(setLoginAccountMock).toHaveBeenCalledWith(null);
+  });
+
+  it('Should prevent multiple answer click', async () => {
+    const { loadSurveyResultSpy, saveSurveyResultSpy } = createSut();
+    loadSurveyResultSpy.surveyResult.answers[0].isCurrentAccountAnswer = false;
+    await waitFor(() => screen.getByTestId('survey-container'));
+    const answer = screen.getAllByTestId('answer-item')[0];
+    fireEvent.click(answer);
+    await waitFor(() => screen.getByTestId('survey-container'));
+    fireEvent.click(answer);
+    expect(saveSurveyResultSpy.callsCount).toBe(1);
   });
 });

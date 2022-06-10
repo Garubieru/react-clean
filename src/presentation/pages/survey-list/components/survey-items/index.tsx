@@ -1,12 +1,7 @@
 import React from 'react';
-import { SurveyItem } from '@/presentation/pages/survey-list/components';
-
+import { useRecoilValue } from 'recoil';
+import { SurveyItem, surveyListState } from '@/presentation/pages/survey-list/components';
 import Styles from './styles.scss';
-import { LoadSurveyList } from '@/domain/usecases';
-
-type SurveyItemProps = {
-  surveyItems: LoadSurveyList.Model[];
-};
 
 const EmptySurveyItems: React.FC = () => {
   return (
@@ -19,7 +14,8 @@ const EmptySurveyItems: React.FC = () => {
   );
 };
 
-const SurveyItems: React.FC<SurveyItemProps> = ({ surveyItems }) => {
+const SurveyItems: React.FC = () => {
+  const { surveyItems } = useRecoilValue(surveyListState);
   return (
     <ul className={Styles.surveys} data-testid="surveys-list">
       {surveyItems.length === 0 ? (

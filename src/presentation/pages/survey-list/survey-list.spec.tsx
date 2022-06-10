@@ -1,15 +1,16 @@
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { createMemoryHistory, MemoryHistory } from 'history';
-
-import { ForbiddenError, UnexpectedError } from '@/domain/errors';
-import { LoadSurveyListStub } from '@/presentation/test';
-import { ApiContext } from '@/presentation/context/api/api-context';
-
-import { SurveyList } from '@/presentation/pages';
+import { RecoilRoot } from 'recoil';
 import { Router } from 'react-router-dom';
+import { createMemoryHistory, MemoryHistory } from 'history';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+
 import { mockAccount } from '@/domain/test';
 import { AccountModel } from '@/domain/models';
+import { ForbiddenError, UnexpectedError } from '@/domain/errors';
+
+import { LoadSurveyListStub } from '@/presentation/test';
+import { ApiContext } from '@/presentation/context/api/api-context';
+import SurveyList from '.';
 
 type SutTypes = {
   loadSurveyListStub: LoadSurveyListStub;
@@ -23,16 +24,18 @@ const createSut = (
   const history = createMemoryHistory({ initialEntries: ['/'] });
   const setLoginAccountMock = jest.fn();
   render(
-    <ApiContext.Provider
-      value={{
-        getLoginAccount: jest.fn(() => mockAccount()),
-        setLoginAccount: setLoginAccountMock,
-      }}
-    >
-      <Router location={history.location} navigator={history}>
-        <SurveyList loadSurveyList={loadSurveyListStub} />
-      </Router>
-    </ApiContext.Provider>,
+    <RecoilRoot>
+      <ApiContext.Provider
+        value={{
+          getLoginAccount: jest.fn(() => mockAccount()),
+          setLoginAccount: setLoginAccountMock,
+        }}
+      >
+        <Router location={history.location} navigator={history}>
+          <SurveyList loadSurveyList={loadSurveyListStub} />
+        </Router>
+      </ApiContext.Provider>
+    </RecoilRoot>,
   );
   return {
     loadSurveyListStub,

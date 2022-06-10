@@ -1,38 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
 import { LoadSurveyList } from '@/domain/usecases';
-import { MainHeader, PageWrapper, ReloadError } from '@/presentation/components';
+import { MainHeader, PageWrapper } from '@/presentation/components';
 import { SurveyItems } from '@/presentation/pages/survey-list/components';
 import { useErrorHandler } from '@/presentation/hooks';
 import Styles from './styles.scss';
+import { surveyListState, SurveyReloadError } from './components';
 
 type SurveyListProps = {
   loadSurveyList: LoadSurveyList;
 };
 
-type SurveyState = {
-  surveyItems: LoadSurveyList.Model[];
-  error: string;
-  reload: boolean;
-};
-
 const SurveyList: React.FC<SurveyListProps> = ({ loadSurveyList }) => {
-  const [surveyScreenState, setSurveyScreenState] = useState<SurveyState>({
-    surveyItems: [],
-    error: '',
-    reload: false,
-  });
+  const [surveyScreenState, setSurveyScreenState] = useRecoilState(surveyListState);
 
   const handleError = useErrorHandler((error) =>
     setSurveyScreenState((state) => ({ ...state, error: error.message })),
   );
-
-  const handleReload = (): void => {
-    setSurveyScreenState((state) => ({
-      error: '',
-      surveyItems: [],
-      reload: !state.reload,
-    }));
-  };
 
   useEffect(() => {
     const listSurveys = async (): Promise<void> => {
@@ -51,11 +35,7 @@ const SurveyList: React.FC<SurveyListProps> = ({ loadSurveyList }) => {
     <PageWrapper header={<MainHeader />}>
       <div className={Styles.surveyListContainer}>
         <h2>Surveys</h2>
-        {!surveyScreenState.error ? (
-          <SurveyItems surveyItems={surveyScreenState.surveyItems} />
-        ) : (
-          <ReloadError handleReload={handleReload} error={surveyScreenState.error} />
-        )}
+        {!surveyScreenState.error ? <SurveyItems /> : <SurveyReloadError />}
       </div>
     </PageWrapper>
   );

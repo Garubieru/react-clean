@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import Styles from './styles.scss';
-import {
-  LoadingOverlay,
-  MainHeader,
-  PageWrapper,
-  ReloadError,
-} from '@/presentation/components';
+import React, { useEffect } from 'react';
 import { LoadSurveyResult, SaveSurveyResult } from '@/domain/usecases';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { LoadingOverlay, MainHeader, PageWrapper } from '@/presentation/components';
 import { useErrorHandler } from '@/presentation/hooks';
 import {
   SurveyResultData,
-  SurveyResultContext,
+  surveyResultState,
+  surveyAnswerState,
+  SurveyReloadError,
 } from '@/presentation/pages/survey-result/components';
+import Styles from './styles.scss';
 
 type SurveyResultType = {
   loadSurveyResult: LoadSurveyResult;
@@ -22,14 +20,8 @@ const SurveyResult: React.FC<SurveyResultType> = ({
   loadSurveyResult,
   saveSurveyResult,
 }) => {
-  const [state, setState] = useState({
-    surveyResult: null as LoadSurveyResult.Model,
-    isLoading: false,
-    error: '',
-    reload: false,
-  });
-
-  const { surveyResult } = state;
+  const [state, setState] = useRecoilState(surveyResultState);
+  const setOnAnswer = useSetRecoilState(surveyAnswerState);
 
   const handleError = useErrorHandler((error) =>
     setState((prevState) => ({
@@ -40,16 +32,8 @@ const SurveyResult: React.FC<SurveyResultType> = ({
     })),
   );
 
-  const handleReload = (): void => {
-    setState((prevState) => ({
-      surveyResult: null,
-      isLoading: false,
-      error: '',
-      reload: !prevState.reload,
-    }));
-  };
-
   const onAnswer = async (answer: string): Promise<void> => {
+    if (state.isLoading) return;
     try {
       setState((prevState) => ({
         ...prevState,
@@ -67,6 +51,10 @@ const SurveyResult: React.FC<SurveyResultType> = ({
   };
 
   useEffect(() => {
+    setOnAnswer({ onAnswer });
+  }, []);
+
+  useEffect(() => {
     const loadSurvey = async (): Promise<void> => {
       try {
         const result = await loadSurveyResult.load();
@@ -81,12 +69,9 @@ const SurveyResult: React.FC<SurveyResultType> = ({
   return (
     <PageWrapper header={<MainHeader />}>
       <div className={Styles.surveyContainer} data-testid="survey-container">
-        <SurveyResultContext.Provider value={{ onAnswer }}>
-          {surveyResult && <SurveyResultData surveyResult={surveyResult} />}
-        </SurveyResultContext.Provider>
-
+        {state.surveyResult && <SurveyResultData />}
         {state.isLoading && <LoadingOverlay />}
-        {state.error && <ReloadError error={state.error} handleReload={handleReload} />}
+        {state.error && <SurveyReloadError />}
       </div>
     </PageWrapper>
   );

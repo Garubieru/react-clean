@@ -1,16 +1,16 @@
 import React from 'react';
 import FlipMove from 'react-flip-move';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 import { Calendar, Button } from '@/presentation/components';
-import { SurveyResultItem } from '@/presentation/pages/survey-result/components';
-import { LoadSurveyResult } from '@/domain/usecases';
+import {
+  SurveyResultItem,
+  surveyResultState,
+} from '@/presentation/pages/survey-result/components';
 import Styles from './styles.scss';
 
-type SurveyResultDataProps = {
-  surveyResult: LoadSurveyResult.Model;
-};
-
-const SurveyResultData: React.FC<SurveyResultDataProps> = ({ surveyResult }) => {
+const SurveyResultData: React.FC = () => {
+  const { surveyResult } = useRecoilValue(surveyResultState);
   const navigate = useNavigate();
   return (
     <>
