@@ -82,6 +82,30 @@ describe('Signup', () => {
     FormHelpers.testButtonStatus('create-btn', 'enabled');
   });
 
+  it('Should reset form state on page change', () => {
+    FormHelpers.populateField('name', faker.random.alphaNumeric(3));
+    FormHelpers.testFieldStatus('name', '', false);
+
+    FormHelpers.populateField('email', faker.internet.email());
+    FormHelpers.testFieldStatus('email', '', false);
+
+    const password = faker.internet.password();
+
+    FormHelpers.populateField('password', password);
+    FormHelpers.testFieldStatus('password', '', false);
+
+    FormHelpers.populateField('passwordConfirmation', password);
+    FormHelpers.testFieldStatus('passwordConfirmation', '', false);
+
+    cy.getByTestId('login-link').click();
+    cy.getByTestId('signup-link').click();
+
+    FormHelpers.testFieldStatus('name', 'Field is required');
+    FormHelpers.testFieldStatus('email', 'Field is required');
+    FormHelpers.testFieldStatus('password', 'Field is required');
+    FormHelpers.testFieldStatus('passwordConfirmation', 'Field is required');
+  });
+
   it('Should throw EmailInUseError if response statusCode returns 403', () => {
     mockEmailInUseSignupError();
     simulateValidSubmit();

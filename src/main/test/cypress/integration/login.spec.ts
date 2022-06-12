@@ -29,7 +29,7 @@ describe('Login', () => {
   });
 
   it('Should render page with initial state', () => {
-    FormHelpers.testFieldStatus('email', 'Field is required');
+    // FormHelpers.testFieldStatus('email', 'Field is required');
     FormHelpers.testFieldStatus('password', 'Field is required');
     FormHelpers.testButtonStatus('login-button', 'disabled');
     FormHelpers.testErrorContainer('error-msg');
@@ -55,6 +55,20 @@ describe('Login', () => {
 
     FormHelpers.testButtonStatus('login-button', 'enabled');
     FormHelpers.testErrorContainer('error-msg');
+  });
+
+  it('Should reset form state on page change', () => {
+    FormHelpers.populateField('email', faker.internet.email());
+    FormHelpers.testFieldStatus('email', '', false);
+
+    FormHelpers.populateField('password', faker.internet.password(3));
+    FormHelpers.testFieldStatus('password', '', false);
+
+    cy.getByTestId('signup-link').click();
+    cy.getByTestId('login-link').click();
+
+    FormHelpers.testFieldStatus('email', 'Field is required', true);
+    FormHelpers.testFieldStatus('password', 'Field is required', true);
   });
 
   it('Should throw InvalidCredentialsError message if invalid credentials are provided', () => {
