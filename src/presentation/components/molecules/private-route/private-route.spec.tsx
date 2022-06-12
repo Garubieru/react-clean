@@ -1,9 +1,11 @@
-import { mockAccount } from '@/domain/test';
-import { ApiContext } from '@/presentation/context/api/api-context';
-import { render, RenderResult } from '@testing-library/react';
-import { createMemoryHistory, MemoryHistory } from 'history';
 import React from 'react';
 import { Router } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
+import { createMemoryHistory, MemoryHistory } from 'history';
+import { render, RenderResult } from '@testing-library/react';
+
+import { mockAccount } from '@/domain/test';
+import { loginApiState } from '@/presentation/context/api/api-state';
 import PrivateRoute from '.';
 
 const Page: React.FC = () => {
@@ -18,11 +20,15 @@ type SutType = {
 const createSut = (account = mockAccount()): SutType => {
   const history = createMemoryHistory({ initialEntries: ['/'] });
   const sut = render(
-    <ApiContext.Provider value={{ getLoginAccount: () => account }}>
+    <RecoilRoot
+      initializeState={({ set }) =>
+        set(loginApiState, { getLoginAccount: () => account })
+      }
+    >
       <Router location={history.location} navigator={history}>
         <PrivateRoute element={<Page />} />
       </Router>
-    </ApiContext.Provider>,
+    </RecoilRoot>,
   );
   return {
     sut,

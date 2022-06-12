@@ -1,10 +1,11 @@
+import { useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-import { useApi } from '@/presentation/context/api/api-context';
+import { loginApiState } from '@/presentation/context/api/api-state';
 
 type UseLogoutResult = () => void;
 
 export const useLogout = (): UseLogoutResult => {
-  const { setLoginAccount } = useApi();
+  const { setLoginAccount } = useRecoilValue(loginApiState);
   const navigate = useNavigate();
   return () => {
     setLoginAccount(null);

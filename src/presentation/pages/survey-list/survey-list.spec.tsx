@@ -9,7 +9,7 @@ import { AccountModel } from '@/domain/models';
 import { ForbiddenError, UnexpectedError } from '@/domain/errors';
 
 import { LoadSurveyListStub } from '@/presentation/test';
-import { ApiContext } from '@/presentation/context/api/api-context';
+import { loginApiState } from '@/presentation/context/api/api-state';
 import SurveyList from '.';
 
 type SutTypes = {
@@ -24,17 +24,17 @@ const createSut = (
   const history = createMemoryHistory({ initialEntries: ['/'] });
   const setLoginAccountMock = jest.fn();
   render(
-    <RecoilRoot>
-      <ApiContext.Provider
-        value={{
+    <RecoilRoot
+      initializeState={({ set }) => {
+        set(loginApiState, {
           getLoginAccount: jest.fn(() => mockAccount()),
           setLoginAccount: setLoginAccountMock,
-        }}
-      >
-        <Router location={history.location} navigator={history}>
-          <SurveyList loadSurveyList={loadSurveyListStub} />
-        </Router>
-      </ApiContext.Provider>
+        });
+      }}
+    >
+      <Router location={history.location} navigator={history}>
+        <SurveyList loadSurveyList={loadSurveyListStub} />
+      </Router>
     </RecoilRoot>,
   );
   return {

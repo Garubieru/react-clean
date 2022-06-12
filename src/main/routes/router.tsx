@@ -8,33 +8,34 @@ import {
   CreateSurveyResult,
 } from '@/main/factories';
 import { PrivateRoute } from '@/presentation/components';
-import { ApiContext } from '@/presentation/context/api/api-context';
+import { loginApiState } from '@/presentation/context/api/api-state';
 import {
   setLocalLoginAccountAdapter,
   getLocalLoginAccountAdapter,
 } from '@/main/adapters';
 
 const Router: React.FC = () => {
+  const apiState = {
+    getLoginAccount: getLocalLoginAccountAdapter,
+    setLoginAccount: setLocalLoginAccountAdapter,
+  };
   return (
-    <RecoilRoot>
-      <ApiContext.Provider
-        value={{
-          setLoginAccount: setLocalLoginAccountAdapter,
-          getLoginAccount: getLocalLoginAccountAdapter,
-        }}
-      >
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<CreateLogin />} />
-            <Route path="/signup" element={<CreateSignup />} />
-            <Route path="/" element={<PrivateRoute element={<CreateSurveyList />} />} />
-            <Route
-              path="/survey/:id"
-              element={<PrivateRoute element={<CreateSurveyResult />} />}
-            />
-          </Routes>
-        </BrowserRouter>
-      </ApiContext.Provider>
+    <RecoilRoot
+      initializeState={({ set }) => {
+        set(loginApiState, apiState);
+      }}
+    >
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<CreateLogin />} />
+          <Route path="/signup" element={<CreateSignup />} />
+          <Route path="/" element={<PrivateRoute element={<CreateSurveyList />} />} />
+          <Route
+            path="/survey/:id"
+            element={<PrivateRoute element={<CreateSurveyResult />} />}
+          />
+        </Routes>
+      </BrowserRouter>
     </RecoilRoot>
   );
 };

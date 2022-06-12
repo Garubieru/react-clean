@@ -5,7 +5,7 @@ import { createMemoryHistory } from 'history';
 import { render, fireEvent, screen } from '@testing-library/react';
 
 import { ValidationStub, AuthenticationSpy, Helpers } from '@/presentation/test';
-import { ApiContext } from '@/presentation/context/api/api-context';
+import { loginApiState } from '@/presentation/context/api/api-state';
 import { RequiredFieldError } from '@/validation/errors';
 
 import { mockAuthenticationParams } from '@/domain/test';
@@ -34,17 +34,22 @@ const createSut = (params?: SutParams): SutTypes => {
   const authenticationSpy = new AuthenticationSpy();
   const setLoginAccount = jest.fn();
   render(
-    <RecoilRoot>
-      <ApiContext.Provider value={{ setLoginAccount }}>
-        <Router location={history.location} navigator={history}>
-          <Login validation={validationStub} authentication={authenticationSpy} />
-        </Router>
-      </ApiContext.Provider>
+    <RecoilRoot
+      initializeState={({ set }) => {
+        set(loginApiState, { setLoginAccount });
+      }}
+    >
+      <Router location={history.location} navigator={history}>
+        <Login validation={validationStub} authentication={authenticationSpy} />
+      </Router>
     </RecoilRoot>,
   );
   if (params?.populateForm) populateForm(params?.authParams);
-
-  return { validationStub, authenticationSpy, setLoginAccount };
+  return {
+    setLoginAccount,
+    authenticationSpy,
+    validationStub,
+  };
 };
 
 const populateForm = (authParams = mockAuthenticationParams()): void => {

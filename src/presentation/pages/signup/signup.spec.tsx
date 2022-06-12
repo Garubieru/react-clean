@@ -5,7 +5,7 @@ import { RecoilRoot } from 'recoil';
 import { render, fireEvent, screen } from '@testing-library/react';
 
 import { ValidationStub, RemoteSignupSpy, Helpers } from '@/presentation/test';
-import { ApiContext } from '@/presentation/context/api/api-context';
+import { loginApiState } from '@/presentation/context/api/api-state';
 import { RequiredFieldError } from '@/validation/errors';
 
 import { mockSignupParams } from '@/domain/test';
@@ -27,18 +27,28 @@ type SutParams = {
 };
 
 const history = createMemoryHistory({ initialEntries: ['/signin'] });
+
+const populateForm = (params = mockSignupParams()): void => {
+  Helpers.populateField('name', params.name);
+  Helpers.populateField('email', params.email);
+  Helpers.populateField('password', params.password);
+  Helpers.populateField('passwordConfirmation', params.passwordConfirmation);
+};
+
 const createSut = (params?: SutParams): SutType => {
   const validationStub = new ValidationStub();
   const remoteSignupSpy = new RemoteSignupSpy();
   const setLoginAccount = jest.fn();
   if (params?.withError) validationStub.errorMessage = new RequiredFieldError().message;
   render(
-    <RecoilRoot>
-      <ApiContext.Provider value={{ setLoginAccount }}>
-        <Router location={history.location} navigator={history}>
-          <Signup validations={validationStub} remoteSignup={remoteSignupSpy} />
-        </Router>
-      </ApiContext.Provider>
+    <RecoilRoot
+      initializeState={({ set }) => {
+        set(loginApiState, { setLoginAccount });
+      }}
+    >
+      <Router location={history.location} navigator={history}>
+        <Signup validations={validationStub} remoteSignup={remoteSignupSpy} />
+      </Router>
     </RecoilRoot>,
   );
   if (params?.populateForm) populateForm(params?.formParams);
@@ -47,13 +57,6 @@ const createSut = (params?: SutParams): SutType => {
     remoteSignupSpy,
     setLoginAccount,
   };
-};
-
-const populateForm = (params = mockSignupParams()): void => {
-  Helpers.populateField('name', params.name);
-  Helpers.populateField('email', params.email);
-  Helpers.populateField('password', params.password);
-  Helpers.populateField('passwordConfirmation', params.passwordConfirmation);
 };
 
 describe('Signup Component', () => {

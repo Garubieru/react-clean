@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { Authentication } from '@/domain/usecases';
 import { Button, Link, PageWrapper, Form } from '@/presentation/components';
 import { Validation } from '@/presentation/protocols/validation';
-import { useApi } from '@/presentation/context/api/api-context';
+import { loginApiState } from '@/presentation/context/api/api-state';
 import { loginState, Input, Error } from './components';
 import Styles from './styles.scss';
 
@@ -14,7 +14,7 @@ type LoginProps = {
 };
 
 const Login: React.FC<LoginProps> = ({ validation, authentication }) => {
-  const { setLoginAccount } = useApi();
+  const { setLoginAccount } = useRecoilValue(loginApiState);
   const navigate = useNavigate();
   const [state, setState] = useRecoilState(loginState);
 

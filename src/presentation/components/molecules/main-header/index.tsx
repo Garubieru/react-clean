@@ -1,14 +1,15 @@
 import React, { memo } from 'react';
+import { useRecoilValue } from 'recoil';
 import { faUserCircle, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Logo } from '@/presentation/components';
-import Styles from './styles.scss';
-import { useApi } from '@/presentation/context/api/api-context';
+import { loginApiState } from '@/presentation/context/api/api-state';
 import { useLogout } from '@/presentation/hooks';
+import Styles from './styles.scss';
 
 const MainHeader: React.FC = () => {
   const logout = useLogout();
-  const { getLoginAccount } = useApi();
+  const { getLoginAccount } = useRecoilValue(loginApiState);
   const { name } = getLoginAccount();
 
   const handleSignout = (e: React.MouseEvent<HTMLLIElement, MouseEvent>): void => {

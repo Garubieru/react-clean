@@ -1,11 +1,13 @@
 import React from 'react';
+import { RecoilRoot } from 'recoil';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { createMemoryHistory, MemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
+
 import { mockAccount } from '@/domain/test';
 import { AccountModel } from '@/domain/models';
 import { MainHeader } from '@/presentation/components';
-import { ApiContext } from '@/presentation/context/api/api-context';
+import { loginApiState } from '@/presentation/context/api/api-state';
 
 type SutType = {
   setLoginAccountMock: jest.Mock<void, [AccountModel]>;
@@ -19,16 +21,18 @@ const createSut = (account = mockAccount()): SutType => {
 
   const history = createMemoryHistory({ initialEntries: ['/'] });
   render(
-    <ApiContext.Provider
-      value={{
-        setLoginAccount: setLoginAccountMock,
-        getLoginAccount: () => account,
+    <RecoilRoot
+      initializeState={({ set }) => {
+        set(loginApiState, {
+          setLoginAccount: setLoginAccountMock,
+          getLoginAccount: () => account,
+        });
       }}
     >
       <Router location={history.location} navigator={history}>
         <MainHeader />
       </Router>
-    </ApiContext.Provider>,
+    </RecoilRoot>,
   );
   return {
     setLoginAccountMock,

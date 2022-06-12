@@ -1,5 +1,6 @@
 import React from 'react';
-import { useApi } from '@/presentation/context/api/api-context';
+import { useRecoilValue } from 'recoil';
+import { loginApiState } from '@/presentation/context/api/api-state';
 import { Navigate } from 'react-router-dom';
 
 type PrivateRouteProps = {
@@ -7,7 +8,7 @@ type PrivateRouteProps = {
 };
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ element }) => {
-  const { getLoginAccount } = useApi();
+  const { getLoginAccount } = useRecoilValue(loginApiState);
 
   return getLoginAccount() ? element : <Navigate to="/login" />;
 };
