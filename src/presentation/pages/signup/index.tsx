@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { Signup as SignupProtocol } from '@/domain/usecases';
 import { Button, Link, PageWrapper, Form } from '@/presentation/components';
 import { Validation } from '@/presentation/protocols/validation';
 import { loginApiState } from '@/presentation/context/api/api-state';
-import Styles from './styles.scss';
 import { signupState, Input, Error } from './components';
+import Styles from './styles.scss';
 
 type SignupProps = {
   validations: Validation;
@@ -14,9 +14,12 @@ type SignupProps = {
 };
 
 const Signup: React.FC<SignupProps> = ({ validations, remoteSignup }) => {
-  const { setLoginAccount } = useRecoilValue(loginApiState);
   const navigate = useNavigate();
+  const { setLoginAccount } = useRecoilValue(loginApiState);
   const [state, setState] = useRecoilState(signupState);
+  const resetState = useResetRecoilState(signupState);
+
+  useEffect(() => resetState(), []);
 
   useEffect(() => {
     const { name, email, password, passwordConfirmation } = state;

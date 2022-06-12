@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { Authentication } from '@/domain/usecases';
 import { Button, Link, PageWrapper, Form } from '@/presentation/components';
 import { Validation } from '@/presentation/protocols/validation';
@@ -14,9 +14,10 @@ type LoginProps = {
 };
 
 const Login: React.FC<LoginProps> = ({ validation, authentication }) => {
-  const { setLoginAccount } = useRecoilValue(loginApiState);
   const navigate = useNavigate();
   const [state, setState] = useRecoilState(loginState);
+  const { setLoginAccount } = useRecoilValue(loginApiState);
+  const resetLoginState = useResetRecoilState(loginState);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -38,6 +39,7 @@ const Login: React.FC<LoginProps> = ({ validation, authentication }) => {
       }));
     }
   };
+  useEffect(() => resetLoginState(), []);
 
   useEffect(() => {
     const { email, password } = validation.validate({
