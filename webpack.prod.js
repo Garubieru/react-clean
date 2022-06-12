@@ -29,6 +29,7 @@ module.exports = merge(common, {
     react: 'React',
     axios: 'axios',
     'react-dom': 'ReactDOM',
+    recoil: 'Recoil',
   },
   plugins: [
     new Dotenv({
